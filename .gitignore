@@ -52,3 +52,16 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Vim, Django and Python
+*.pyc
+*.pyo
+
+*.swp
+*.swo
+
+build/*
+*.egg-info
+
+local_settings.py
+static/admin

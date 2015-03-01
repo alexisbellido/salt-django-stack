@@ -1,0 +1,67 @@
+{% set apache = salt['grains.filter_by']({
+    'Debian': {
+        'server': 'apache2',
+        'service': 'apache2',
+
+        'mod_wsgi': 'libapache2-mod-wsgi',
+
+        'vhostdir': '/etc/apache2/sites-available',
+        'confdir': '/etc/apache2/conf.d',
+        'confext': '',
+        'default_site': 'default',
+        'default_site_ssl': 'default-ssl',
+        'logdir': '/var/log/apache2',
+        'wwwdir': '/srv',
+        'use_require': False,
+    },
+    'RedHat': {
+        'server': 'httpd',
+        'service': 'httpd',
+
+        'mod_wsgi': 'mod_wsgi',
+
+        'vhostdir': '/etc/httpd/conf.d',
+        'confdir': '/etc/httpd/conf.d',
+        'confext': '.conf',
+        'default_site': 'default',
+        'default_site_ssl': 'default-ssl',
+        'logdir': '/var/log/httpd',
+        'wwwdir': '/var/www',
+        'use_require': False,
+    },
+    'FreeBSD': {
+        'server': 'apache22',
+        'service': 'apache22',
+
+        'mod_wsgi': 'ap22-mod_wsgi3',
+
+        'vhostdir': '/usr/local/etc/apache22/Includes',
+        'confdir': '/usr/local/etc/apache22/Includes',
+        'confext': '',
+        'default_site': 'default',
+        'default_site_ssl': 'default-ssl',
+        'logdir': '/var/log/',
+        'wwwdir': '/usr/local/www/apache22/',
+        'use_require': False,
+    },
+}, merge=salt['grains.filter_by']({
+    '14.04': {
+        'confext': '.conf',
+        'default_site': '000-default.conf',
+        'default_site_ssl': 'default-ssl.conf',
+        'use_require': True,
+    },
+    '14.10': {
+        'confext': '.conf',
+        'default_site': '000-default.conf',
+        'default_site_ssl': 'default-ssl.conf',
+        'use_require': True,
+    },
+    '8.0': {
+        'wwwdir': '/var/www',
+        'confext': '.conf',
+        'default_site': '000-default.conf',
+        'default_site_ssl': 'default-ssl.conf',
+        'user_require': True,
+    },
+}, grain='lsb_distrib_release', merge=salt['pillar.get']('apache:lookup'))) %}
