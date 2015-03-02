@@ -1,0 +1,4 @@
+TODO
+
+- States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production.
+
