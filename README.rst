@@ -13,7 +13,7 @@ Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is t
 Overview
 ========
 
-Include zinibu in your top.sls to setup a standard webhead (Nginx, Gunicorn, and Django). To setup other servers include individual state files, like this:
+Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a standard webhead (Nginx, Gunicorn, and Django). To setup other servers include individual state files, like this:
 
 base:
   'webhead':
@@ -24,6 +24,8 @@ base:
     - zinibu.redis
   'database':
     - zinibu.postgresql
+
+Move pillar.example to your pillar directory (this could be /srv/pillar/zinibu.sls) and set the configuration data for your application.
 
 Available states
 ================
