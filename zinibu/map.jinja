@@ -36,12 +36,12 @@
     'Debian': {
         'pkg': 'python3',
         'dev_pkg': 'python3-dev',
-        'pip_pkg': 'python3-pip',
+        'pip_pkg': 'python-pip',
     },
     'RedHat': {
         'pkg': 'python3',
         'dev_pkg': 'python3-devel',
-        'mako_pkg': 'python3-mako',
+        'pip_pkg': 'python-pip',
     },
 }, merge=salt['grains.filter_by']({
     '14.04': {
