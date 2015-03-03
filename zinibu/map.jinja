@@ -31,3 +31,23 @@
         'config': '/etc/sysconfig/varnish',
     },
 }, merge=salt['pillar.get']('varnish:lookup')) %}
+
+{% set python = salt['grains.filter_by']({
+    'Debian': {
+        'pkg': 'python3',
+        'dev_pkg': 'python3-dev',
+        'pip_pkg': 'python3-pip',
+    },
+    'RedHat': {
+        'pkg': 'python3',
+        'dev_pkg': 'python3-devel',
+        'mako_pkg': 'python3-mako',
+    },
+}, merge=salt['grains.filter_by']({
+    '14.04': {
+        'pyvenv_cmd': 'pyvenv-3.4',
+    },
+    '14.10': {
+        'pyvenv_cmd': 'pyvenv-3.4',
+    },
+}, grain='lsb_distrib_release', merge=salt['pillar.get']('python:lookup'))) %}
