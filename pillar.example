@@ -1,4 +1,4 @@
-common:
+zinibu_common:
   app_user: vagrant
   app_group: vagrant
   root_user: root

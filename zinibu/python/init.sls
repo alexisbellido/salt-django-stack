@@ -12,20 +12,27 @@ pip:
 ensurepip:
   cmd.script:
     - name: salt://zinibu/python/files/ensurepip.sh
-    - user: {{ salt['pillar.get']('common:root_user', 'root') }}
+    - user: {{ salt['pillar.get']('zinibu_common:root_user', 'root') }}
     - shell: /bin/bash
     - cwd: /usr/lib/python3.4
     - unless: test -f /usr/lib/python3.4/ensurepip/_bundled/pip-1.5.4-py2.py3-none-any.whl
 
+mkdir_pyvenv:
+  cmd.run:
+    - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
+    - name: mkdir -p /home/vagrant/pyvenvs
+    - shell: /bin/bash
+
 create_pyvenv:
   cmd.run:
-    - cwd: /home/vagrant/pyenvs # create this first
-    - user: {{ salt['pillar.get']('common:app_user', 'user') }}
-    - group: {{ salt['pillar.get']('common:app_user', 'group') }}
+    - cwd: /home/vagrant/pyvenvs
+    - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
+    - group: {{ salt['pillar.get']('zinibu_common:app_user', 'group') }}
     - shell: /bin/bash
     - name: pyvenv-3.4 venv2 ; source venv2/bin/activate ; pip --version
     - require:
       - cmd: ensurepip
+      - cmd: mkdir_pyvenv
 
 # create state, probably in its own sls, to delete venv
 
@@ -35,8 +42,8 @@ install_pip_packages:
     - names:
       - requests
       - Jinja2
-    - bin_env: /home/vagrant/pyenvs/venv2
-    - user: {{ salt['pillar.get']('common:app_user', 'user') }}
+    - bin_env: /home/vagrant/pyvenvs/venv2
+    - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
     - require:
       - cmd: create_pyvenv
       - pkg: pip
