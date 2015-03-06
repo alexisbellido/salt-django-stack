@@ -13,3 +13,9 @@ nginx:
 python:
   testfilename: /tmp/pillar-file-3
   pyvenvs_dir: /home/vagrant/pyenvs
+  pip_packages:
+    - requests
+    - Jinja2
+    - Django
+    - psycopg2
+    - ipython

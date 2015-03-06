@@ -1,8 +1,19 @@
 {% from "zinibu/map.jinja" import python with context %}
+{% from "zinibu/map.jinja" import postgres with context %}
 
 pip:
   pkg.installed:
     - name: {{ python.pip_pkg }}
+
+python3-dev:
+  pkg.installed:
+    - name: {{ python.dev_pkg }}
+
+{% if postgres.pkg_libpq_dev != False %}
+install-postgres-libpq-dev:
+  pkg.installed:
+    - name: {{ postgres.pkg_libpq_dev }}
+{% endif %}
 
 # create one sls for creating venv and get venv names from pillar
 
@@ -36,17 +47,19 @@ create_pyvenv:
 
 # create state, probably in its own sls, to delete venv
 
-# move installation of pip packages to its own sls and use pillar to list them
-install_pip_packages:
+# move installation of pip packages to its own sls
+{% for pip_package in salt['pillar.get']('python:pip_packages', []) %}
+install_pip_package_{{ pip_package }}:
   pip.installed:
-    - names:
-      - requests
-      - Jinja2
+    - name: {{ pip_package }}
     - bin_env: /home/vagrant/pyvenvs/venv2
     - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
     - require:
       - cmd: create_pyvenv
       - pkg: pip
+      - pkg: python3-dev
+      - pkg: install-postgres-libpq-dev
+{% endfor%}
 
 #/tmp/file-{{ python.pyvenv_cmd }}:
 #  file.managed:
