@@ -55,6 +55,9 @@ can be overriden like this:
 
 salt 'minion_id' state.sls zinibu.python pillar='{"python": {"pyvenv_name": "zinibu_stage"}}'
 
+A virtual environment can be manually activated like this on each minion:
+source /home/vagrant/pyvenvs/zinibu_dev/bin/activate
+
 ``zinibu.python.rmenv``
 -----------------------
 
