@@ -31,28 +31,26 @@ ensurepip:
 mkdir_pyvenv:
   cmd.run:
     - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
-    - name: mkdir -p /home/vagrant/pyvenvs
+    - name: mkdir -p {{ salt['pillar.get']('python:pyvenvs_dir', '/home/user/pyvenvs') }}
     - shell: /bin/bash
 
 create_pyvenv:
   cmd.run:
-    - cwd: /home/vagrant/pyvenvs
+    - cwd: {{ salt['pillar.get']('python:pyvenvs_dir', '/home/user/pyvenvs') }}
     - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
     - group: {{ salt['pillar.get']('zinibu_common:app_user', 'group') }}
     - shell: /bin/bash
-    - name: pyvenv-3.4 venv2 ; source venv2/bin/activate ; pip --version
+    - name: pyvenv-3.4 {{ salt['pillar.get']('python:pyvenv_name', 'venv') }} ; source {{ salt['pillar.get']('python:pyvenv_name', 'venv') }}/bin/activate ; pip --version
     - require:
       - cmd: ensurepip
       - cmd: mkdir_pyvenv
-
-# create state, probably in its own sls, to delete venv
 
 # move installation of pip packages to its own sls
 {% for pip_package in salt['pillar.get']('python:pip_packages', []) %}
 install_pip_package_{{ pip_package }}:
   pip.installed:
     - name: {{ pip_package }}
-    - bin_env: /home/vagrant/pyvenvs/venv2
+    - bin_env: {{ salt['pillar.get']('python:pyvenvs_dir', '/home/user/pyvenvs') }}/{{ salt['pillar.get']('python:pyvenv_name', 'venv') }}
     - user: {{ salt['pillar.get']('zinibu_common:app_user', 'user') }}
     - require:
       - cmd: create_pyvenv

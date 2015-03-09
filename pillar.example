@@ -11,8 +11,9 @@ nginx:
     package: nginx
 
 python:
-  testfilename: /tmp/pillar-file-3
-  pyvenvs_dir: /home/vagrant/pyenvs
+  testfilename: /tmp/pillar-file-44
+  pyvenvs_dir: /home/vagrant/pyvenvs
+  pyvenv_name: zinibu_dev
   pip_packages:
     - requests
     - Jinja2

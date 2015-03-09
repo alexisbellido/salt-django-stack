@@ -42,3 +42,22 @@ Installs the needed packages and services for a Django webhead.
 ----------------
 
 Setups Varnish to load balance and cache the webheads.
+
+``zinibu.python``
+----------------
+
+Installs the required Python software and creates a virtual environment.
+
+salt 'minion_id' state.sls zinibu.python
+
+The default name for the virtual environment is provided by pillar as pyvenv_name but
+can be overriden like this:
+
+salt 'minion_id' state.sls zinibu.python pillar='{"python": {"pyvenv_name": "zinibu_stage"}}'
+
+``zinibu.python.rmenv``
+-----------------------
+
+Remove a virtual environment. Note how pillar data can be passed at the command line to override pyvenv_name.
+
+salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"python": {"pyvenv_name": "zinibu_dev"}}'
