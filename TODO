@@ -1,4 +1,4 @@
 TODO
 
-- States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production.
+- States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states)
 
