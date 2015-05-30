@@ -49,7 +49,6 @@ create_pyvenv:
     - user: {{ user }}
     - group: {{ group }}
     - shell: /bin/bash
-    # TODO get 
     - name: {{ python.pyvenv_cmd }} {{ pyvenv_name }} ; source {{ pyvenv_name }}/bin/activate ; pip --version
     - require:
       - cmd: ensurepip
