@@ -44,6 +44,9 @@
         'pip_pkg': 'python-pip',
     },
 }, merge=salt['grains.filter_by']({
+    '12.04': {
+        'pyvenv_cmd': 'pyvenv-3.4',
+    },
     '14.04': {
         'pyvenv_cmd': 'pyvenv-3.4',
     },
