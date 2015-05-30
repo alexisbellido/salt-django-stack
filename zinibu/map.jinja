@@ -46,12 +46,15 @@
 }, merge=salt['grains.filter_by']({
     '12.04': {
         'pyvenv_cmd': 'pyvenv-3.4',
+        'lib_dir': '/usr/lib/python3.2',
     },
     '14.04': {
         'pyvenv_cmd': 'pyvenv-3.4',
+        'lib_dir': '/usr/lib/python3.4',
     },
     '14.10': {
         'pyvenv_cmd': 'pyvenv-3.4',
+        'lib_dir': '/usr/lib/python3.4',
     },
 }, grain='lsb_distrib_release', merge=salt['pillar.get']('python:lookup'))) %}
 

@@ -21,6 +21,11 @@ install-postgres-libpq-dev:
     - name: {{ postgres.pkg_libpq_dev }}
 {% endif %}
 
+testing:
+  cmd.run:
+    - user: {{ user }}
+    - name: echo mkdir -p {{ pyvenvs_dir }}
+
 # See:
 # https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847
 # http://rem4me.me/2014/09/fixing-pyvenv-3-4-in-debian-ubuntu-mint-17-etc/
@@ -29,7 +34,7 @@ ensurepip:
     - name: salt://zinibu/python/files/ensurepip.sh
     - user: {{ root_user }}
     - shell: /bin/bash
-    - cwd: /usr/lib/python3.4
+    - cwd: {{ python.lib_dir }}
     - unless: test -f /usr/lib/python3.4/ensurepip/_bundled/pip-1.5.4-py2.py3-none-any.whl
 
 mkdir_pyvenv:

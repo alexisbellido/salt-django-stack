@@ -13,6 +13,15 @@ Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is t
 Overview
 ========
 
+Add formulas to /etc/salt/master like this:
+
+file_roots:
+  base:
+    - /srv/salt
+    - /home/user/salt-django-stack
+
+The first directory, /srv/salt, is the default used by Salt on Ubuntu.
+
 Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a standard webhead (Nginx, Gunicorn, and Django). To setup other servers include individual state files, like this:
 
 base:
@@ -43,6 +52,14 @@ base:
 Move pillar.example from the root of this repository to the pillar directory. For the top.sls above pillar.example should be moved /srv/pillar/zinibu.sls
 
 Now you can use the pillar data for your configuration.
+
+Testing
+================
+
+Run some state on some host for testing, for example:
+
+
+sudo salt hostname state.sls zinibu.python
 
 
 Available states
