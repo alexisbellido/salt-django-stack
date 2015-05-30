@@ -25,7 +25,25 @@ base:
   'database':
     - zinibu.postgresql
 
-Move pillar.example to your pillar directory (this could be /srv/pillar/zinibu.sls) and set the configuration data for your application.
+Pillar setup
+================
+
+Create a directory for pillar and point /etc/salt/master to it:
+
+pillar_roots:
+  base:
+    - /srv/pillar
+
+Create /srv/pillar/top.sls, for example:
+
+base:
+  '*':
+    - zinibu
+
+Move pillar.example from the root of this repository to the pillar directory. For the top.sls above pillar.example should be moved /srv/pillar/zinibu.sls
+
+Now you can use the pillar data for your configuration.
+
 
 Available states
 ================
