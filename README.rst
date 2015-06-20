@@ -98,3 +98,20 @@ source /home/vagrant/pyvenvs/zinibu_dev/bin/activate
 Remove a virtual environment. Note how pillar data can be passed at the command line to override pyvenv_name.
 
 salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"python": {"pyvenv_name": "zinibu_dev"}}'
+
+Some test commands
+====================
+
+sudo salt-key -L
+sudo salt-key -a django*
+sudo salt '*' test.ping
+sudo salt '*' pillar.items
+sudo salt '*' state.highstate
+sudo salt django5 pillar.items
+sudo salt '*' pillar.items
+sudo salt django5 state.sls zinibu.python
+history | grep "sudo salt"
+
+To test locally, use salt-call:
+sudo salt-call test.ping
+sudo salt-call state.sls zinibu.python

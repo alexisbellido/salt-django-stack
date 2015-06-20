@@ -2,3 +2,6 @@ TODO
 
 - States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states)
 
+- Keep an example of copying a configuration file like the one in zinibu/gunicorn/init.sls.
+
+- Keep an example of copying a file that includes some jinja changes. See if I can get some examples from old code.
