@@ -1,0 +1,15 @@
+this is file 1 for {{ name_var }}
+
+ip for file1: {{ public_ip }}
+pillar info : {{ pillar['info'] }}
+
+{% if 'colors' in pillar %}
+{% for color in pillar['colors'] %}
+color: {{ color }}
+{% endfor %}
+{% endif %}
+
+colors: {{ salt['pillar.get']('colors') }}
+countries: {{ salt['pillar.get']('countries', 'no countries found') }}
+
+alexis has this many legs:{{ salt['pillar.get']('persons:alexis:legs', 0) }}

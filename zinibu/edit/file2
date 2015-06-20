@@ -1,0 +1,3 @@
+and this file 2 and name is {{ name_var }}
+
+ip for file2: {{ public_ip }}
