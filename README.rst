@@ -37,7 +37,7 @@ base:
 Pillar setup
 ================
 
-Create a directory for pillar and point /etc/salt/master to it:
+Create the pillar directory and point /etc/salt/master to it:
 
 pillar_roots:
   base:
@@ -49,15 +49,14 @@ base:
   '*':
     - zinibu
 
-Move pillar.example from the root of this repository to the pillar directory. For the top.sls above pillar.example should be moved /srv/pillar/zinibu.sls
+This is looking for pillar data in /srv/pillar/zinibu.sls, which is originally a copy pillar.example in the root of this repository.
 
-Now you can use the pillar data for your configuration.
+Now you can use the pillar data for your configuration. As you make changes to /srv/pillar/zinibu.sls copy to pillar.example in the root of the repository.
 
 Testing
 ================
 
 Run some state on some host for testing, for example:
-
 
 sudo salt hostname state.sls zinibu.python
 
