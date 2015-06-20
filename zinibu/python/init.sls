@@ -7,6 +7,12 @@
 {% set group = salt['pillar.get']('zinibu_common:app_group', 'group') %}
 {% set root_user = salt['pillar.get']('zinibu_common:root_user', 'root') %}
 
+include:
+  # standard absolute include
+  #- zinibu.python.python_test
+  # and a relative include, note the dot
+  - .python_test
+
 pip:
   pkg.installed:
     - name: {{ python.pip_pkg }}

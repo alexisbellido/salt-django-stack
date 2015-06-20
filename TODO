@@ -4,4 +4,6 @@ TODO
 
 - Keep an example of copying a configuration file like the one in zinibu/gunicorn/init.sls.
 
-- Keep an example of copying a file that includes some jinja changes. See if I can get some examples from old code.
+- Keep an example of copying a file that includes some jinja changes and variables from grains and pillars. See zinibu/edit/vim.sls.
+
+- Include multiple SLS files as needed, see zinibu/python/python_test.sls
