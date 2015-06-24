@@ -34,6 +34,14 @@ base:
   'database':
     - zinibu.postgresql
 
+
+To make testing easier, run commands locally with salt-call, this way you don't need a target and can use just one server. This means a command like:
+sudo salt '*' test.ping
+
+becomes:
+sudo salt-call test.ping
+
+
 Pillar setup
 ================
 
@@ -97,7 +105,7 @@ source /home/vagrant/pyvenvs/zinibu_dev/bin/activate
 
 Remove a virtual environment. Note how pillar data can be passed at the command line to override pyvenv_name.
 
-salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"python": {"pyvenv_name": "zinibu_dev"}}'
+salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"zinibu_common": {"app_user": "vagrant", "app_group": "vagrant"}, "python": {"pyvenvs_dir": "/home/vagrant/pyvenvs", "pyvenv_name": "zinibu_dev"}}'
 
 Some test commands
 ====================
@@ -112,6 +120,5 @@ sudo salt '*' pillar.items
 sudo salt django5 state.sls zinibu.python
 history | grep "sudo salt"
 
-To test locally, use salt-call:
 sudo salt-call test.ping
 sudo salt-call state.sls zinibu.python
