@@ -41,6 +41,9 @@ sudo salt '*' test.ping
 becomes:
 sudo salt-call test.ping
 
+To run all states use:
+sudo salt '*' state.highstate
+
 
 Pillar setup
 ================
