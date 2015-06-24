@@ -5,8 +5,12 @@ python-test:
     - name: echo 'Python testing. This is the user variable passed via pillar {{ user }}'
 
 # See pillar.get() vs salt['pillar.get']() at http://docs.saltstack.com/en/latest/topics/pillar/index.html
-{% for pip_package in salt['pillar.get']('python:pip_packages', []) %}
-pillar-test-{{ pip_package }}:
+
+pillar-get:
   cmd.run:
-    - name: echo 'Pillar testing, pip_package - {{ pip_package }}'
-{% endfor %}
+    - name: echo 'pillar.get [ {% for pip_package in salt['pillar.get']('python:pip_packages', []) %}{{ pip_package }} {% endfor %}]'
+
+pillar-dict:
+  cmd.run:
+    - name: echo 'pillar as dictionary [ {% for pip_package in pillar['python']['pip_packages'] %}{{ pip_package }} {% endfor %}]'
+
