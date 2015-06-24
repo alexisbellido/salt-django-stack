@@ -107,6 +107,10 @@ Remove a virtual environment. Note how pillar data can be passed at the command 
 
 salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"zinibu_common": {"app_user": "vagrant", "app_group": "vagrant"}, "python": {"pyvenvs_dir": "/home/vagrant/pyvenvs", "pyvenv_name": "zinibu_dev"}}'
 
+To pass a list, use something like:
+
+salt '*' state.highstate pillar='["cheese", "milk", "bread"]'
+
 Some test commands
 ====================
 
