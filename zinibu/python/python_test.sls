@@ -14,3 +14,10 @@ pillar-dict:
   cmd.run:
     - name: echo 'pillar as dictionary [ {% for pip_package in pillar['python']['pip_packages'] %}{{ pip_package }} {% endfor %}]'
 
+pillar-dict-names:
+  cmd.run:
+    - names:
+{% for pip_package in pillar['python']['pip_packages'] %}
+      - echo "pillar as dictionary using names - {{ pip_package }}"
+{% endfor %}
+
