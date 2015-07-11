@@ -1,5 +1,12 @@
 TODO
 
+- I want to run the whole thing with:
+sudo salt '*' state.highstate
+
+and to do that I need to check that /srv/salt/top.sls is calling zinibu, which is actually zinibu/init.sls, and this is calling the rest of states so I have to go and check each of those states. I'm already done with a good part of zinibu.python.
+
+- zinibu.python is doing django stuff and that should probably go to zinibu.django
+
 - Check how to run pip upgrades like:
 pip install Django --upgrade
 
