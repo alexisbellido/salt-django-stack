@@ -27,11 +27,6 @@ install-postgres-libpq-dev:
     - name: {{ postgres.pkg_libpq_dev }}
 {% endif %}
 
-testing:
-  cmd.run:
-    - user: {{ user }}
-    - name: echo mkdir -p {{ pyvenvs_dir }}
-
 # See:
 # https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847
 # http://rem4me.me/2014/09/fixing-pyvenv-3-4-in-debian-ubuntu-mint-17-etc/
