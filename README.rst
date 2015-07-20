@@ -108,7 +108,9 @@ source /home/vagrant/pyvenvs/zinibu_dev/bin/activate
 
 Remove a virtual environment. Note how pillar data can be passed at the command line to override pyvenv_name.
 
-salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"zinibu_common": {"app_user": "vagrant", "app_group": "vagrant"}, "python": {"pyvenvs_dir": "/home/vagrant/pyvenvs", "pyvenv_name": "zinibu_dev"}}'
+Note the pyvenvs_dir key refers to the part of the path after /home/user, for example, in /home/user/some_dir, pyvenvs would be "some_dir".
+
+salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"zinibu_common": {"app_user": "vagrant", "app_group": "vagrant"}, "python": {"pyvenvs_dir": "pyvenvs", "pyvenv_name": "zinibu_dev"}}'
 
 To pass a list, use something like:
 
