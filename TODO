@@ -1,5 +1,10 @@
 TODO
 
+- create django project in a git repo and then clone it and start it with dev server and gunicorn
+(zinibu_dev) testuser2@django5:~$ django-admin startproject secondsite
+(zinibu_dev) testuser2@django5:~$ cd secondsite/
+(zinibu_dev) testuser2@django5:~/secondsite$ django-admin.py runserver --pythonpath=`pwd` --settings=secondsite.settings 192.168.33.15:8000
+
 - Read about salt best practices and a little about using a user for setting up django/gunicorn.
 - Each SLS file within the /srv/pillar/ directory should correspond to the states which it matches. Also, make sure passwords for things like db are in pillar files. See postgresql formula.
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
