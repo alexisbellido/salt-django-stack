@@ -1,13 +1,14 @@
 {% from "zinibu/map.jinja" import python with context %}
 {% from "zinibu/map.jinja" import postgres with context %}
 
-{% set pyvenvs_dir = salt['pillar.get']('python:pyvenvs_dir', '/home/user/pyvenvs') %}
-{% set pyvenv_name = salt['pillar.get']('python:pyvenv_name', 'venv') %}
 {% set user = salt['pillar.get']('zinibu_common:app_user', 'user') %}
 {% set group = salt['pillar.get']('zinibu_common:app_group', 'group') %}
+{% set pyvenvs_dir = '/home/' + user + '/' + salt['pillar.get']('python:pyvenvs_dir', 'pyvenvs') %}
+{% set pyvenv_name = salt['pillar.get']('python:pyvenv_name', 'venv') %}
 {% set root_user = salt['pillar.get']('zinibu_common:root_user', 'root') %}
 
 include:
+  - zinibu.basic
   # standard absolute include
   #- zinibu.python.python_test
   # and a relative include, note the dot
@@ -43,6 +44,8 @@ mkdir_pyvenv:
     - user: {{ user }}
     - name: mkdir -p {{ pyvenvs_dir }}
     - shell: /bin/bash
+    - require:
+      - user: user_{{ user }}_user
 
 create_pyvenv:
   cmd.run:
@@ -54,6 +57,7 @@ create_pyvenv:
     - require:
       - cmd: ensurepip
       - cmd: mkdir_pyvenv
+      - user: user_{{ user }}_user
 
 # move installation of pip packages to its own sls
 {% for pip_package in salt['pillar.get']('pip_packages', []) %}
@@ -67,4 +71,5 @@ install_pip_package_{{ pip_package }}:
       - pkg: pip
       - pkg: python3-dev
       - pkg: install-postgres-libpq-dev
+      - user: user_{{ user }}_user
 {% endfor%}

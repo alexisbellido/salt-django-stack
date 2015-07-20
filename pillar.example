@@ -12,7 +12,7 @@ nginx:
 
 python:
   testfilename: /tmp/pillar-file-44
-  pyvenvs_dir: /home/vagrant/pyvenvs
+  pyvenvs_dir: pyvenvs
   pyvenv_name: zinibu_dev
 
 pip_packages:
