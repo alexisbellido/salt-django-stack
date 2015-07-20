@@ -1,11 +1,11 @@
 {% from "zinibu/map.jinja" import python with context %}
 {% from "zinibu/map.jinja" import postgres with context %}
 
-{% set user = salt['pillar.get']('zinibu_common:app_user', 'user') %}
-{% set group = salt['pillar.get']('zinibu_common:app_group', 'group') %}
+{% set root_user = salt['pillar.get']('zinibu_basic:root_user', 'root') %}
+{% set user = salt['pillar.get']('zinibu_basic:app_user', 'user') %}
+{% set group = salt['pillar.get']('zinibu_basic:app_group', 'group') %}
 {% set pyvenvs_dir = '/home/' + user + '/' + salt['pillar.get']('python:pyvenvs_dir', 'pyvenvs') %}
 {% set pyvenv_name = salt['pillar.get']('python:pyvenv_name', 'venv') %}
-{% set root_user = salt['pillar.get']('zinibu_common:root_user', 'root') %}
 
 include:
   - zinibu.basic

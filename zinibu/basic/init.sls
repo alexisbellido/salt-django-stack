@@ -1,5 +1,5 @@
-{% set user = salt['pillar.get']('zinibu_common:app_user', 'user') %}
-{% set group = salt['pillar.get']('zinibu_common:app_group', 'group') %}
+{% set user = salt['pillar.get']('zinibu_basic:app_user', 'user') %}
+{% set group = salt['pillar.get']('zinibu_basic:app_group', 'group') %}
 
 user_{{ group }}_group:
   group:

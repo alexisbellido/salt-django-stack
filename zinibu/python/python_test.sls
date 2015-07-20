@@ -1,4 +1,4 @@
-{% set user = salt['pillar.get']('zinibu_common:app_user', 'user') %}
+{% set user = salt['pillar.get']('zinibu_basic:app_user', 'user') %}
 
 python-test:
   cmd.run:

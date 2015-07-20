@@ -1,9 +1,25 @@
 TODO
 
+- Read about salt best practices and a little about using a user for setting up django/gunicorn.
+- Each SLS file within the /srv/pillar/ directory should correspond to the states which it matches. Also, make sure passwords for things like db are in pillar files. See postgresql formula.
+- move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
+- create seperate map.jinja and pillar for each component, or maybe not, to keep it simple to start...
+
+- Create emtpy Django project and make it run with development server and gunicorn manually, then saltify that and proceed to work on db setup.
+
 - I want to run the whole thing with:
 sudo salt '*' state.highstate
 
 and to do that I need to check that /srv/salt/top.sls is calling zinibu, which is actually zinibu/init.sls, and this is calling the rest of states so I have to go and check each of those states. I'm already done with a good part of zinibu.python.
+
+- Also, I may need to change /srv/salt/top.sls to point a minion, like 'db' to zinibu.postgresql, and the rest to zinibu (which, as mentioned above, is zinibu.init.sls) to work as webheads. As an example from http://docs.saltstack.com/en/latest/topics/best_practices.html:
+
+base:
+  'web*':
+    - mysql.client
+    - mysql.python
+  'db*':
+    - mysql.server
 
 - zinibu.python is doing django stuff and that should probably go to zinibu.django
 
