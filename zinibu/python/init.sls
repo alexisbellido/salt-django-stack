@@ -56,7 +56,7 @@ create_pyvenv:
       - cmd: mkdir_pyvenv
 
 # move installation of pip packages to its own sls
-{% for pip_package in salt['pillar.get']('python:pip_packages', []) %}
+{% for pip_package in salt['pillar.get']('pip_packages', []) %}
 install_pip_package_{{ pip_package }}:
   pip.installed:
     - name: {{ pip_package }}
