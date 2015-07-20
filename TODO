@@ -3,7 +3,7 @@ TODO
 - Read about salt best practices and a little about using a user for setting up django/gunicorn.
 - Each SLS file within the /srv/pillar/ directory should correspond to the states which it matches. Also, make sure passwords for things like db are in pillar files. See postgresql formula.
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
-- create seperate map.jinja and pillar for each component, or maybe not, to keep it simple to start...
+- just one map.jinja to start
 
 - Create emtpy Django project and make it run with development server and gunicorn manually, then saltify that and proceed to work on db setup.
 
