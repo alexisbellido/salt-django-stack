@@ -10,7 +10,29 @@ TODO
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
 - just one map.jinja to start
 
+- 
+
 - Create emtpy Django project and make it run with development server and gunicorn manually, then saltify that and proceed to work on db setup.
+
+- I added gunicorn to INSTALLED_APPS and got deprecated message, see new articles
+(zinibu_dev) testuser2@django5:~/secondsite$ django-admin.py run_gunicorn --workers=3 --user=testuser2 --group=testuser2 --bind=192.168.33.15:5:8001 --log-level=debug --log-file=/tmp/django-log --pythonpath=`pwd` --settings=secondsite.settings
+/home/testuser2/pyvenvs/zinibu_dev/lib/python3.4/site-packages/django/core/management/base.py:259: RemovedInDjango19Warning: "requires_model_validation" is deprecated in favor of "requires_system_checks".
+  RemovedInDjango19Warning)
+
+!!!
+!!! WARNING: This command is deprecated.
+!!! 
+!!!         You should now run your application with the WSGI interface
+!!!         installed with your project. Ex.:
+!!! 
+!!!             gunicorn myproject.wsgi:application
+!!! 
+!!!         See https://docs.djangoproject.com/en/1.5/howto/deployment/wsgi/gunicorn/
+!!!         for more info.
+!!!
+
+
+
 
 - I want to run the whole thing with:
 sudo salt '*' state.highstate
