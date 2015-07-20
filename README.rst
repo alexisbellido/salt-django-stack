@@ -54,15 +54,9 @@ pillar_roots:
   base:
     - /srv/pillar
 
-Create /srv/pillar/top.sls, for example:
+Copy the files from zinibu/pillar_data to /srv/pillar and now you can use the pillar data for your configuration. As you make changes to the pillar files in /srv/pillar, copy the changes to pillar_data the repository. Avoid keeping credentials and any other private data in the repository.
 
-base:
-  '*':
-    - zinibu
-
-This is looking for pillar data in /srv/pillar/zinibu.sls, which is originally a copy pillar.example in the root of this repository.
-
-Now you can use the pillar data for your configuration. As you make changes to /srv/pillar/zinibu.sls copy to pillar.example in the root of the repository.
+The goal is to keep separate pillar SLS files for each state.
 
 Testing
 ================
