@@ -1,5 +1,11 @@
 TODO
 
+- copy /etc/nginx/sites-available/django-project and make it template to setup nginx virtual host
+- copy /home/vagrant/run-project.sh and make it template to setup gunicorn + upstart + nginx
+- figure out how to run collectstatic
+- Django project should have its settings ready but docs for salt states should mention the basics, like STATIC_ROOT, and the first version of collectstatic should just run on every webhead, later it can implement rsync to a shared directory (maybe nfs) served by nginx
+- get things working up to here with salt and then move to Varnish
+
 - create django project in a git repo and then clone it and start it with dev server and gunicorn
 (zinibu_dev) testuser2@django5:~$ django-admin startproject secondsite
 (zinibu_dev) testuser2@django5:~$ cd secondsite/
