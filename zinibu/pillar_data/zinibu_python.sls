@@ -10,3 +10,4 @@ pip_packages:
   - psycopg2==2.6.1
   - ipython==3.2.0
   - gunicorn==19.3.0
+  - pyinotify==0.9.6
