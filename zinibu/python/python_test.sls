@@ -1,8 +1,13 @@
+{% from "zinibu/map.jinja" import project with context %}
 {% set user = salt['pillar.get']('zinibu_basic:app_user', 'user') %}
 
 python-test:
   cmd.run:
-    - name: echo 'Python testing. This is the user variable passed via pillar {{ user }}'
+    - name: echo 'Python testing. This is the user variable passed via pillar {{ user }} and project.name {{ project.name }}'
+
+python-test-webheads:
+  cmd.run:
+    - name: echo 'webheads ips [ {% for webhead in project.webheads %}{{ webhead.ip }} {% endfor %}]'
 
 # See pillar.get() vs salt['pillar.get']() at http://docs.saltstack.com/en/latest/topics/pillar/index.html
 

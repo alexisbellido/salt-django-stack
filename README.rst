@@ -110,6 +110,12 @@ To pass a list, use something like:
 
 salt '*' state.highstate pillar='["cheese", "milk", "bread"]'
 
+``zinibu.python.python_test``
+-----------------------
+
+sudo salt-call state.sls zinibu.python.python_test
+
+
 Some test commands
 ====================
 
