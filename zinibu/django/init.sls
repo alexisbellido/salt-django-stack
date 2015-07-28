@@ -1,3 +1,6 @@
+# need something from map.jinja?
+#{% from "zinibu/map.jinja" import django with context %}
+#
 # django
 #
 #- Create Django project, two ways:
@@ -12,4 +15,5 @@
 #    cd /home/vagrant/
 #    django-admin startproject mysite6
 #    django-admin runserver --pythonpath=/home/vagrant/mysite6 --settings=mysite6.settings 192.168.50.11:8000
+#
 #
