@@ -1,11 +1,11 @@
 #server {
-#       listen IPADDRESS:PORT;
+#       listen {{ public_ip }}:PORT;
 #	server_name example.com;
 #       rewrite ^/(.*) http://www.example.com/$1 permanent;
 #}
 
 server {
-    #listen 192.168.33.15:80;
+    #listen {{ public_ip }}:80;
     #server_name www.example.com;
 
     listen 80;
@@ -18,7 +18,7 @@ server {
     #}
 
     location /static/ {
-        root /home/vagrant/zinibu_dev;
+        root /home/{{ user }}/{{ project_name }};
         # if asset versioning is used
         #if ($query_string) {
         #    expires max;
@@ -37,8 +37,8 @@ server {
         proxy_pass http://127.0.0.1:8000/;
     }
 
-    access_log /home/vagrant/logs/zinibu_dev-nginx-access.log;
-    error_log /home/vagrant/logs/zinibu_dev-nginx-error.log;
+    access_log /home/{{ user }}/logs/{{ project_name }}-nginx-access.log;
+    error_log /home/{{ user }}/logs/{{ project_name }}-nginx-error.log;
 
     # what to serve if upstream is not available or crashes
     error_page 500 502 503 504 /static/50x.html;
