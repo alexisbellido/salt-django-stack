@@ -10,6 +10,21 @@ nginx:
 /etc/nginx/sites-enabled/default:
   file.absent
 
+# I may use to check if a file exists
+#{% if 0 == salt['cmd.retcode']('test -f /etc/nginx/sites-available/' + zinibu_basic.project.name, template='jinja') %}
+# do something here
+#{% endif %}
+
+/etc/nginx/sites-enabled/{{ zinibu_basic.project.name }}:
+  file.symlink:
+    - target: /etc/nginx/sites-available/{{ zinibu_basic.project.name }}
+    - mode: 644
+    - user: root
+    - group: root
+    - require:
+      - pkg: nginx
+
+# make the symlink a requirement to make sure it's created
 /etc/nginx/sites-available/{{ zinibu_basic.project.name }}:
   file.managed:
     - source: salt://zinibu/nginx/files/nginx-server-block
@@ -28,12 +43,4 @@ nginx:
     {% endif %}
     - require:
       - pkg: nginx
-
-#{% if 0 == salt['cmd.retcode']('test -f /etc/nginx/sites-available/' + zinibu_basic.project.name, template='jinja') %}
-/etc/nginx/sites-enabled/{{ zinibu_basic.project.name }}:
-  file.symlink:
-    - target: /etc/nginx/sites-available/{{ zinibu_basic.project.name }}
-    - mode: 644
-    - user: root
-    - group: root
-#{% endif %}
+      - file: /etc/nginx/sites-enabled/{{ zinibu_basic.project.name }}
