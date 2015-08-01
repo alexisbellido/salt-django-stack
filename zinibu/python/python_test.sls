@@ -24,4 +24,3 @@ pillar-dict-names:
 {% for pip_package in pillar['pip_packages'] %}
       - echo "pillar as dictionary using names - {{ pip_package }}"
 {% endfor %}
-

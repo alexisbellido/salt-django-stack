@@ -24,11 +24,14 @@ nginx:
     - require:
       - pkg: nginx
 
-# create new virtual host, first create configuration in sites-available and then symlink it to sites-enabled
-# sudo ln -s /etc/nginx/sites-available/django-project /etc/nginx/sites-enabled/django-project
-
-# the file above should be based on a template managed by this state and modified with jinja, see how to reuse project name (zinibu_dev in examples)
+{% if 0 == salt['cmd.retcode']('test -f /etc/nginx/sites-available/' + zinibu_basic.project.name, template='jinja') %}
+/etc/nginx/sites-enabled/{{ zinibu_basic.project.name }}:
+  file.symlink:
+    - target: /etc/nginx/sites-available/{{ zinibu_basic.project.name }}
+    - mode: 644
+    - user: root
+    - group: root
+{% endif %}
 
 # remove default nginx virtual host
 #sudo rm /etc/nginx/sites-enabled/default 
-
