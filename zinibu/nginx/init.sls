@@ -1,5 +1,5 @@
 {% from "zinibu/map.jinja" import nginx with context %}
-{% from "zinibu/map.jinja" import project with context %}
+{% from "zinibu/map.jinja" import zinibu_basic with context %}
 
 nginx:
   pkg.installed:
@@ -7,9 +7,20 @@ nginx:
   service.running:
     - name: {{ nginx.service }}
 
-/tmp/nginx-{{ project.name }}:
+/etc/nginx/sites-available/{{ zinibu_basic.project.name }}:
   file.managed:
     - source: salt://zinibu/nginx/files/nginx-server-block
+    - mode: 644
+    - user: root
+    - group: root
+    - template: jinja
+    - defaults:
+        name_var: "Default Name"
+        public_ip: {{ grains['ip_interfaces']['eth1'][0] }}
+    {% if grains['os'] == 'Ubuntu' %}
+    - context:
+        name_var: "Context-based Name"
+    {% endif %}
     - require:
       - pkg: nginx
 

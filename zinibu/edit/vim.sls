@@ -22,7 +22,7 @@ vim:
         public_ip: {{ grains['ip_interfaces']['eth1'] }}
     {% if grains['os'] == 'Ubuntu' %}
     - context:
-        name_var: "Mike"
+        name_var: "Context-based Name"
     {% endif %}
 {% endfor %}
 

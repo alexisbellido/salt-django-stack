@@ -107,12 +107,18 @@
     },
 }, merge=salt['pillar.get']('postgres:lookup')) %}
 
-{% set project = salt['grains.filter_by']({
+{% set zinibu_basic = salt['grains.filter_by']({
     'default': {
-        'name': 'default_project_name',
+        'app_user': 'default_user',
+        'app_group': 'default_group',
+        'root_user': 'root',
+        'test_value': 'test default value',
+        'project': {
+            'name': 'default_project_name'
+        }
     },
     'Debian': {
     },
     'RedHat': {
     },
-}, merge=salt['pillar.get']('zinibu_basic:project'), base='default') %}
+}, merge=salt['pillar.get']('zinibu_basic'), base='default') %}

@@ -1,19 +1,14 @@
-{% set user = salt['pillar.get']('zinibu_basic:app_user', 'user') %}
-{% set group = salt['pillar.get']('zinibu_basic:app_group', 'group') %}
+{% from "zinibu/map.jinja" import zinibu_basic with context %}
 
-user-test:
-  cmd.run:
-    - name: echo 'user {{ user }} group {{ group }}'
-
-user_{{ group }}_group:
+user_{{ zinibu_basic.app_group }}_group:
   group:
-  - name: {{ group }}
+  - name: {{ zinibu_basic.app_group }}
   - present
 
-user_{{ user }}_user:
+user_{{ zinibu_basic.app_user }}_user:
   user:
-  - name: {{ user }}
+  - name: {{ zinibu_basic.app_user }}
   - present
   - remove_groups: False
   - require:
-    - group: user_{{ group }}_group
+    - group: user_{{ zinibu_basic.app_group }}_group
