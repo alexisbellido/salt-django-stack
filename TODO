@@ -1,14 +1,13 @@
 TODO
 
-- copy /etc/nginx/sites-available/django-project and make it template to setup nginx virtual host , continue with zinibu.nginx and see edit.vim for ideas about jinja to modify the file copied, and copy it as root to the correct place and symlink it
+- zinibu.django should take care of run-project and name it something else in the /home/user dir to be able to call collectstatic
+
+- for zinibu.upstart copy /home/vagrant/run-project.sh and make it template to setup gunicorn + upstart + nginx
+- see zinibu.nginx and edit.vim for ideas about jinja to modify the file copied
 - get IP information from grains, ports and other data common to all servers, including passwords, can be defined in pillars
-- determine values for nginx webroot, bash script, etc, based on project.name coming from pillar, no need to create pillar data that can be figured out
 
 - use common values from zinibu_basic pillar, see zinibu.python.python_test
-{% from "zinibu/map.jinja" import project with context %}
 
-
-- copy /home/vagrant/run-project.sh and make it template to setup gunicorn + upstart + nginx
 - figure out how to run collectstatic
 - Django project should have its settings ready but docs for salt states should mention the basics, like STATIC_ROOT, and the first version of collectstatic should just run on every webhead, later it can implement rsync to a shared directory (maybe nfs) served by nginx
 - get things working up to here with salt and then move to Varnish

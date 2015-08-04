@@ -1,4 +1,6 @@
 django:
-  project:
-    name: project_name
   lookup:
+    repo: git@github.com:alexisbellido/basic-django-project.git
+    user:
+      name: Alexis Bellido
+      email: alexis@ventanazul.com

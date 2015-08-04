@@ -19,6 +19,13 @@
     },
 }, merge=salt['pillar.get']('nginx:lookup')) %}
 
+{% set django = salt['grains.filter_by']({
+    'Debian': {
+    },
+    'RedHat': {
+    },
+}, merge=salt['pillar.get']('django:lookup')) %}
+
 {% set varnish = salt['grains.filter_by']({
     'Debian': {
         'package': 'varnish',
