@@ -1,15 +1,21 @@
-# upstart
-# need something from map.jinja?
-#{% from "zinibu/map.jinja" import upstart with context %}
-#
-# this first and required by upstart job configuration file below
-/tmp/file-django-script:
-  file.managed:
-    - source: salt://zinibu/upstart/files/run-project.sh
+{% from "zinibu/map.jinja" import zinibu_basic with context %}
 
-# job configuration file should be copied to /etc/init/project_name.conf and configured correctly with jinja and pillar data
-# then it should be started
-/tmp/file-upstart:
+{% set run_project_script = '/home/' + zinibu_basic.app_user + '/run-' + zinibu_basic.project.name + '.sh' %}
+{% set upstart_job_file = '/etc/init/' + zinibu_basic.project.name + '.conf' %}
+
+upstart_job_running:
+  service.running:
+    - name: {{ zinibu_basic.project.name }}
+    - watch:
+      - file: {{ upstart_job_file }}
+
+{{ upstart_job_file }}:
   file.managed:
     - source: salt://zinibu/upstart/files/django-gunicorn.conf
-
+    - mode: 644
+    - user: root
+    - group: root
+    - template: jinja
+    - defaults:
+        project_name: {{ zinibu_basic.project.name }}
+        run_project_script: {{ run_project_script }}

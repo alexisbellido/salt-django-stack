@@ -8,7 +8,7 @@
   file.managed:
     - name: 
     - source: salt://zinibu/django/files/run-project.sh
-    - mode: 644
+    - mode: 744
     - user: {{ zinibu_basic.app_user }}
     - group: {{ zinibu_basic.app_group }}
     - template: jinja
