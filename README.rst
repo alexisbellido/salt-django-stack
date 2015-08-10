@@ -104,7 +104,7 @@ Remove a virtual environment. Note how pillar data can be passed at the command 
 
 Note the pyvenvs_dir key refers to the part of the path after /home/user, for example, in /home/user/some_dir, pyvenvs would be "some_dir".
 
-salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"zinibu_basic": {"app_user": "vagrant", "app_group": "vagrant", "project": {"pyvenvs_dir": "pyvenvs", "pyvenv_name": "zinibu_dev"}} }'
+salt 'minion_id' state.sls zinibu.python.rmenv pillar='{"zinibu_basic": {"app_user": "vagrant", "app_group": "vagrant", "project": {"name": "zinibu_dev", "pyvenvs_dir": "pyvenvs"}} }'
 
 To pass a list, use something like:
 
