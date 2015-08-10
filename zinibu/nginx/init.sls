@@ -33,14 +33,15 @@ nginx:
     - group: root
     - template: jinja
     - defaults:
-        name_var: "Default Name"
-        public_ip: {{ grains['ip_interfaces']['eth1'][0] }}
+        public_ip: 0.0.0.0
         user: {{ zinibu_basic.app_user }}
         project_name: {{ zinibu_basic.project.name }}
-    {% if grains['os'] == 'Ubuntu' %}
+  {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
+    {% if grains['id'] == id %}
     - context:
-        name_var: "Context-based Name"
+        public_ip: {{ webhead.public_ip }}
     {% endif %}
+  {% endfor %}
     - require:
       - pkg: nginx
       - file: /etc/nginx/sites-enabled/{{ zinibu_basic.project.name }}

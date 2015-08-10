@@ -6,8 +6,27 @@ zinibu_basic:
     name: zinibu_dev
     pyvenvs_dir: pyvenvs
 
-    # just for testing YAML alternative list of objects syntax. We will get IP addresses with grains
+    # keys of webheads must match minion ids
     webheads:
-      - {ip: 1.1.1.1, nginx_port: 80, gunicorn_port: 8001}
-      - {ip: 2.2.2.2, nginx_port: 81, gunicorn_port: 8002}
+      django5:
+          public_ip: 192.168.33.15
+          local_ip: 127.0.0.1
+          nginx_port: 80
+          gunicorn_port: 8000
+      django6:
+          public_ip: 192.168.33.16
+          local_ip: 127.0.0.1
+          nginx_port: 80
+          gunicorn_port: 8000
+      django7:
+          public_ip: 192.168.33.17
+          local_ip: 127.0.0.1
+          nginx_port: 80
+          gunicorn_port: 8000
+
+    # YAML alternative list of objects syntax
+    #webheads:
+    #  - {public_ip: 192.168.33.15, local_ip: 127.0.0.1, nginx_port: 80, gunicorn_port: 8000}
+    #  - {public_ip: 192.168.33.16, local_ip: 127.0.0.1, nginx_port: 80, gunicorn_port: 8000}
+    #  - {public_ip: 192.168.33.17, local_ip: 127.0.0.1, nginx_port: 80, gunicorn_port: 8000}
       
