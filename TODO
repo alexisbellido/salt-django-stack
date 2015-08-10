@@ -1,5 +1,6 @@
 TODO
 
+- fix rmenv.sls for correct pillar parameters and test it
 - zinibu.django should take care of run-project and name it something else in the /home/user dir to be able to call collectstatic
 
 - for zinibu.upstart copy /home/vagrant/run-project.sh and make it template to setup gunicorn + upstart + nginx
@@ -8,7 +9,6 @@ TODO
 
 - use common values from zinibu_basic pillar, see zinibu.python.python_test
 
-- figure out how to run collectstatic
 - Django project should have its settings ready but docs for salt states should mention the basics, like STATIC_ROOT, and the first version of collectstatic should just run on every webhead, later it can implement rsync to a shared directory (maybe nfs) served by nginx
 - get things working up to here with salt and then move to Varnish
 

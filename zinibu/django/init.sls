@@ -2,8 +2,23 @@
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
 {% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
+{% set run_project_script = '/home/' + zinibu_basic.app_user + '/run-' + zinibu_basic.project.name + '.sh' %}
 
-{{ project_dir}}:
+{{ run_project_script }}:
+  file.managed:
+    - name: 
+    - source: salt://zinibu/django/files/run-project.sh
+    - mode: 644
+    - user: {{ zinibu_basic.app_user }}
+    - group: {{ zinibu_basic.app_group }}
+    - template: jinja
+    - defaults:
+        public_ip: {{ grains['ip_interfaces']['eth1'][0] }}
+        user: {{ zinibu_basic.app_user }}
+        group: {{ zinibu_basic.app_group }}
+        project_name: {{ zinibu_basic.project.name }}
+
+{{ project_dir }}:
   file.directory:
     - user: {{ zinibu_basic.app_user }}
     - group: {{ zinibu_basic.app_group }}
@@ -23,13 +38,15 @@ clone-git-repo:
 
 collectstatic:
   cmd.script:
-    - name: /home/{{ zinibu_basic.app_user }}/run-project.sh
+    - name: {{ run_project_script }}
     - args: collectstatic
     - user: {{ zinibu_basic.app_user }}
     - shell: /bin/bash
     - cwd: {{ project_dir }}
     - require:
       - git: clone-git-repo
+      - file: {{ project_dir }}
+      - file: {{ run_project_script }}
 
 setup-git-user-name:
   git.config:

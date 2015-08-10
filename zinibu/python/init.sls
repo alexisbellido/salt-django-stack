@@ -2,8 +2,8 @@
 {% from "zinibu/map.jinja" import postgres with context %}
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
-{% set pyvenvs_dir = '/home/' + zinibu_basic.app_user + '/' + salt['pillar.get']('python:pyvenvs_dir', 'pyvenvs') %}
-{% set pyvenv_name = salt['pillar.get']('python:pyvenv_name', 'venv') %}
+{% set pyvenvs_dir = '/home/' + zinibu_basic.app_user + '/' + salt['pillar.get']('zinibu_basic:project:pyvenvs_dir', 'pyvenvs') %}
+{% set pyvenv_name = salt['pillar.get']('zinibu_basic:project:name', 'venv') %}
 
 include:
   - zinibu.basic

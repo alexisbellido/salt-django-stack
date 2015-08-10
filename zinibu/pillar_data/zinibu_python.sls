@@ -1,8 +1,3 @@
-python:
-  testfilename: /tmp/pillar-file-44
-  pyvenvs_dir: pyvenvs
-  pyvenv_name: zinibu_dev
-
 pip_packages:
   - requests==2.7.0
   - Jinja2==2.7.3

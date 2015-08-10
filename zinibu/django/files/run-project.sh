@@ -16,12 +16,12 @@
 #export PROJECT_REDIS_HOST
 
 # user/group to run as
-USER=vagrant
-GROUP=vagrant
+USER={{ user }}
+GROUP={{ group }}
 export HOME="/home/$USER"
 
 # PROJECTNAME is used by the Python virtual environment, the Django project and the log file.
-PROJECTNAME=zinibu_dev
+PROJECTNAME={{ project_name }}
 PROJECTDIR=/home/$USER/$PROJECTNAME
 PROJECTENV=/home/$USER/pyvenvs/$PROJECTNAME
 
