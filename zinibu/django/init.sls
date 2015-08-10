@@ -13,10 +13,18 @@
     - group: {{ zinibu_basic.app_group }}
     - template: jinja
     - defaults:
-        public_ip: {{ grains['ip_interfaces']['eth1'][0] }}
         user: {{ zinibu_basic.app_user }}
         group: {{ zinibu_basic.app_group }}
         project_name: {{ zinibu_basic.project.name }}
+  {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
+    {% if grains['id'] == id %}
+    - context:
+        public_ip: {{ webhead.public_ip }}
+        local_ip: {{ webhead.local_ip }}
+        nginx_port: {{ webhead.nginx_port }}
+        gunicorn_port: {{ webhead.gunicorn_port }}
+    {% endif %}
+  {% endfor %}
 
 {{ project_dir }}:
   file.directory:

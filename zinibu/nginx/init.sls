@@ -6,6 +6,8 @@ nginx:
     - name: {{ nginx.package }}
   service.running:
     - name: {{ nginx.service }}
+    - watch:
+      - file: /etc/nginx/sites-available/{{ zinibu_basic.project.name }}
 
 /etc/nginx/sites-enabled/default:
   file.absent
@@ -40,6 +42,9 @@ nginx:
     {% if grains['id'] == id %}
     - context:
         public_ip: {{ webhead.public_ip }}
+        local_ip: {{ webhead.local_ip }}
+        nginx_port: {{ webhead.nginx_port }}
+        gunicorn_port: {{ webhead.gunicorn_port }}
     {% endif %}
   {% endfor %}
     - require:

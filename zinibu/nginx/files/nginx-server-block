@@ -1,14 +1,14 @@
 #server {
-#       listen {{ public_ip }}:PORT;
+#       listen {{ public_ip }}:{{ nginx_port }};
 #	server_name example.com;
 #       rewrite ^/(.*) http://www.example.com/$1 permanent;
 #}
 
 server {
-    #listen {{ public_ip }}:80;
+    #listen {{ public_ip }}:{{ nginx_port }};
     #server_name www.example.com;
 
-    listen 80;
+    listen {{ nginx_port }};
     server_name {{ public_ip }};
 
     # ignore problems with favicon?
@@ -34,7 +34,7 @@ server {
         proxy_set_header X-Scheme $scheme;
         proxy_connect_timeout 10;
         proxy_read_timeout 10;
-        proxy_pass http://127.0.0.1:8000/;
+        proxy_pass http://{{ local_ip }}:{{ gunicorn_port }}/;
     }
 
     access_log /home/{{ user }}/logs/{{ project_name }}-nginx-access.log;
