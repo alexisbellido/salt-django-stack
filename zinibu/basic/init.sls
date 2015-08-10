@@ -1,5 +1,8 @@
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
+git:
+  pkg.installed
+
 user_{{ zinibu_basic.app_group }}_group:
   group:
   - name: {{ zinibu_basic.app_group }}

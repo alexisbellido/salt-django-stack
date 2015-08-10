@@ -19,3 +19,15 @@ upstart_job_running:
     - defaults:
         project_name: {{ zinibu_basic.project.name }}
         run_project_script: {{ run_project_script }}
+
+nginx-stopped:
+  service.dead:
+    - name: nginx
+
+nginx-running:
+  service.running:
+    - name: nginx
+    - require:
+      - service: nginx-stopped
+      - service: upstart_job_running
+      - file: {{ upstart_job_file }}
