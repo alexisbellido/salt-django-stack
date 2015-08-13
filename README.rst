@@ -22,10 +22,10 @@ file_roots:
 
 The first directory, /srv/salt, is the default used by Salt on Ubuntu.
 
-Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a standard webhead (Nginx, Gunicorn, and Django). To setup other servers include individual state files, like this:
+Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a standard webhead (this is zinibu/init.sls including state files to setup the web stack). To setup other servers include individual state files, like this:
 
 base:
-  'webhead':
+  'webhead*':
     - zinibu
   'load-balancer':
     - zinibu.varnish
@@ -34,6 +34,7 @@ base:
   'database':
     - zinibu.postgresql
 
+See http://docs.saltstack.com/en/latest/ref/states/top.html
 
 To make testing easier, run commands locally with salt-call, this way you don't need a target and can use just one server. This means a command like:
 sudo salt '*' test.ping

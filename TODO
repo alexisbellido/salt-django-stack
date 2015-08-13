@@ -1,18 +1,9 @@
 TODO
 
 - get things working up to here with salt and then move to postgresql
-- get things working up to here with salt and then move to Varnish
-
-- create django project in a git repo and put that in zinibu_django pillar then clone it and start it with dev server and gunicorn
 
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
-
-- I want to run the whole thing with:
-sudo salt '*' state.highstate
-
-and to do that I need to check that /srv/salt/top.sls is calling zinibu, which is actually zinibu/init.sls, and this is calling the rest of states so I have to go and check each of those states. I'm already done with a good part of zinibu.python.
-
-- Also, I may need to change /srv/salt/top.sls to point a minion, like 'db' to zinibu.postgresql, and the rest to zinibu (which, as mentioned above, is zinibu.init.sls) to work as webheads. As an example from http://docs.saltstack.com/en/latest/topics/best_practices.html:
+- I may need to change /srv/salt/top.sls to point a minion, like 'db' to zinibu.postgresql, and the rest to zinibu (which, as mentioned above, is zinibu.init.sls) to work as webheads. As an example from http://docs.saltstack.com/en/latest/topics/best_practices.html:
 
 base:
   'web*':
@@ -21,13 +12,15 @@ base:
   'db*':
     - mysql.server
 
+
+- I want to run the whole thing with:
+sudo salt '*' state.highstate
+
+- get things working up to here with salt and then move to Varnish
+
 - zinibu.python is doing django stuff and that should probably go to zinibu.django
 
 - Check how to run pip upgrades like:
 pip install Django --upgrade
 
 - States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box.
-
-- Keep an example of copying a file that includes some jinja changes and variables from grains and pillars. See zinibu/edit/vim.sls.
-
-- Include multiple SLS files as needed, see zinibu/python/python_test.sls

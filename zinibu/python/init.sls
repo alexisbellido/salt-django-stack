@@ -10,7 +10,7 @@ include:
   # standard absolute include
   #- zinibu.python.python_test
   # and a relative include, note the dot
-  - .python_test
+  #- .python_test
 
 pip:
   pkg.installed:

@@ -1,12 +1,13 @@
 postgres:
-  pg_hba.conf: salt://postgres/pg_hba.conf
+  pg_hba.conf: salt://zinibu/postgresql/files/pg_hba.conf
+  service: postgresql
 
   use_upstream_repo: False
 
   lookup:
     pkg: 'postgresql-9.3'
     pkg_client: 'postgresql-client-9.3'
-    pg_hba: '/etc/postgresql/9.3/main/pg_hba.conf'
+    conf_dir: '/etc/postgresql/9.3/main/'
 
   users:
     localUser:

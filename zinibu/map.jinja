@@ -77,7 +77,7 @@
     'wheezy' : { 'id': '9.1' },
 }, grain='lsb_distrib_codename', merge=salt['pillar.get']('postgres:lookup')))) %}
 
-{% set postgres = salt['grains.filter_by']({
+{% set postgres_lookup = salt['grains.filter_by']({
     'RedHat': {
         'pkg'            : 'postgresql-server',
         'pkg_dev'        : 'postgresql-devel',
@@ -113,6 +113,8 @@
         'version'        : pg_version.id,
     },
 }, merge=salt['pillar.get']('postgres:lookup')) %}
+
+{% set postgres = salt['pillar.get']('postgres', default=postgres_lookup, merge=True) %}
 
 {% set zinibu_basic = salt['grains.filter_by']({
     'default': {
