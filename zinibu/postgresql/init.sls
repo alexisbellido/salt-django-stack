@@ -1,10 +1,6 @@
 {% from "zinibu/map.jinja" import postgres with context %}
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
-postgresql-test:
-  cmd.run:
-    - name: echo 'Setting up Postgresql {{ postgres.pkg }} {{ postgres.use_upstream_repo }}'
-
 install-postgresql-client:
   pkg.installed:
     - name: {{ postgres.pkg_client }}
@@ -27,6 +23,20 @@ pg_hba.conf:
       - pkg: {{ postgres.pkg }}
     - watch_in:
       - service: {{ postgres.service }}
+
+{% if postgres.postgresconf %}
+postgresql-conf:
+  file.blockreplace:
+    - name: {{ postgres.conf_dir }}/postgresql.conf
+    - marker_start: "# Managed by SaltStack: listen_addresses: please do not edit"
+    - marker_end: "# Managed by SaltStack: end of salt managed zone --"
+    - content: |
+        {{ postgres.postgresconf|indent(8) }}
+    - show_changes: True
+    - append_if_not_found: True
+    - watch_in:
+      - service: {{ postgres.service }}
+{% endif %}
 
 run-postgresql:
   service.running:
