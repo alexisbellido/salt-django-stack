@@ -4,3 +4,4 @@ include:
   - zinibu.django
   - zinibu.nginx
   - zinibu.upstart
+  - zinibu.postgresql.client
