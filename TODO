@@ -1,6 +1,7 @@
 TODO
 
-- create user and db in postgresql and test psql connection before moving to django and modifying settings.py
+- install varnish, nginx is at 81
+- modifying settings.py in django to connect to db and dbsync/migrate as needed
 
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
 - I may need to change /srv/salt/top.sls to point a minion, like 'db' to zinibu.postgresql, and the rest to zinibu (which, as mentioned above, is zinibu.init.sls) to work as webheads. As an example from http://docs.saltstack.com/en/latest/topics/best_practices.html:
