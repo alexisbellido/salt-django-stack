@@ -4,6 +4,14 @@
 # Default backend definition.  Set this to point to your content
 # server.
 # 
+
+# Managed by saltstack.
+{% set settings = salt['pillar.get']('varnish', {}) -%}
+{% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
+# TODO use these
+# {{ settings }}
+# {{ zinibu_basic }}
+
 backend default {
     .host = "127.0.0.1";
     .port = "8080";
