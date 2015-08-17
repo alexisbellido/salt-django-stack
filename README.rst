@@ -29,6 +29,7 @@ base:
     - zinibu
   'load-balancer':
     - zinibu.varnish
+    - zinibu.varnish.conf
   'redis-server':
     - zinibu.redis
   'database':
