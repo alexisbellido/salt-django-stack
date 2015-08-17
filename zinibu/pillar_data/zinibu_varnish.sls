@@ -1,7 +1,4 @@
 varnish:
-  lookup:
-
-varnish:
   # Overrides map.jinja
   lookup:
     version: xxx

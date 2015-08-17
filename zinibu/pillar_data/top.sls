@@ -7,3 +7,4 @@ base:
     - zinibu_gunicorn
     - zinibu_postgresql
     - zinibu_upstart
+    - zinibu_varnish

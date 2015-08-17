@@ -45,11 +45,11 @@ MEMLOCK=82000
 # Listen on port 6081, administration on localhost:6082, and forward to
 # one content server selected by the vcl file, based on the request.
 #
-DAEMON_OPTS="-a :6081 \
-             -T localhost:6082 \
-             -f /etc/varnish/default.vcl \
-             -S /etc/varnish/secret \
-             -s malloc,256m"
+#DAEMON_OPTS="-a :6081 \
+#             -T localhost:6082 \
+#             -f /etc/varnish/default.vcl \
+#             -S /etc/varnish/secret \
+#             -s malloc,256m"
 
 
 ## Alternative 3, Advanced configuration
@@ -111,3 +111,18 @@ DAEMON_OPTS="-a :6081 \
 ## Alternative 4, Do It Yourself
 #
 # DAEMON_OPTS=""
+
+# Managed by saltstack.
+{% set settings = salt['pillar.get']('varnish', {}) -%}
+
+DAEMON_OPTS="-a {{ settings.get('listen', ':6081') }} \
+             -T localhost:6082 \
+             -f /etc/varnish/default.vcl \
+             -S /etc/varnish/secret \
+{%- for storage in settings.get('storages', ['malloc,256M']) %}
+             -s {{ storage }} \
+{%- endfor %}
+{%- for param, value in settings.get('params', {}).iteritems() %}
+             -p {{ param }}={{ value }}\
+{%- endfor %}
+             {{ settings.get('extra_options', '') }}"

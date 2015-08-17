@@ -35,6 +35,8 @@ base:
   'database':
     - zinibu.postgresql
 
+If some states are running in the same server they all should be under the same minion id in top.sls.
+
 See http://docs.saltstack.com/en/latest/ref/states/top.html
 
 To make testing easier, run commands locally with salt-call, this way you don't need a target and can use just one server. This means a command like:
