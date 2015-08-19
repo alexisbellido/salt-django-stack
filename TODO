@@ -1,8 +1,8 @@
 TODO
 
-- install varnish, nginx is at 81
-- install redis
 - modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
+- install redis and change settings to use it
+- define .probe for varnish/default.vcl with django, maybe just some image or better a functioning url delivered by django? I think I have somethging prodcing /aerticle/probe
 
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
 - I may need to change /srv/salt/top.sls to point a minion, like 'db' to zinibu.postgresql, and the rest to zinibu (which, as mentioned above, is zinibu.init.sls) to work as webheads. As an example from http://docs.saltstack.com/en/latest/topics/best_practices.html:
