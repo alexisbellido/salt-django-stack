@@ -112,7 +112,7 @@ MEMLOCK=82000
 #
 # DAEMON_OPTS=""
 
-# Managed by saltstack.
+# Managed by saltstack. Note we're gettings values from the root varnish element in pillar
 {% set settings = salt['pillar.get']('varnish', {}) -%}
 
 DAEMON_OPTS="-a {{ settings.get('listen', ':6081') }} \

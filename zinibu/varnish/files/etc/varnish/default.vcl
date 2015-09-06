@@ -10,7 +10,7 @@
 {% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
 backend {{ id }} {
-  .host = "{{ webhead.private_ip }}";
+  .host = "{{ webhead.public_ip }}";
   .port = "{{ webhead.nginx_port }}";
 #  .probe = {
 #    .url = "/articles/probe";

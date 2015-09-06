@@ -1,0 +1,3 @@
+haproxy:
+  server:
+    password: 'somepass'

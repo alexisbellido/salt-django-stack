@@ -8,3 +8,4 @@ base:
     - zinibu_postgresql
     - zinibu_upstart
     - zinibu_varnish
+    - zinibu_haproxy

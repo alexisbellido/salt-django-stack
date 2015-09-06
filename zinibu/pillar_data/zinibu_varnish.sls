@@ -4,7 +4,7 @@ varnish:
     version: xxx
 
   # Listen address:port
-  listen: ':80'
+  listen: ':83'
 
   # List of storage backends
   storages:

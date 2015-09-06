@@ -9,23 +9,20 @@ zinibu_basic:
     # keys of webheads must match minion ids
     webheads:
       django5:
-          public_ip: 192.168.33.15
+          public_ip: 192.168.1.95
           private_ip: 192.168.33.15
-          #local_ip: 127.0.0.1
           local_ip: 192.168.33.15
           nginx_port: 81
           gunicorn_port: 8000
       django6:
-          public_ip: 192.168.33.16
+          public_ip: 192.168.1.96
           private_ip: 192.168.33.16
-          #local_ip: 127.0.0.1
           local_ip: 192.168.33.16
           nginx_port: 81
           gunicorn_port: 8000
       django7:
-          public_ip: 192.168.33.17
+          public_ip: 192.168.1.97
           private_ip: 192.168.33.17
-          #local_ip: 127.0.0.1
           local_ip: 192.168.33.17
           nginx_port: 81
           gunicorn_port: 8000

@@ -1,5 +1,9 @@
 TODO
 
+- install haproxy to have a setup like this:
+
+haproxy with ssl termination > varnish > nginx > gunicorn
+
 - modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
 - install redis and change settings to use it
 - define .probe for varnish/default.vcl with django, maybe just some image or better a functioning url delivered by django? I think I have somethging prodcing /aerticle/probe
