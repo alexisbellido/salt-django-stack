@@ -1,5 +1,6 @@
 TODO
 
+- understand how haproxy.cfg works and modify the jinja version in salt to get correct ips from zinibu_basic
 - install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
 
 - nfs for static files

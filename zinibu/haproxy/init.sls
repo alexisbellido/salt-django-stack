@@ -23,7 +23,7 @@ haproxy.service:
     - reload: True
     - require:
       - pkg: haproxy
-      - file: haproxy.service
+      - file: haproxy.start_file
     - watch:
       - file: haproxy.config
 {% else %}
@@ -33,8 +33,6 @@ haproxy.service:
 {% endif %}
   file.replace:
     - name: /etc/default/haproxy
-    - require:
-      - file: haproxy.start_file
 {% if salt['pillar.get']('haproxy:enabled', True) %}
     - pattern: ENABLED=0$
     - repl: ENABLED=1
@@ -60,7 +58,3 @@ haproxy.config:
    - user: root
    - group: root
    - mode: 644
-
-haproxy-test:
-  cmd.run:
-    - name: echo {{ salt['pillar.get']('haproxy:config_file_path', '/etc/haproxy/haproxy.cfg') }}
