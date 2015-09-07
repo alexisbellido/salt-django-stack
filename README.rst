@@ -30,6 +30,7 @@ base:
   'load-balancer':
     - zinibu.varnish
     - zinibu.varnish.conf
+    - zinibu.haproxy
   'redis-server':
     - zinibu.redis
   'database':
