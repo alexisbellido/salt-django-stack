@@ -9,3 +9,4 @@ base:
     - zinibu_upstart
     - zinibu_varnish
     - zinibu_haproxy
+    - zinibu_keepalived

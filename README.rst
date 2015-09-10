@@ -27,10 +27,12 @@ Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a st
 base:
   'webhead*':
     - zinibu
-  'load-balancer':
+  'cache':
     - zinibu.varnish
     - zinibu.varnish.conf
+  'load-balancer':
     - zinibu.haproxy
+    - zinibu.keepalived
   'redis-server':
     - zinibu.redis
   'database':
