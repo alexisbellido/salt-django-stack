@@ -41,9 +41,27 @@ zinibu_basic:
       django5:
           public_ip: 192.168.1.95
           private_ip: 192.168.33.15
+          stats_ip: 192.168.1.95
+          stats_port: 8998
+          stats:
+            enable: True
+            hide-version: ""
+            uri: "/admin?stats"
+            refresh: "20s"
+            realm: "HAProxy Statistics 1"
+            auth: 'admin:admin'
       django6:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
+          stats_ip: 192.168.1.96
+          stats_port: 8998
+          stats:
+            enable: True
+            hide-version: ""
+            uri: "/admin?stats"
+            refresh: "20s"
+            realm: "HAProxy Statistics 2"
+            auth: 'admin2:admin2'
 
     # YAML alternative list of objects syntax
     #webheads:

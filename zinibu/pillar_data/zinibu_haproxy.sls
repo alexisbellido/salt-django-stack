@@ -6,8 +6,8 @@ haproxy:
     stats:
       enable: True
       socketpath: /var/lib/haproxy/stats
-    ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
-    ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
+#    ssl-default-bind-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384"
+#    ssl-default-bind-options: "no-sslv3 no-tlsv10 no-tlsv11"
 
     user: haproxy
     group: haproxy
@@ -16,7 +16,6 @@ haproxy:
       path: /var/lib/haproxy
 
     daemon: True
-
 
 #  userlists:
 #    userlist1:
@@ -34,21 +33,15 @@ haproxy:
     options:
       - httplog
       - dontlognull
-      - forwardfor
       - http-server-close
     timeouts:
-      - http-request    10s
-      - queue           1m
-      - connect         10s
+      - connect         5s
       - client          1m
       - server          1m
-      - http-keep-alive 10s
       - check           10s
-    stats:
-      - enable
-      - uri: '/admin?stats'
-      - realm: 'Haproxy\ Statistics'
-      - auth: 'admin1:AdMiN123'
+      - http-keep-alive 10s
+      - http-request    10s
+      - queue           1m
 
     errorfiles:
       400: /etc/haproxy/errors/400.http
@@ -58,16 +51,6 @@ haproxy:
       502: /etc/haproxy/errors/502.http
       503: /etc/haproxy/errors/503.http
       504: /etc/haproxy/errors/504.http
-
-#  {# Suported by HAProxy 1.6 #}
-#  resolvers:
-#    local_dns:
-#      options:
-#        - nameserver resolvconf 127.0.0.1:53
-#        - resolve_retries 3
-#        - timeout retry 1s
-#        - hold valid 10s
-
 
   listens:
     stats:
@@ -108,22 +91,6 @@ haproxy:
       reqadd:
         - "X-Forwarded-Proto:\\ http"
       default_backend: www-backend
-
-    #www-https:
-    #  bind: "*:443 ssl crt /etc/ssl/private/certificate-chain-and-key-combined.pem"
-    #  reqadd:
-    #    - "X-Forwarded-Proto:\\ https"
-    #  default_backend: www-backend
-    #  acls:
-    #    - url_static       path_beg       -i /static /images /javascript /stylesheets
-    #    - url_static       path_end       -i .jpg .gif .png .css .js
-    #  use_backends:
-    #    - static-backend  if url_static
-    #some-services:
-    #  bind:
-    #    - "*:8080"
-    #    - "*:8088"
-    #  default_backend: api-backend
 
   backends:
     backend1:
