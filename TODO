@@ -1,39 +1,6 @@
 TODO
 
-add these to salt after testing that tproxy works
-
-- /etc/init/tproxy.conf
-===
-respawn
-console none
-start on (local-filesystems and net-device-up IFACE!=lo)
-stop on [!12345]
-exec /usr/bin/haproxy_rules.sh
-===
-
-- /usr/bin/haproxy_rules.sh (confirm it's executable, look at upstart_job_file in upstart state
-===
-#!/bin/bash -e
-# testing
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT 
-iptables -t mangle -N DIVERT
-iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT
-iptables -t mangle -A DIVERT -j MARK --set-mark 111
-iptables -t mangle -A DIVERT -j ACCEPT
-ip rule add fwmark 111 lookup 100
-ip route add local 0.0.0.0/0 dev lo table 100
-ip route flush cache
-
-# original from haproxy's article
-#iptables -t mangle -N DIVERT
-#iptables -t mangle -A PREROUTING -p tcp -m socket -j DIVERT
-#iptables -t mangle -A DIVERT -j MARK --set-mark 1
-#iptables -t mangle -A DIVERT -j ACCEPT
-#ip rule add fwmark 1 lookup 100
-#ip route add local 0.0.0.0/0 dev lo table 100
-#ip route flush cache
-
-
+- no need for haproxy route changes
 - understand how haproxy.cfg works and modify the jinja version in salt to get correct ips from zinibu_basic
 - install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
 
