@@ -36,6 +36,9 @@ zinibu_basic:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
 
+    haproxy_shared_ip: 192.168.1.95
+    haproxy_shared_port: 80
+
     # keys must match minion ids
     haproxy_servers:
       django5:

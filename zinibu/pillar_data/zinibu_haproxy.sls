@@ -30,9 +30,9 @@ haproxy:
     log: global
     mode: http
     retries: 3
+    default-server: "inter 3s fall 2 rise 2 slowstart 60s"
     options:
       - httplog
-      - dontlognull
       - http-server-close
     timeouts:
       - connect         5s
@@ -51,36 +51,6 @@ haproxy:
       502: /etc/haproxy/errors/502.http
       503: /etc/haproxy/errors/503.http
       504: /etc/haproxy/errors/504.http
-
-  listens:
-    stats:
-      bind:
-        - "0.0.0.0:8998"
-      mode: http
-      stats:
-        enable: True
-        uri: "/admin?stats"
-        refresh: "20s"
-    myservice:
-      bind:
-        - "*:8888"
-      options:
-        - forwardfor
-        - http-server-close
-      defaultserver:
-        slowstart: 60s
-        maxconn: 256
-        maxqueue: 128
-        weight: 100
-      servers:
-        web1:
-          host: web1.example.com
-          port: 80
-          check: check
-        web2:
-          host: web2.example.com
-          port: 18888
-          check: check
 
   frontends:
     frontend1:
@@ -124,18 +94,3 @@ haproxy:
           host: 192.168.33.16
           port: 81
           check: check
-#    api-backend:
-#      options:
-#        - http-server-close
-#        - forwardfor
-#      servers:
-#        apiserver1:
-#          host: apiserver1.example.com
-#          port: 80
-#          check: check
-#        server2:
-#          name: apiserver2
-#          host: apiserver2.example.com
-#          port: 80
-#          check: check
-#          extra: resolvers local_dns resolve-prefer ipv4
