@@ -1,7 +1,7 @@
 TODO
 
-- no need for haproxy route changes
-- understand how haproxy.cfg works and modify the jinja version in salt to get correct ips from zinibu_basic
+- setup nginx and varnish manually and then use salt and pillar
+- haproxy.cfg from pillar data ready, now modify nginx and varnish to work with haproxy and finally, enable installation of other haproxy and test keepalived manually (not salt at first)
 - install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
 
 - nfs for static files

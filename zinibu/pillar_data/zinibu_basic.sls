@@ -14,36 +14,55 @@ zinibu_basic:
           local_ip: 192.168.33.15
           nginx_port: 81
           gunicorn_port: 8000
+          maxconn_dynamic: 250
+          maxconn_static: 50
+          slowstart: 10s
       django6:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
           local_ip: 192.168.33.16
           nginx_port: 81
           gunicorn_port: 8000
+          maxconn_dynamic: 250
+          maxconn_static: 50
+          slowstart: 10s
       django7:
           public_ip: 192.168.1.97
           private_ip: 192.168.33.17
           local_ip: 192.168.33.17
           nginx_port: 81
           gunicorn_port: 8000
+          maxconn_dynamic: 250
+          maxconn_static: 50
+          slowstart: 10s
 
     # keys must match minion ids
     varnish_servers:
       django5:
           public_ip: 192.168.1.95
           private_ip: 192.168.33.15
+          #port: 83
+          # temporal direct to nginx
+          port: 81
+          maxconn_cache: 1000
       django6:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
+          #port: 83
+          # temporal direct to nginx
+          port: 81
+          maxconn_cache: 1000
 
-    haproxy_shared_ip: 192.168.1.95
-    haproxy_shared_port: 80
+    haproxy_frontend_public_ip: 192.168.1.95
+    haproxy_frontend_private_ip: 192.168.33.15
+    haproxy_frontend_port: 80
 
     # keys must match minion ids
     haproxy_servers:
       django5:
           public_ip: 192.168.1.95
           private_ip: 192.168.33.15
+          port: 80
           stats_ip: 192.168.1.95
           stats_port: 8998
           stats:
@@ -51,11 +70,12 @@ zinibu_basic:
             hide-version: ""
             uri: "/admin?stats"
             refresh: "20s"
-            realm: "HAProxy Statistics 1"
+            realm: "HAProxyStatistics1"
             auth: 'admin:admin'
       django6:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
+          port: 80
           stats_ip: 192.168.1.96
           stats_port: 8998
           stats:
@@ -63,7 +83,7 @@ zinibu_basic:
             hide-version: ""
             uri: "/admin?stats"
             refresh: "20s"
-            realm: "HAProxy Statistics 2"
+            realm: "HAProxyStatistics2"
             auth: 'admin2:admin2'
 
     # YAML alternative list of objects syntax
