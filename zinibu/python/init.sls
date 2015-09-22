@@ -64,6 +64,7 @@ install_pip_package_{{ pip_package }}:
     - name: {{ pip_package }}
     - bin_env: {{ pyvenvs_dir }}/{{ pyvenv_name }}
     - user: {{ zinibu_basic.app_user }}
+    - upgrade: True
     - require:
       - cmd: create_pyvenv
       - pkg: pip
