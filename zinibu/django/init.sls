@@ -20,7 +20,7 @@
     {% if grains['id'] == id %}
     - context:
         public_ip: {{ webhead.public_ip }}
-        local_ip: {{ webhead.local_ip }}
+        private_ip: {{ webhead.private_ip }}
         nginx_port: {{ webhead.nginx_port }}
         gunicorn_port: {{ webhead.gunicorn_port }}
     {% endif %}

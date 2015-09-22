@@ -29,7 +29,7 @@ LOGFILE=/home/$USER/logs/$PROJECTNAME.log
 LOGDIR=$(dirname $LOGFILE)
 
 NUM_WORKERS=3
-BIND_ADDRESS={{ local_ip }}:{{ gunicorn_port }}
+BIND_ADDRESS={{ private_ip }}:{{ gunicorn_port }}
 
 source $PROJECTENV/bin/activate
 

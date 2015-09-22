@@ -11,7 +11,6 @@ zinibu_basic:
       django5:
           public_ip: 192.168.1.95
           private_ip: 192.168.33.15
-          local_ip: 192.168.33.15
           nginx_port: 81
           gunicorn_port: 8000
           maxconn_dynamic: 250
@@ -20,7 +19,6 @@ zinibu_basic:
       django6:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
-          local_ip: 192.168.33.16
           nginx_port: 81
           gunicorn_port: 8000
           maxconn_dynamic: 250
@@ -29,7 +27,6 @@ zinibu_basic:
       django7:
           public_ip: 192.168.1.97
           private_ip: 192.168.33.17
-          local_ip: 192.168.33.17
           nginx_port: 81
           gunicorn_port: 8000
           maxconn_dynamic: 250
@@ -88,7 +85,7 @@ zinibu_basic:
 
     # YAML alternative list of objects syntax
     #webheads:
-    #  - {public_ip: 192.168.33.15, local_ip: 127.0.0.1, nginx_port: 80, gunicorn_port: 8000}
-    #  - {public_ip: 192.168.33.16, local_ip: 127.0.0.1, nginx_port: 80, gunicorn_port: 8000}
-    #  - {public_ip: 192.168.33.17, local_ip: 127.0.0.1, nginx_port: 80, gunicorn_port: 8000}
+    #  - {public_ip: 192.168.33.15, nginx_port: 80, gunicorn_port: 8000}
+    #  - {public_ip: 192.168.33.16, nginx_port: 80, gunicorn_port: 8000}
+    #  - {public_ip: 192.168.33.17, nginx_port: 80, gunicorn_port: 8000}
       
