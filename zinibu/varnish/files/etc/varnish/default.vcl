@@ -8,10 +8,10 @@
 # Managed by saltstack.
 {% set settings = salt['pillar.get']('varnish', {}) -%}
 {% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
-{% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
-backend {{ id }} {
-  .host = "{{ webhead.public_ip }}";
-  .port = "{{ webhead.nginx_port }}";
+
+backend bk_appsrv_static {
+  .host = "{{ zinibu_basic.project.haproxy_frontend_private_ip }}";
+  .port = "{{ zinibu_basic.project.haproxy_frontend_port }}";
 #  .probe = {
 #    .url = "/articles/probe";
 #    .interval = 5s;
@@ -20,18 +20,8 @@ backend {{ id }} {
 #    .threshold = 3;
 #  }
 }
-{% endfor %}
-
-director django_balancer round-robin {
-{% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
-  {
-  .backend = {{ id }};
-  }
-{% endfor %}
-}
 
 sub vcl_recv {
-    set req.backend = django_balancer;
     # debug bypass
     #return (pass);
 

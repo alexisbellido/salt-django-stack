@@ -3,9 +3,6 @@ varnish:
   lookup:
     version: xxx
 
-  # Listen address:port
-  listen: ':83'
-
   # List of storage backends
   storages:
     - 'main=malloc,512m'

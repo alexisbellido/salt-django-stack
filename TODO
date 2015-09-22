@@ -1,15 +1,8 @@
 TODO
 
-- Django 1.8.4 pillar
-- fix nginx: sudo salt-call state.sls zinibu.nginx , maybe because of mismatched server, check pillar on box1
-          ID: /etc/nginx/sites-available/zinibu_dev
-              Function: file.managed
-                    Result: False
-                         Comment: Unable to manage file: Jinja variable 'nginx_port' is undefined
-
-
-- setup nginx and varnish manually and then use salt and pillar
-- haproxy.cfg from pillar data ready, now modify nginx and varnish to work with haproxy and finally, enable installation of other haproxy and test keepalived manually (not salt at first)
+- check why varnish not restart when conf is updated
+- complete varnish and django setup for haproxy checks manually
+- haproxy and test keepalived manually (not salt at first) for fault tolerance
 - install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
 
 - nfs for static files

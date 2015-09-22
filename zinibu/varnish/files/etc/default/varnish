@@ -114,8 +114,12 @@ MEMLOCK=82000
 
 # Managed by saltstack. Note we're gettings values from the root varnish element in pillar
 {% set settings = salt['pillar.get']('varnish', {}) -%}
+{% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 
-DAEMON_OPTS="-a {{ settings.get('listen', ':6081') }} \
+{%- if 'varnish_servers' in zinibu_basic.project %}
+  {%- for id, varnish_server in zinibu_basic.project.varnish_servers.iteritems() %}
+    {%- if grains['id'] == id %}
+DAEMON_OPTS="-a {{ varnish_server.private_ip }}:{{ varnish_server.port }} \
              -T localhost:6082 \
              -f /etc/varnish/default.vcl \
              -S /etc/varnish/secret \
@@ -126,3 +130,6 @@ DAEMON_OPTS="-a {{ settings.get('listen', ':6081') }} \
              -p {{ param }}={{ value }}\
 {%- endfor %}
              {{ settings.get('extra_options', '') }}"
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}

@@ -38,16 +38,12 @@ zinibu_basic:
       django5:
           public_ip: 192.168.1.95
           private_ip: 192.168.33.15
-          #port: 83
-          # temporal direct to nginx
-          port: 81
+          port: 83
           maxconn_cache: 1000
       django6:
           public_ip: 192.168.1.96
           private_ip: 192.168.33.16
-          #port: 83
-          # temporal direct to nginx
-          port: 81
+          port: 83
           maxconn_cache: 1000
 
     haproxy_frontend_public_ip: 192.168.1.95
