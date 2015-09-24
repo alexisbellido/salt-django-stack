@@ -9,7 +9,7 @@ server {
     #server_name www.example.com;
 
     listen {{ nginx_port }};
-    server_name {{ public_ip }};
+    server_name {{ private_ip }};
 
     # ignore problems with favicon?
     #location = /favicon.ico { 

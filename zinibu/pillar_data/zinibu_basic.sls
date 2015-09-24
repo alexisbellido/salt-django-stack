@@ -49,6 +49,8 @@ zinibu_basic:
     haproxy_frontend_public_ip: 192.168.1.95
     haproxy_frontend_private_ip: 192.168.33.15
     haproxy_frontend_port: 80
+    haproxy_app_check_url: '/myapp/appcheck/'
+    haproxy_app_check_expect: '[oO][kK]'
 
     # keys must match minion ids
     haproxy_servers:
