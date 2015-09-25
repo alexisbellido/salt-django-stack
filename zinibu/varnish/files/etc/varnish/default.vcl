@@ -172,8 +172,10 @@ sub vcl_fetch {
 }
 
 sub vcl_deliver {
-    unset resp.http.via;
-    unset resp.http.x-varnish;
+    # optionally hide a couple of headers
+    #unset resp.http.via;
+    #unset resp.http.x-varnish;
+    
     # could be useful to know if the object was in cache or not
     if (obj.hits > 0) {
         set resp.http.X-Cache = "HIT";
