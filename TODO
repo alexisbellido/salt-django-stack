@@ -1,12 +1,11 @@
 TODO
 
-- check why varnish not restart when conf is updated
 - complete varnish and django setup for haproxy checks manually
 - find a way to use haproxy and varnish to cache calls by non-logged in users
 - haproxy and test keepalived manually (not salt at first) for fault tolerance
+- check why varnish not restarting when conf is updated
 - install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
-
-- nfs for static files
+- nfs or glusterfs for static files
 - modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
 - install redis and change settings to use it
 - define .probe for varnish/default.vcl with django, maybe just some image or better a functioning url delivered by django? I think I have somethging prodcing /aerticle/probe

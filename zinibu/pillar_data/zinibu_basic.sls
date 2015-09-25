@@ -51,6 +51,7 @@ zinibu_basic:
     haproxy_frontend_port: 80
     haproxy_app_check_url: '/myapp/appcheck/'
     haproxy_app_check_expect: '[oO][kK]'
+    haproxy_static_check_url: '/static/myapp/staticcheck.txt'
 
     # keys must match minion ids
     haproxy_servers:
