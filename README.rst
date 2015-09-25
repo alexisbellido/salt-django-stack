@@ -32,6 +32,7 @@ base:
     - zinibu.varnish.conf
   'load-balancer':
     - zinibu.haproxy
+    - zinibu.haproxy.conf
     - zinibu.keepalived
   'redis-server':
     - zinibu.redis
