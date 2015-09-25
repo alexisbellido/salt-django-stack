@@ -33,6 +33,8 @@ zinibu_basic:
           maxconn_static: 50
           slowstart: 10s
 
+    varnish_check: '/varnishcheck'
+
     # keys must match minion ids
     varnish_servers:
       django5:
@@ -40,15 +42,16 @@ zinibu_basic:
           private_ip: 192.168.33.15
           port: 83
           maxconn_cache: 1000
-      django6:
-          public_ip: 192.168.1.96
-          private_ip: 192.168.33.16
-          port: 83
-          maxconn_cache: 1000
+#      django6:
+#          public_ip: 192.168.1.96
+#          private_ip: 192.168.33.16
+#          port: 83
+#          maxconn_cache: 1000
 
     haproxy_frontend_public_ip: 192.168.1.95
     haproxy_frontend_private_ip: 192.168.33.15
     haproxy_frontend_port: 80
+    haproxy_check: '/haproxycheck'
     haproxy_app_check_url: '/myapp/appcheck/'
     haproxy_app_check_expect: '[oO][kK]'
     haproxy_static_check_url: '/static/myapp/staticcheck.txt'
