@@ -7,10 +7,9 @@ Check pinboard about haproxy and cookie acl
 
 Clean Varnish encoding logic and any additional stuff
 
-===
-
-- study vcl_hash, acl, vcl_hit, vcl_miss and the rest of varnish vcl
 - find a way to use haproxy and varnish to cache calls by non-logged in users
+- using sqlite db from django5, set it up to create a db in postgresql and use it from django
+
 - haproxy and test keepalived manually (not salt at first) for fault tolerance
 - nfs or glusterfs for static files
 - install redis and change settings to use it
