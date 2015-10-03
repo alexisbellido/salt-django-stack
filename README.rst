@@ -123,6 +123,21 @@ salt '*' state.highstate pillar='["cheese", "milk", "bread"]'
 
 sudo salt-call state.sls zinibu.python.python_test
 
+``zinibu.django``
+----------------
+
+zinibu.python installed the Python packages and zinibu.django will install a Django project and related applications. Logged in as the user who owns the project (app_user in zinibu_basic pillar) you can activate the Python environment like this:
+
+$ source ~/pyvenvs/zinibu_dev/bin/activate
+
+then change to the directory of the project, e.g. /home/user/zinibu_dev, and manage it with django-admin.py:
+$ django-admin.py help --pythonpath=`pwd` --settings=zinibu_dev.settings
+
+Instead of django-admin.py, you can also use manage.py, a thin wrapper, from the directory of the project and may require to call it with python:
+$ python manage.py  help
+
+or without:
+$ ./manage.py  help
 
 Some test commands
 ====================
