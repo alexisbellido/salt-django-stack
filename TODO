@@ -1,5 +1,14 @@
 TODO
 
+- So, I'm trying to use just one app and one cache server (all in django5 box) to see how to discern between django logged in cookie from either haproxy or varnish config. I probably can create a dummy backend pointing to django6 app/cache to test based on conditions. Start trying directly with haproxy config and varnish vcl in django5.
+
+Check pinboard about haproxy and cookie acl
+
+
+Clean Varnish encoding logic and any additional stuff
+
+===
+
 - study vcl_hash, acl, vcl_hit, vcl_miss and the rest of varnish vcl
 - find a way to use haproxy and varnish to cache calls by non-logged in users
 - haproxy and test keepalived manually (not salt at first) for fault tolerance
