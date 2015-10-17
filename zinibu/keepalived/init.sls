@@ -3,6 +3,10 @@
 # Use this if configuration files need to be reset.
 # sudo apt-get -o Dpkg::Options::="--force-confmiss" install --reinstall keepalived
 
+net.ipv4.ip_nonlocal_bind:
+  sysctl.present:
+    - value: 1
+
 {% if salt['grains.get']('osfullname') == 'Ubuntu' %}
 keeepalived_ppa_repo:
   pkgrepo.managed:
@@ -16,4 +20,5 @@ keeepalived_ppa_repo:
 keepalived.install:
   pkg.installed:
     - name: keepalived
-
+    - require:
+      - sysctl: net.ipv4.ip_nonlocal_bind
