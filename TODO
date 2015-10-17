@@ -1,17 +1,10 @@
 TODO
 
-- So, I'm trying to use just one app and one cache server (all in django5 box) to see how to discern between django logged in cookie from either haproxy or varnish config. I probably can create a dummy backend pointing to django6 app/cache to test based on conditions. Start trying directly with haproxy config and varnish vcl in django5.
+- start with glusterfs, basic salt setup, maybe some manual changes in config
+- nfs or glusterfs for static files
 
-Check pinboard about haproxy and cookie acl
-
-
-Clean Varnish encoding logic and any additional stuff
-
-- find a way to use haproxy and varnish to cache calls by non-logged in users
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
 
-- haproxy and test keepalived manually (not salt at first) for fault tolerance
-- nfs or glusterfs for static files
 - install redis and change settings to use it
 - modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
 - install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
@@ -34,6 +27,29 @@ sudo salt '*' state.highstate
 - States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box.
 
 - upgrade to varnish 4?
+
+- I may continue without the keepalived shit. If I shutdown the keepalived service, it works. The problem is that backup is not becoming master as it shoud. The check script is working and priority is changing but still master remains master.
+
+- Check about multicast, unicast, firewall and communicating between hosts with keepalived
+
+http://serverfault.com/questions/512153/both-servers-running-keepalived-become-master-and-have-a-same-virtual-ip
+http://www.cyberciti.biz/faq/linux-unix-verify-keepalived-working-or-not/
+
+ping vrrp.mcast.net
+iptables -L
+sudo iptables -L
+sudo tcpdump -vvv -n -i eth0 host 224.0.0.18
+sudo iptables -I INPUT -i eth0 -d 224.0.0.0/8 -j ACCEPT
+sudo iptables -L
+sudo iptables -A INPUT -p 112 -i eth0 -j ACCEPT
+sudo iptables -L
+sudo iptables -A OUTPUT -p 112 -o eth0 -j ACCEPT
+sudo iptables -L
+sudo tcpdump -vvv -n -i eth0 host 224.0.0.18
+sudo tcpdump -v -i eth0 host 224.0.0.18
+sudo service keepalived restart
+sudo service haproxy status
+
 
 - check connections
 netstat -ctnup | grep "192.168.1.95"
