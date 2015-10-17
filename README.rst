@@ -31,13 +31,16 @@ base:
     - zinibu.varnish
     - zinibu.varnish.conf
   'load-balancer':
+    - zinibu.keepalived
+    - zinibu.keepalived.conf
     - zinibu.haproxy
     - zinibu.haproxy.conf
-    - zinibu.keepalived
   'redis-server':
     - zinibu.redis
   'database':
     - zinibu.postgresql
+
+Keepalived should run before haproxy to bind ip addresses.
 
 If some states are running in the same server they all should be under the same minion id in top.sls.
 
