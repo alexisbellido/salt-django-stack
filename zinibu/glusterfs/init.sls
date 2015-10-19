@@ -12,3 +12,10 @@ glusterfs-peer-{{ id }}:
       - pkg: glusterfs-server
 {% endfor %}
 {% endif %}
+
+/var/exports/static-{{ zinibu_basic.project.name }}:
+  file.directory:
+    - user: {{ zinibu_basic.root_user }}
+    - group: {{ zinibu_basic.root_user }}
+    - mode: 755
+    - makedirs: True
