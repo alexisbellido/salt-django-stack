@@ -1,0 +1,2 @@
+glusterfs-client:
+  pkg.installed
