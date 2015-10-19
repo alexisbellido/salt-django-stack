@@ -3,6 +3,8 @@ TODO
 - start with glusterfs, basic salt setup, maybe some manual changes in config
 - nfs or glusterfs for static files
 
+- see how to make zinibu.glusterfs and zinibu.glusterfs.client run before zinibu.django so that when running collectstatic, the static directory is already being shared by glusterfs
+
 - sls to uninstall keepalived and revert sysctl change
 
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django

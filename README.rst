@@ -42,6 +42,30 @@ base:
 
 Keepalived should run before haproxy to bind ip addresses.
 
+Glusterfs (zinibu.glusterfs and zinibu.glusterfs.client) should have run before Django runs collectstatic in zinibu.django. This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
+
+base:
+  'django5':
+    - zinibu.glusterfs
+    - zinibu.postgresql
+    - zinibu.keepalived
+    - zinibu.keepalived.conf
+    - zinibu.varnish
+    - zinibu.varnish.conf
+    - zinibu.haproxy
+    - zinibu.haproxy.conf
+  'django6':
+    - zinibu.glusterfs
+    - zinibu.keepalived
+    - zinibu.keepalived.conf
+    - zinibu.varnish
+    - zinibu.varnish.conf
+    - zinibu.haproxy
+    - zinibu.haproxy.conf
+  'django*':
+    - zinibu
+    - zinibu.glusterfs.client
+
 If some states are running in the same server they all should be under the same minion id in top.sls.
 
 See http://docs.saltstack.com/en/latest/ref/states/top.html
