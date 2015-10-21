@@ -47,6 +47,7 @@ Glusterfs (zinibu.glusterfs and zinibu.glusterfs.client) should have run before 
 base:
   'django5':
     - zinibu.glusterfs
+    - zinibu.glusterfs.conf
     - zinibu.postgresql
     - zinibu.keepalived
     - zinibu.keepalived.conf
@@ -56,6 +57,7 @@ base:
     - zinibu.haproxy.conf
   'django6':
     - zinibu.glusterfs
+    - zinibu.glusterfs.conf
     - zinibu.keepalived
     - zinibu.keepalived.conf
     - zinibu.varnish

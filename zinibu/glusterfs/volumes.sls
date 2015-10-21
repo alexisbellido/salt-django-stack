@@ -1,24 +1,28 @@
 {% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 
-# TODO run these before creating volume just in case there are remains
+# If getting the error "volume create: [VOLUME_NAME]: failed: [VOLUME_PATH] or a prefix of it is already part of a volume"
+# Delete volume manually with "gluster volume delete [VOLUME_NAME]" and then do:
+# setfattr -x trusted.glusterfs.volume-id /var/exports/static-zinibu_dev/
+# setfattr -x trusted.gfid /var/exports/static-zinibu_dev/
+# rm -rf /var/exports/static-zinibu_dev/.glusterfs
+# Or, if the data can be deleted or moved:
+# rm -rf /var/exports/static-zinibu_dev/
 # see https://joejulian.name/blog/glusterfs-path-or-a-prefix-of-it-is-already-part-of-a-volume/ 
-# just did  gluster volume delete static-zinibu_dev and salt needs to run the following
-#setfattr -x trusted.glusterfs.volume-id /var/exports/static-zinibu_dev/
-#setfattr -x trusted.gfid /var/exports/static-zinibu_dev/
-#rm -rf /var/exports/static-zinibu_dev/.glusterfs
-# time sudo salt 'django[5,6]' state.sls zinibu.glusterfs.volumes
-
-install-attr:
-  pkg.installed:
-    - name: attr
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
   cmd.run:
     - user: {{ zinibu_basic.root_user }}
-    - name: echo "TEST"
-#    - name: gluster volume create static-{{ zinibu_basic.project.name }} replica {{ zinibu_basic.project.glusterfs_nodes|length }} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
+    - name: gluster volume create static-{{ zinibu_basic.project.name }} replica {{ zinibu_basic.project.glusterfs_nodes|length }} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
     - shell: /bin/bash
     - unless: "gluster volume info static-{{ zinibu_basic.project.name }}"
-# TODO move to the attr calls
+
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-start:
+  glusterfs.started:
+    - name: static-{{ zinibu_basic.project.name }}
     - require:
-      - pkg: install-attr
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
+
+# do this after confirmed connections
+#sudo gluster volume set volume1 auth.allow gluster_client1_ip,gluster_client2_ip
+# gluster volume set www auth.allow 192.168.56.*
+# gluster volume set datastore auth.allow 10.1.1.*,10.5.5.1

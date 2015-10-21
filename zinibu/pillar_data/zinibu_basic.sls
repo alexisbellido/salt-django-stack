@@ -16,22 +16,22 @@ zinibu_basic:
           maxconn_dynamic: 250
           maxconn_static: 50
           slowstart: 10s
-#      django6:
-#          public_ip: 192.168.1.96
-#          private_ip: 192.168.33.16
-#          nginx_port: 81
-#          gunicorn_port: 8000
-#          maxconn_dynamic: 250
-#          maxconn_static: 50
-#          slowstart: 10s
-#      django7:
-#          public_ip: 192.168.1.97
-#          private_ip: 192.168.33.17
-#          nginx_port: 81
-#          gunicorn_port: 8000
-#          maxconn_dynamic: 250
-#          maxconn_static: 50
-#          slowstart: 10s
+      django6:
+          public_ip: 192.168.1.96
+          private_ip: 192.168.33.16
+          nginx_port: 81
+          gunicorn_port: 8000
+          maxconn_dynamic: 250
+          maxconn_static: 50
+          slowstart: 10s
+      django7:
+          public_ip: 192.168.1.97
+          private_ip: 192.168.33.17
+          nginx_port: 81
+          gunicorn_port: 8000
+          maxconn_dynamic: 250
+          maxconn_static: 50
+          slowstart: 10s
 
     varnish_check: '/varnishcheck'
 
