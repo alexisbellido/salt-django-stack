@@ -47,7 +47,7 @@ GlusterFS client is required by collectstatic in zinibu.django. This is another 
 base:
   'django5':
     - zinibu.glusterfs
-    - zinibu.glusterfs.conf
+    - zinibu.glusterfs.volumes
     - zinibu.postgresql
     - zinibu.varnish
     - zinibu.varnish.conf
@@ -55,7 +55,7 @@ base:
     - zinibu.haproxy.conf
   'django6':
     - zinibu.glusterfs
-    - zinibu.glusterfs.conf
+    - zinibu.glusterfs.volumes
     - zinibu.varnish
     - zinibu.varnish.conf
     - zinibu.haproxy
