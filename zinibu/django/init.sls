@@ -3,6 +3,7 @@
 
 {% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
 {% set run_project_script = '/home/' + zinibu_basic.app_user + '/run-' + zinibu_basic.project.name + '.sh' %}
+{% set project_static_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/static' %}
 
 {{ run_project_script }}:
   file.managed:
@@ -45,6 +46,7 @@ clone-git-repo:
       - git: setup-git-user-name
       - git: setup-git-user-email
 
+# GlusterFS directories are mounted before this.
 collectstatic:
   cmd.script:
     - name: {{ run_project_script }}
@@ -56,6 +58,43 @@ collectstatic:
       - git: clone-git-repo
       - file: {{ project_dir }}
       - file: {{ run_project_script }}
+      - cmd: glusterfs-mount-static
+
+glusterfs-client:
+  pkg.installed
+
+{{ project_static_dir }}:
+  file.directory:
+    - user: {{ zinibu_basic.app_user }}
+    - group: {{ zinibu_basic.app_group }}
+    - mode: 755
+    - makedirs: True
+
+# Just need to mount from one of the nodes to get to the volume.
+{%- if 'webheads' in zinibu_basic.project %}
+  {%- for id, node in zinibu_basic.project.glusterfs_nodes.iteritems() %}
+    {%- if loop.index == 1 %}
+glusterfs-fstab-static:
+  file.append:
+    - name: /etc/fstab
+    - text: |
+        # GlusterFS mount
+        {{ node.private_ip }}:static-{{ zinibu_basic.project.name }} {{ project_static_dir }} glusterfs defaults,_netdev 0 0
+    - require:
+      - file: {{ project_static_dir }}
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}
+
+glusterfs-mount-static:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: mount {{ project_static_dir }}
+    - shell: /bin/bash
+    - unless: mount | grep static-{{ zinibu_basic.project.name }}
+    - require:
+      - pkg: glusterfs-client
+      - file: glusterfs-fstab-static
 
 setup-git-user-name:
   git.config:
