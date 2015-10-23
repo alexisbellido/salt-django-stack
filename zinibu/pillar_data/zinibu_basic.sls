@@ -48,8 +48,9 @@ zinibu_basic:
 #          port: 83
 #          maxconn_cache: 1000
 
-    haproxy_frontend_public_ip: 192.168.1.99
-    haproxy_frontend_private_ip: 192.168.33.19
+    # if using keepalived, put the virtual IPs in the next two lines
+    haproxy_frontend_public_ip: 192.168.1.95
+    haproxy_frontend_private_ip: 192.168.33.15
     haproxy_frontend_port: 80
     haproxy_check: '/haproxycheck'
     haproxy_app_check_url: '/myapp/appcheck/'

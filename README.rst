@@ -40,17 +40,15 @@ base:
   'database':
     - zinibu.postgresql
 
-Keepalived should run before haproxy to bind ip addresses.
+If used, the keepalived states should run before varnish and haproxy states make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.
 
-GlusterFS client is required collectstatic in zinibu.django. This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
+GlusterFS client is required by collectstatic in zinibu.django. This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
 
 base:
   'django5':
     - zinibu.glusterfs
     - zinibu.glusterfs.conf
     - zinibu.postgresql
-    - zinibu.keepalived
-    - zinibu.keepalived.conf
     - zinibu.varnish
     - zinibu.varnish.conf
     - zinibu.haproxy
@@ -58,8 +56,6 @@ base:
   'django6':
     - zinibu.glusterfs
     - zinibu.glusterfs.conf
-    - zinibu.keepalived
-    - zinibu.keepalived.conf
     - zinibu.varnish
     - zinibu.varnish.conf
     - zinibu.haproxy

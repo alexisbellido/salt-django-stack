@@ -1,35 +1,23 @@
 TODO
 
-- order for top, servers: zinibu.glusterfs, zinibu.glusterfs.volumes, clients: zinibu.glusterfs.client
-
-- start with glusterfs, basic salt setup, maybe some manual changes in config
-
-- see how to make zinibu.glusterfs and zinibu.glusterfs.client run before zinibu.django so that when running collectstatic, the static directory is already being shared by glusterfs
-
-- sls to uninstall keepalived and revert sysctl change
 
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
 
-- install redis and change settings to use it
-- modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
-- install haproxy to have a setup like this: haproxy with ssl termination > varnish > nginx > gunicorn , use haproxy with balance uri to maximize cache hits, so, multiple varnish servers but let's start with one haproxy sending to one varnish that does the load balacing
+- States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box. Run from command line after merged to a branch I designate as the one feeding the environment, like "production" and "staging," and probably use git hooks so after something is merged to any of those branches the autodeployment runs
 
-- logrotate to keep all logs under control (syslog-ng for something else?)
-- I may need to change /srv/salt/top.sls to point a minion, like 'db' to zinibu.postgresql, and the rest to zinibu (which, as mentioned above, is zinibu.init.sls) to work as webheads. As an example from http://docs.saltstack.com/en/latest/topics/best_practices.html:
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
 
-base:
-  'web*':
-    - mysql.client
-    - mysql.python
-  'db*':
-    - mysql.server
+- don't worry about high availability for redis and postgresql yet
+- keepalived won't be used at the beginning for ha haproxy
+- most destructive operations (umount, removing directories, uninstalls, etc) should be handled manually to avoid errors
+- install redis and change settings to use it
+- modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
 
+- logrotate to keep all logs under control (syslog-ng for something else?)
 
 - I want to run the whole thing with:
 sudo salt '*' state.highstate
 
-- States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box.
 
 - upgrade to varnish 4?
 
