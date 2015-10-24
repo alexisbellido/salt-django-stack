@@ -1,7 +1,16 @@
 TODO
 
+After Linode test 1 ($ 0.33):
+- focus on 14.04 LTS, 15.04 has replaced upstart with systemd and I don't want to mess with that for now, eventually I'll update these salt formulas to make a Django project run with systemd
+- review glusterfs for at least 2 servers, volume replicate can't be created with one node
+- review pyvenv installation for brand new Ubuntu 14.04 LTS, it seems I just need to "sudo apt-get install python3.4-venv" for this version, try it in vbox
+- double check refresh apt db for haproxy to get 1.5
+====
+
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
+
+- remove unused data from pillar zinibu_haproxy and zinibu_postgresql and any others
 
 - States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box. Run from command line after merged to a branch I designate as the one feeding the environment, like "production" and "staging," and probably use git hooks so after something is merged to any of those branches the autodeployment runs
 

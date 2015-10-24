@@ -7,7 +7,7 @@
 haproxy_ppa_repo:
   pkgrepo.managed:
     - ppa: vbernat/haproxy-1.5
-    - refresh_db: False
+    - refresh_db: True
     - require_in:
       - pkg: haproxy.install
 #    - watch_in:
