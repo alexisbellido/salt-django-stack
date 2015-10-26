@@ -13,6 +13,8 @@ Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is t
 Overview
 ========
 
+See the conf directory for sample top.sls and pillar configuration.
+
 Add formulas to /etc/salt/master like this:
 
 file_roots:
