@@ -1,0 +1,29 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+#auto eth0
+#iface eth0 inet dhcp
+
+# Configuration for eth0
+# We no longer need to use aliases (eg. eth0:0 eth0:1 eth0:2)
+# This line ensures that the interface will be brought up during boot
+auto eth0
+allow-hotplug eth0
+
+# The address and gateway are necessary.
+# The netmask is taken automatically from the block.
+# Example: /24 is considered to be a public IP address: netmask 255.255.255.0
+iface eth0 inet static
+    address 45.79.161.112/24
+    gateway 45.79.161.1
+
+# This is a private IP address. Private IPs do not have a gateway (they are not publicly routable).
+# All you need to specify is the address and the block. The netmask is taken from the block.
+# Example: /17 is considered to be a private IP address: netmask 255.255.128.0
+iface eth0 inet static
+    address 192.168.205.149/17
