@@ -3,7 +3,6 @@ TODO
 After Linode test 1 ($ 0.33):
 - focus on 14.04 LTS, 15.04 has replaced upstart with systemd and I don't want to mess with that for now, eventually I'll update these salt formulas to make a Django project run with systemd
 - review glusterfs for at least 2 servers, volume replicate can't be created with one node
-- review pyvenv installation for brand new Ubuntu 14.04 LTS, it seems I just need to "sudo apt-get install python3.4-venv" for this version, try it in vbox
 - double check refresh apt db for haproxy to get 1.5
 ====
 

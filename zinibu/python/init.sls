@@ -20,22 +20,29 @@ python3-dev:
   pkg.installed:
     - name: {{ python.dev_pkg }}
 
+python3.4-venv:
+  pkg.installed:
+    - refresh: True
+    - require:
+      - pkg: python3-dev
+
 {% if postgres.pkg_libpq_dev != False %}
 install-postgres-libpq-dev:
   pkg.installed:
     - name: {{ postgres.pkg_libpq_dev }}
 {% endif %}
 
-# See:
-# https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847
-# http://rem4me.me/2014/09/fixing-pyvenv-3-4-in-debian-ubuntu-mint-17-etc/
-ensurepip:
-  cmd.script:
-    - name: salt://zinibu/python/files/ensurepip.sh
-    - user: {{ zinibu_basic.root_user }}
-    - shell: /bin/bash
-    - cwd: {{ python.lib_dir }}
-    - unless: test -f /usr/lib/python3.4/ensurepip/_bundled/pip-1.5.4-py2.py3-none-any.whl
+# no longer needed, with new python3.4-venv
+## See:
+## https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847
+## http://rem4me.me/2014/09/fixing-pyvenv-3-4-in-debian-ubuntu-mint-17-etc/
+#ensurepip:
+#  cmd.script:
+#    - name: salt://zinibu/python/files/ensurepip.sh
+#    - user: {{ zinibu_basic.root_user }}
+#    - shell: /bin/bash
+#    - cwd: {{ python.lib_dir }}
+#    - unless: test -f /usr/lib/python3.4/ensurepip/_bundled/pip-1.5.4-py2.py3-none-any.whl
 
 mkdir_pyvenv:
   cmd.run:
@@ -53,9 +60,11 @@ create_pyvenv:
     - shell: /bin/bash
     - name: {{ python.pyvenv_cmd }} {{ pyvenv_name }} ; source {{ pyvenv_name }}/bin/activate ; pip --version
     - require:
-      - cmd: ensurepip
+      - pkg: python3.4-venv
       - cmd: mkdir_pyvenv
       - user: user_{{ zinibu_basic.app_user }}_user
+# no longer needed, with new python3.4-venv
+#      - cmd: ensurepip
 
 # move installation of pip packages to its own sls
 {% for pip_package in salt['pillar.get']('pip_packages', []) %}
