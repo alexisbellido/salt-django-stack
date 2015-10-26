@@ -12,7 +12,7 @@
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
   cmd.run:
     - user: {{ zinibu_basic.root_user }}
-    - name: gluster volume create static-{{ zinibu_basic.project.name }} replica {{ zinibu_basic.project.glusterfs_nodes|length }} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
+    - name: gluster volume create static-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica {{ zinibu_basic.project.glusterfs_nodes|length }}{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
     - shell: /bin/bash
     - unless: "gluster volume info static-{{ zinibu_basic.project.name }}"
 
