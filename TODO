@@ -1,6 +1,7 @@
 TODO
 
-Run Linode test 2
+After Linode test 2:
+- fix settings to use correct user, db info and more from pillar, see zinibu_dev/settings.py:STATIC_ROOT = '/home/vagrant/zinibu_dev/static'
 
 After Linode test 1 ($ 0.33):
 - focus on 14.04 LTS, 15.04 has replaced upstart with systemd and I don't want to mess with that for now, eventually I'll update these salt formulas to make a Django project run with systemd
