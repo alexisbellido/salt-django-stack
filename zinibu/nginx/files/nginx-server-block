@@ -8,7 +8,7 @@ server {
     #listen {{ public_ip }}:{{ nginx_port }};
     #server_name www.example.com;
 
-    listen {{ nginx_port }};
+    listen {{ private_ip }}:{{ nginx_port }};
     server_name {{ private_ip }};
 
     # ignore problems with favicon?
