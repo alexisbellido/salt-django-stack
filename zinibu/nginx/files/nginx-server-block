@@ -23,6 +23,9 @@ server {
         #if ($query_string) {
         #    expires max;
         #}
+        if ( $request ~* "{{ haproxy_static_check_url }}" ) {
+            access_log off;
+        }
     }
 
     location / {
@@ -35,7 +38,14 @@ server {
         proxy_connect_timeout 10;
         proxy_read_timeout 10;
         proxy_pass http://{{ private_ip }}:{{ gunicorn_port }}/;
+        if ( $request ~* "{{ haproxy_app_check_url }}" ) {
+            access_log off;
+        }
     }
+
+    # use for debugging log
+    #log_format debug_format '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" host:"$host"';
+    #access_log /home/{{ user }}/logs/{{ project_name }}-nginx-access.log debug_format;
 
     access_log /home/{{ user }}/logs/{{ project_name }}-nginx-access.log;
     error_log /home/{{ user }}/logs/{{ project_name }}-nginx-error.log;

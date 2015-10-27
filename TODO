@@ -1,11 +1,7 @@
 TODO
 
-After Linode test 2:
-- fix settings to use correct user, db info and more from pillar, see zinibu_dev/settings.py:STATIC_ROOT = '/home/vagrant/zinibu_dev/static'
-
-After Linode test 1 ($ 0.33):
-- focus on 14.04 LTS, 15.04 has replaced upstart with systemd and I don't want to mess with that for now, eventually I'll update these salt formulas to make a Django project run with systemd
-====
+Started working with nginx to disable logging for health checks, now add logrotate
+log rotate for everything else that logs
 
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
@@ -55,4 +51,14 @@ sudo service haproxy status
 
 - check connections
 netstat -ctnup | grep "192.168.1.95"
+
+===
+Linode tests
+
+10/26/15 After Linode test 2:
+- fix settings to use correct user, db info and more from pillar, see zinibu_dev/settings.py:STATIC_ROOT = '/home/vagrant/zinibu_dev/static'
+
+10/25/15 After Linode test 1 ($ 0.33):
+- focus on 14.04 LTS, 15.04 has replaced upstart with systemd and I don't want to mess with that for now, eventually I'll update these salt formulas to make a Django project run with systemd
+====
 

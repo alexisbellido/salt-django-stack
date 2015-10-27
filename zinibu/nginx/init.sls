@@ -38,6 +38,8 @@ nginx:
         public_ip: 0.0.0.0
         user: {{ zinibu_basic.app_user }}
         project_name: {{ zinibu_basic.project.name }}
+        haproxy_app_check_url: {{ zinibu_basic.project.haproxy_app_check_url }}
+        haproxy_static_check_url: {{ zinibu_basic.project.haproxy_static_check_url }}
   {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
     {% if grains['id'] == id %}
     - context:
