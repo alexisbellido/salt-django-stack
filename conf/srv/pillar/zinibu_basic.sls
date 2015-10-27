@@ -97,6 +97,11 @@ zinibu_basic:
       django6:
           private_ip: 192.168.33.16
 
+    # keys must match minion ids
+    redis_nodes:
+      django5:
+          private_ip: 192.168.33.15
+
     # YAML alternative list of objects syntax
     #webheads:
     #  - {public_ip: 192.168.33.15, nginx_port: 80, gunicorn_port: 8000}

@@ -5,6 +5,7 @@ base:
     - zinibu_python
     - zinibu_django
     - zinibu_gunicorn
+    - zinibu_redis
     - zinibu_postgresql
     - zinibu_upstart
     - zinibu_varnish
