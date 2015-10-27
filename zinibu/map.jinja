@@ -19,6 +19,15 @@
     },
 }, merge=salt['pillar.get']('nginx:lookup')) %}
 
+{% set redis = salt['grains.filter_by']({
+    'Debian': {
+        'package': 'redis',
+    },
+    'RedHat': {
+        'package': 'redis',
+    },
+}, merge=salt['pillar.get']('redis:lookup')) %}
+
 {% set django = salt['grains.filter_by']({
     'Debian': {
     },
