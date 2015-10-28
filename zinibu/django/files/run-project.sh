@@ -25,7 +25,8 @@ PROJECTNAME={{ project_name }}
 PROJECTDIR=/home/$USER/$PROJECTNAME
 PROJECTENV=/home/$USER/pyvenvs/$PROJECTNAME
 
-LOGFILE=/home/$USER/logs/$PROJECTNAME.log
+#LOGFILE=/home/$USER/logs/$PROJECTNAME.log
+LOGFILE=/var/log/upstart/$PROJECTNAME.log
 LOGDIR=$(dirname $LOGFILE)
 
 NUM_WORKERS=3
@@ -36,7 +37,8 @@ source $PROJECTENV/bin/activate
 cd $PROJECTDIR
 export LC_ALL="en_US.UTF-8"
 
-test -d $LOGDIR || mkdir -p $LOGDIR
+# logging inside /var/log/upstart, the directory should already be present
+#test -d $LOGDIR || mkdir -p $LOGDIR
 
 if [ "$1" == "dev" ]; then
   # development server

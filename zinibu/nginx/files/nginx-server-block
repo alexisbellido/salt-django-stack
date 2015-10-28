@@ -45,10 +45,10 @@ server {
 
     # use for debugging log
     #log_format debug_format '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" host:"$host"';
-    #access_log /home/{{ user }}/logs/{{ project_name }}-nginx-access.log debug_format;
+    #access_log /var/log/nginx/{{ project_name }}-access.log debug_format;
 
-    access_log /home/{{ user }}/logs/{{ project_name }}-nginx-access.log;
-    error_log /home/{{ user }}/logs/{{ project_name }}-nginx-error.log;
+    access_log /var/log/nginx/{{ project_name }}-access.log;
+    error_log /var/log/nginx/{{ project_name }}-error.log;
 
     # what to serve if upstream is not available or crashes
     error_page 500 502 503 504 /static/50x.html;
