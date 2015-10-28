@@ -4,11 +4,11 @@
 install-postgresql:
   pkg.installed:
     - name: {{ postgres.pkg }}
-    - refresh: {{ postgres.use_upstream_repo }}
+    - refresh: True
 
 pg_hba.conf:
   file.managed:
-    - name: {{ postgres.conf_dir }}/pg_hba.conf
+    - name: {{ postgres.conf_dir }}pg_hba.conf
     - source: {{ postgres['pg_hba.conf'] }}
     - template: jinja
     - user: postgres
@@ -22,7 +22,7 @@ pg_hba.conf:
 {% if postgres.postgresconf %}
 postgresql-conf:
   file.blockreplace:
-    - name: {{ postgres.conf_dir }}/postgresql.conf
+    - name: {{ postgres.conf_dir }}postgresql.conf
     - marker_start: "# Managed by SaltStack: listen_addresses: please do not edit"
     - marker_end: "# Managed by SaltStack: end of salt managed zone --"
     - content: |
