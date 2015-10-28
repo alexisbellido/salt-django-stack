@@ -1,8 +1,6 @@
 TODO
 
-Started working with nginx to disable logging for health checks, now add logrotate
-log rotate for everything else that logs
-
+- try keepalived with digital ocean tutorial, Python script is saved locally
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
 
