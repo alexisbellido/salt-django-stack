@@ -7,7 +7,6 @@
 # thiscript production --log-level=debug
 # Pass no parameter to start a production setup, like Gunicorn.
 
-#export DJANGO_SETTINGS_MODULE
 #export PROJECT_DATABASES_DEFAULT_NAME
 #export PROJECT_DATABASES_DEFAULT_USER
 #export PROJECT_DATABASES_DEFAULT_PASSWORD
@@ -24,6 +23,7 @@ export HOME="/home/$USER"
 PROJECTNAME={{ project_name }}
 PROJECTDIR=/home/$USER/$PROJECTNAME
 PROJECTENV=/home/$USER/pyvenvs/$PROJECTNAME
+export DJANGO_SETTINGS_MODULE=$PROJECTNAME.settings.local
 
 #LOGFILE=/home/$USER/logs/$PROJECTNAME.log
 LOGFILE=/var/log/upstart/$PROJECTNAME.log
@@ -46,7 +46,9 @@ if [ "$1" == "dev" ]; then
   echo "==================================="
   echo "Django development server"
   echo "==================================="
-  django-admin.py runserver --pythonpath=`pwd` --settings=$PROJECTNAME.settings $BIND_ADDRESS
+  # Using DJANGO_SETTINGS_MODULE environment variables as we are not specifying --settings
+  #django-admin.py runserver --pythonpath=`pwd` --settings=$PROJECTNAME.settings $BIND_ADDRESS
+  django-admin.py runserver --pythonpath=`pwd` $BIND_ADDRESS
   # thin wrapper for django-admin.py, no need for --pythonpath or --settings but it requires to use python first
   #python manage.py runserver $BIND_ADDRESS
 elif [ "$1" == "production" ]; then
@@ -67,7 +69,9 @@ elif [ "$1" == "collectstatic" ]; then
   echo "==================================="
   echo "Django collect static files"
   echo "==================================="
-  django-admin.py collectstatic --pythonpath=`pwd` --settings=$PROJECTNAME.settings --noinput
+  #django-admin.py collectstatic --pythonpath=`pwd` --settings=$PROJECTNAME.settings --noinput
+  # Using DJANGO_SETTINGS_MODULE environment variables as we are not specifying --settings
+  django-admin.py collectstatic --pythonpath=`pwd` --noinput
 else
   ## production server (gunicorn) with log to console
   echo "==================================="

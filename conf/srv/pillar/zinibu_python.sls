@@ -6,3 +6,4 @@ pip_packages:
   - ipython==3.2.0
   - gunicorn==19.3.0
   - pyinotify==0.9.6
+  - Unipath==1.1
