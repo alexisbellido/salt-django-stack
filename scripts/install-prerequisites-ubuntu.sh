@@ -12,6 +12,7 @@ if [ -z "$1" ]; then
   echo "sudo scripts/install-prerequisites-ubuntu.sh master \"Joe Doe\" name@example.com"
   echo "Use quotes if the name contains spaces."
   echo "You may need to run these before using add-apt-repository"
+  echo "sudo apt-get update"
   echo "sudo apt-get install -y python-software-properties"
   echo "sudo apt-get install -y software-properties-common"
   echo
