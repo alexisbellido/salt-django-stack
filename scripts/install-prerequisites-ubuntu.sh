@@ -15,11 +15,14 @@ if [ -z "$1" ]; then
 
 else
 
+  echo
+  echo "Preparing Salt..."
+  echo
+
   add-apt-repository ppa:saltstack/salt
   apt-get update
   
   if [ "$1" == "master" -o "$1" == "full" ]; then
-    echo "master"
     apt-get install -y salt-master
     ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
     TOP_DIR="/etc/srv/salt"
@@ -39,12 +42,19 @@ else
   fi
   
   if [ "$1" == "minion" -o "$1" == "full" ]; then
-    echo "minion"
     apt-get install -y salt-minion
   fi
   
   git config --global user.name "$2"
   git config --global user.email $3
 
-fi
+  echo
+  echo "Next steps:"
+  echo "1. Add $ROOT_DIR to file_roots and $PILLAR_DIR to pillar_roots in /etc/salt/master and restart salt-master."
+  echo "2. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR."
+  echo "3. Setup /etc/host to point all hosts to the salt master using the \"salt\" hostname."
+  echo "4. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
+  echo "5. Accept keys on master using salt-key."
+  echo
 
+fi
