@@ -5,9 +5,7 @@ postgres:
   use_upstream_repo: False
 
   lookup:
-    pkg: 'postgresql-9.3'
-    pkg_client: 'postgresql-client-9.3'
-    conf_dir: '/etc/postgresql/9.3/main/'
+    value: "will overwrite data in map.jinja"
 
   users:
     user1:

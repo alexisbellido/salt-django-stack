@@ -117,7 +117,8 @@
         'version'        : pg_version.id,
     },
     'Debian': {
-        'pkg'            : 'postgresql',
+        'pkg'            : 'postgresql-' + pg_version.id,
+        'pkg_client'     : 'postgresql-client-' + pg_version.id,
         'pkg_dev'        : 'postgresql-server-dev-' + pg_version.id,
         'pkg_libpq_dev'  : 'libpq-dev',
         'python'         : 'python-pygresql',
