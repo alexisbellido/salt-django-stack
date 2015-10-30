@@ -56,9 +56,10 @@ else
   echo "Next steps:"
   echo "1. Add $ROOT_DIR to file_roots and $PILLAR_DIR to pillar_roots in /etc/salt/master and restart salt-master."
   echo "2. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR."
-  echo "3. Setup /etc/host to point all hosts to the salt master using the \"salt\" hostname."
-  echo "4. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
-  echo "5. Accept keys on master using salt-key."
+  echo "3. Setup /srv/salt/top.sls"
+  echo "4. Setup /etc/host to point all hosts to the salt master using the \"salt\" hostname."
+  echo "5. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
+  echo "6. Accept keys on master using salt-key."
   echo
 
 fi
