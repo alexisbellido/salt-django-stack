@@ -29,8 +29,8 @@ else
   if [ "$1" == "master" -o "$1" == "full" ]; then
     apt-get install -y salt-master
     ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
-    TOP_DIR="/etc/srv/salt"
-    PILLAR_DIR="/etc/srv/pillar"
+    TOP_DIR="/srv/salt"
+    PILLAR_DIR="/srv/pillar"
     
     if [ ! -d  "$TOP_DIR" ]; then
       echo "Creating $TOP_DIR..."
