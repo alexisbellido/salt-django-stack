@@ -11,6 +11,9 @@ if [ -z "$1" ]; then
   echo "Example:"
   echo "sudo scripts/install-prerequisites-ubuntu.sh master \"Joe Doe\" name@example.com"
   echo "Use quotes if the name contains spaces."
+  echo "You may need to run these before using add-apt-repository"
+  echo "sudo apt-get install -y python-software-properties"
+  echo "sudo apt-get install -y software-properties-common"
   echo
 
 else
@@ -19,7 +22,8 @@ else
   echo "Preparing Salt..."
   echo
 
-  add-apt-repository ppa:saltstack/salt
+  apt-get install -y vim-gnome
+  add-apt-repository -y ppa:saltstack/salt
   apt-get update
   
   if [ "$1" == "master" -o "$1" == "full" ]; then
