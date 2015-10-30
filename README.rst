@@ -13,6 +13,9 @@ Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is t
 Overview
 ========
 
+To install prerequisities:
+$ sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "git_name_in_quotes_if_it_contains_spaces" git_user_email
+
 See the conf directory for sample top.sls and pillar configuration.
 
 Add formulas to /etc/salt/master like this:
@@ -168,15 +171,15 @@ $ ./manage.py  help
 Some test commands
 ====================
 
-sudo salt-key -L
-sudo salt-key -a django*
-sudo salt '*' test.ping
-sudo salt '*' pillar.items
-sudo salt '*' state.highstate
-sudo salt django5 pillar.items
-sudo salt '*' pillar.items
-sudo salt django5 state.sls zinibu.python
-history | grep "sudo salt"
-
-sudo salt-call test.ping
-sudo salt-call state.sls zinibu.python
+$ sudo salt-key -L
+$ sudo salt-key -a django*
+$ sudo salt '*' test.ping
+$ sudo salt '*' pillar.items
+$ sudo salt '*' grains.item lsb_distrib_release
+$ sudo salt '*' state.highstate
+$ sudo salt django5 pillar.items
+$ sudo salt '*' pillar.items
+$ sudo salt django5 state.sls zinibu.python
+$ history | grep "sudo salt"
+$ sudo salt-call test.ping
+$ sudo salt-call state.sls zinibu.python
