@@ -22,7 +22,7 @@ pg_hba.conf:
 {% if postgres.postgresconf %}
 postgresql-conf:
   file.blockreplace:
-    - name: {{ postgres.conf_dir }}postgresql.conf
+    - name: {{ postgres.conf_dir }}/postgresql.conf
     - marker_start: "# Managed by SaltStack: listen_addresses: please do not edit"
     - marker_end: "# Managed by SaltStack: end of salt managed zone --"
     - content: |
