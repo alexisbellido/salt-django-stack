@@ -60,6 +60,7 @@ else
   echo "4. Setup /etc/host to point all hosts to the salt master using the \"salt\" hostname."
   echo "5. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
   echo "6. Accept keys on master using salt-key."
+  echo "7. sudo salt '*' state.highstate"
   echo
 
 fi
