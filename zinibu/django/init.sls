@@ -41,6 +41,7 @@ clone-git-repo:
     - user: {{ zinibu_basic.app_user }}
     - target: {{ project_dir }}
     - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
+    - force: True # Deprecated since version 2015.8.0: Use force_clone instead.
     - require:
       - file: {{ project_dir }}
       - git: setup-git-user-name
