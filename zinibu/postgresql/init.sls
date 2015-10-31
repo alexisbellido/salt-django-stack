@@ -4,7 +4,6 @@
 install-postgresql:
   pkg.installed:
     - name: {{ postgres.pkg }}
-    - refresh: True
 
 pg_hba.conf:
   file.managed:

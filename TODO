@@ -1,5 +1,6 @@
 TODO
 
+- gluster user group fix
 - find a way to pass the environment to use for starting Django, which will determine the value of DJANGO_SETTINGS_MODULE used when --settings not passed to django-admin.py and used automatically when calling gunicorn, for now,using $PROJECTNAME.settings.local
 - there is a vagrant user hardcoded in django settings file, change it via salt
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings

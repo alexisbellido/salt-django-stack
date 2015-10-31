@@ -9,6 +9,11 @@
 # rm -rf /var/exports/static-zinibu_dev/
 # see https://joejulian.name/blog/glusterfs-path-or-a-prefix-of-it-is-already-part-of-a-volume/ 
 
+# TODO fix user and group of mount, how to make sure uid and gid is the same for all clients?
+#gluster volume set static-zinibu_dev storage.owner-uid 1000
+#gluster volume set static-zinibu_dev storage.owner-gid 1000
+# sudo mount /home/vagrant/zinibu_dev/static
+
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
   cmd.run:
     - user: {{ zinibu_basic.root_user }}

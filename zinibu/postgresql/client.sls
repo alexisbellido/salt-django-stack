@@ -4,4 +4,3 @@
 install-postgresql-client:
   pkg.installed:
     - name: {{ postgres.pkg_client }}
-    - refresh: True
