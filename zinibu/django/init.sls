@@ -71,8 +71,8 @@ glusterfs-client:
     - mode: 755
     - makedirs: True
 
-# Just need to mount from one of the nodes to get to the volume.
-{%- if 'webheads' in zinibu_basic.project %}
+# Just need to mount one of the nodes from each client to get to the volume.
+{%- if 'glustefs_nodes' in zinibu_basic.project %}
   {%- for id, node in zinibu_basic.project.glusterfs_nodes.iteritems() %}
     {%- if loop.index == 1 %}
 glusterfs-fstab-static:

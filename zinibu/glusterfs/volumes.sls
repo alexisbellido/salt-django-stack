@@ -9,18 +9,33 @@
 # rm -rf /var/exports/static-zinibu_dev/
 # see https://joejulian.name/blog/glusterfs-path-or-a-prefix-of-it-is-already-part-of-a-volume/ 
 
-# I can specify --uid and --gid while creating user on Ubuntu but maybe I need to rethink
-# way of creating a user for deployment, or maybe I create a group and put my user and that other
-# user there. Review users and groups information.
-# TODO fix user and group of mount, how to make sure uid and gid is the same for all clients?
-# I can get uid with: id -u username
-# I can get gid with: id -g groupname
-# use backticks to get id in a command
-# echo "the id is `id -u username"
-# use cmd.run to set these options
-#gluster volume set static-zinibu_dev storage.owner-uid 1000
-#gluster volume set static-zinibu_dev storage.owner-gid 1000
-# sudo mount /home/vagrant/zinibu_dev/static
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-user:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: gluster volume set static-{{ zinibu_basic.project.name }} storage.owner-uid `id -u {{ zinibu_basic.app_user }}`
+    - shell: /bin/bash
+    - require:
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
+
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-group:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: gluster volume set static-{{ zinibu_basic.project.name }} storage.owner-gid `id -g {{ zinibu_basic.app_user }}`
+    - shell: /bin/bash
+    - require:
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
+
+{%- if 'webheads' in zinibu_basic.project %}
+  {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-allow-{{ id }}:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: gluster volume set static-{{ zinibu_basic.project.name }} auth.allow {{ webhead.private_ip }}
+    - shell: /bin/bash
+    - require:
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
+  {%- endfor %}
+{%- endif %}
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
   cmd.run:
@@ -34,8 +49,3 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-start:
     - name: static-{{ zinibu_basic.project.name }}
     - require:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
-
-# do this after confirmed connections
-#sudo gluster volume set volume1 auth.allow gluster_client1_ip,gluster_client2_ip
-# gluster volume set www auth.allow 192.168.56.*
-# gluster volume set datastore auth.allow 10.1.1.*,10.5.5.1
