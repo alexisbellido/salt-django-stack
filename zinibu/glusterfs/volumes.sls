@@ -9,7 +9,15 @@
 # rm -rf /var/exports/static-zinibu_dev/
 # see https://joejulian.name/blog/glusterfs-path-or-a-prefix-of-it-is-already-part-of-a-volume/ 
 
+# I can specify --uid and --gid while creating user on Ubuntu but maybe I need to rethink
+# way of creating a user for deployment, or maybe I create a group and put my user and that other
+# user there. Review users and groups information.
 # TODO fix user and group of mount, how to make sure uid and gid is the same for all clients?
+# I can get uid with: id -u username
+# I can get gid with: id -g groupname
+# use backticks to get id in a command
+# echo "the id is `id -u username"
+# use cmd.run to set these options
 #gluster volume set static-zinibu_dev storage.owner-uid 1000
 #gluster volume set static-zinibu_dev storage.owner-gid 1000
 # sudo mount /home/vagrant/zinibu_dev/static
