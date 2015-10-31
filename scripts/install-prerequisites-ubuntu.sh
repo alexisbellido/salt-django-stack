@@ -11,10 +11,7 @@ if [ -z "$1" ]; then
   echo "Example:"
   echo "sudo scripts/install-prerequisites-ubuntu.sh master \"Joe Doe\" name@example.com"
   echo "Use quotes if the name contains spaces."
-  echo "You may need to run these before using add-apt-repository"
-  echo "sudo apt-get update"
-  echo "sudo apt-get install -y python-software-properties"
-  echo "sudo apt-get install -y software-properties-common"
+  echo "Make sure you run apt-get update before running this."
   echo
 
 else
@@ -23,6 +20,8 @@ else
   echo "Preparing Salt..."
   echo
 
+  apt-get install -y python-software-properties
+  apt-get install -y software-properties-common
   apt-get install -y vim-gnome
   add-apt-repository -y ppa:saltstack/salt
   apt-get update
@@ -58,6 +57,7 @@ pillar_roots:
   base:
     - /srv/pillar
 EOL
+    service salt-master restart
   fi
   
   if [ "$1" == "minion" -o "$1" == "full" ]; then
@@ -69,13 +69,12 @@ EOL
 
   echo
   echo "Next steps:"
-  echo "1. Add $ROOT_DIR to file_roots and $PILLAR_DIR to pillar_roots in /etc/salt/master and restart salt-master."
-  echo "2. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR."
-  echo "3. Setup /srv/salt/top.sls"
-  echo "4. Setup /etc/host to point all hosts to the salt master using the \"salt\" hostname."
-  echo "5. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
-  echo "6. Accept keys on master using salt-key."
-  echo "7. sudo salt '*' state.highstate"
+  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR."
+  echo "2. Setup /srv/salt/top.sls and restart salt master"
+  echo "3. Setup /etc/host to point all hosts to the salt master using the \"salt\" hostname."
+  echo "4. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
+  echo "5. Accept keys on master using salt-key."
+  echo "6. sudo salt '*' state.highstate"
   echo
 
 fi
