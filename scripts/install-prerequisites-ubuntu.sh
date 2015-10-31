@@ -44,6 +44,20 @@ else
       mkdir -p $PILLAR_DIR
       cp $ROOT_DIR/conf/srv/pillar/* $PILLAR_DIR
     fi
+
+    sed -i '/^# Added by install script$/,$d' /etc/salt/master
+    cat >> /etc/salt/master << EOL
+
+# Added by install script
+file_roots:
+  base:
+    - /srv/salt
+    - ${ROOT_DIR}
+
+pillar_roots:
+  base:
+    - /srv/pillar
+EOL
   fi
   
   if [ "$1" == "minion" -o "$1" == "full" ]; then
