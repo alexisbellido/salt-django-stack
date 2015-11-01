@@ -63,7 +63,6 @@ pillar_roots:
     - /srv/pillar
 EOL
     service salt-master restart
-    git clone git@github.com:alexisbellido/salt-django-stack.git
   fi
   
   if [ "$1" == "minion" -o "$1" == "full" ]; then
