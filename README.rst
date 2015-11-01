@@ -15,7 +15,7 @@ Quick Install
 
 To install prerequisities, including git, and then clone, add public key to Github and then run:
 
-  ``\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full \"Joe Doe\" name@example.com``
+  ``\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full "Joe Doe" name@example.com``
 
 To install prerequisities after cloning:
 
