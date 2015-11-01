@@ -35,6 +35,7 @@
 #    apt-get install -y salt-master
     ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
     echo "ROOT_DIR is $ROOT_DIR"
+    printenv
 #    TOP_DIR="/srv/salt"
 #    PILLAR_DIR="/srv/pillar"
 #    
