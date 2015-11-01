@@ -2,7 +2,21 @@
 zinibu
 =========
 
-Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is the stack used by zinibu.
+This Salt formula will setup a stack of one or more servers to run a Django project with some high availability and scalability features. The stack includes:
+
+* Gunicorn and Nginx webheads running * Django 1.8.x with Python 3.x and venv.
+* Gunicorn process managed via Upstart.
+* Varnish 3.x to cache static files and dynamic pages for non-logged in users.
+* HAProxy 1.5x inspired by `Baptiste Assmann`_.
+* HAProxy basic high availability support via Keepalived.
+* Redis.
+* PostgreSQL.
+* GlusterFS cluster for managing and sharing a volume for Django's static directory. Replica support is automatic if the number of hosts used as GlusterFS nodes is a multiple of two.
+* vim-gnome on the host used as a Salt master. Just because I love vim.
+
+The states are designed to be run together but you could take what you need and reuse in your own formulas.
+
+So far, I have tested with Ubuntu 14.04 and 14.10 on both Linode and Digital Ocean hosts.
 
 .. note::
 
@@ -200,6 +214,15 @@ $ python manage.py  help
 or without:
 $ ./manage.py  help
 
+Future Plans
+============
+
+* HAProxy SSL support.
+* HAProxy high availability with Keepalived.
+* Control Gunicorn with systemd, the new services manager by Ubuntu 15.04.
+* High availability Redis.
+* High availability PostgreSQL.
+
 Some test commands
 ====================
 
@@ -215,3 +238,5 @@ $ sudo salt django5 state.sls zinibu.python
 $ history | grep "sudo salt"
 $ sudo salt-call test.ping
 $ sudo salt-call state.sls zinibu.python
+
+.. _`Baptiste Assmann`: http://blog.haproxy.com/2012/08/25/haproxy-varnish-and-the-single-hostname-website/
