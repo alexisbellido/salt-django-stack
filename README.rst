@@ -13,13 +13,29 @@ Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is t
 Quick Install
 ================
 
-To install prerequisities, including git, and then clone, add public key to Github and then run:
+Add your public key to Github and then run this from, ideally, your home directory (although the script should be smart enough to work from any directory):
 
-  ``\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full "Joe Doe" name@example.com``
+  ``\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full|master|minion "Joe Doe" name@example.com``
 
-To install prerequisities after cloning:
+You need three arguments:
 
-  ``sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "git_name_in_quotes_if_it_contains_spaces" git_user_email``
+The first one defines the type of installation: "full" to install both salt-master and salt-minion, "master" to install only salt-master, or "minion" to install only salt-minion.
+The second and third arguments are used to setup git --global user.name and user.email.
+
+An installation of type full or master will also copy basic top.sls to /srv/salt/top.sls and /srv/pillar/* and files and point to them from /etc/salt/master.
+
+Pay attention to the next steps displayed after the script finishes running and customize your settings before proceeding to run salt states.
+
+You shouldn't worry about overwriting your settings if running the script more than once; files won't be touched if they already exist.
+
+Alternative Install
+================
+
+You can clone this project to any directory and then cd to it and run it with:
+
+  ``sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "Joe Doe" name@example.com``
+
+The end result will be the same as using the quick install.
 
 Overview
 ========
