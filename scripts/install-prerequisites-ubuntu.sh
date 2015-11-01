@@ -11,7 +11,9 @@ if [ -z "$1" ]; then
   echo "Example:"
   echo "sudo scripts/install-prerequisites-ubuntu.sh master \"Joe Doe\" name@example.com"
   echo "Use quotes if the name contains spaces."
-  echo "Make sure you run apt-get update before running this."
+  echo
+  echo "Run it remotely:"
+  echo "\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full \"Joe Doe\" name@example.com"
   echo
 
 else
@@ -19,6 +21,9 @@ else
   echo
   echo "Preparing Salt..."
   echo
+
+  apt-get update
+  apt-get install -y git
 
   apt-get install -y python-software-properties
   apt-get install -y software-properties-common
@@ -58,6 +63,7 @@ pillar_roots:
     - /srv/pillar
 EOL
     service salt-master restart
+    git clone git@github.com:alexisbellido/salt-django-stack.git
   fi
   
   if [ "$1" == "minion" -o "$1" == "full" ]; then

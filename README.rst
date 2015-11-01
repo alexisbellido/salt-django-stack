@@ -10,16 +10,25 @@ Salt formulas to setup Django with Gunicorn, Nginx, Redis and Varnish. This is t
     See the full `Salt Formulas installation and usage instructions
     <http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html>`_.
 
+Quick Install
+================
+
+To install prerequisities, including git, and then clone, add public key to Github and then run:
+``\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full \"Joe Doe\" name@example.com``
+
+To install prerequisities after cloning:
+``sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "git_name_in_quotes_if_it_contains_spaces" git_user_email``
+
 Overview
 ========
 
 Make sure to create a user with the same uid on all servers involved, this is specially important for GlusterFS. One way to do it it with Ubuntu's adduser --uid.
 
+Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
+echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
+
 You can use sed to quickly make changes in zinibu_basic.sls:
 sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls
-
-To install prerequisities:
-$ sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "git_name_in_quotes_if_it_contains_spaces" git_user_email
 
 See the conf directory for sample top.sls and pillar configuration.
 
