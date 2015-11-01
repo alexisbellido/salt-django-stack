@@ -33,9 +33,16 @@
 #  
 #  if [ "$1" == "master" -o "$1" == "full" ]; then
 #    apt-get install -y salt-master
-    ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
+    # TODO check if running from curl and if so make ROOT_DIR pwd + salt-django-stack 
+    if [[ $SUDO_COMMAND == "/bin/bash -s"* ]]; then
+      echo "running via bash -s"
+      ROOT_DIR="$PWD/salt-django-stack"
+    else
+      echo "running directly"
+      ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
+    fi
     echo "ROOT_DIR is $ROOT_DIR"
-    printenv
+    #printenv
 #    TOP_DIR="/srv/salt"
 #    PILLAR_DIR="/srv/pillar"
 #    
