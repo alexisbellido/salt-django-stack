@@ -42,6 +42,10 @@ else
     fi
     TOP_DIR="/srv/salt"
     PILLAR_DIR="/srv/pillar"
+
+    if [ ! -d  "$ROOT_DIR" ]; then
+      sudo -u $SUDO_USER git clone git@github.com:alexisbellido/salt-django-stack.git
+    fi
     
     if [ ! -d  "$TOP_DIR" ]; then
       echo "Creating $TOP_DIR..."
@@ -70,10 +74,6 @@ pillar_roots:
 EOL
 
     service salt-master restart
-
-    if [ ! -d  "$ROOT_DIR" ]; then
-      sudo -u $SUDO_USER git clone git@github.com:alexisbellido/salt-django-stack.git
-    fi
 
   fi
   
