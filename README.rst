@@ -15,6 +15,9 @@ Overview
 
 Make sure to create a user with the same uid on all servers involved, this is specially important for GlusterFS. One way to do it it with Ubuntu's adduser --uid.
 
+You can use sed to quickly make changes in zinibu_basic.sls:
+sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls
+
 To install prerequisities:
 $ sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "git_name_in_quotes_if_it_contains_spaces" git_user_email
 
