@@ -53,7 +53,14 @@
         'service': 'varnish',
         'config': '/etc/sysconfig/varnish',
     },
-}, merge=salt['pillar.get']('varnish:lookup')) %}
+}, merge=salt['grains.filter_by']({
+    '14.04': {
+        'version': '3',
+    },
+    '14.10': {
+        'version': '4',
+    },
+}, grain='lsb_distrib_release', merge=salt['pillar.get']('varnish:lookup'))) %}
 
 {% set python = salt['grains.filter_by']({
     'Debian': {

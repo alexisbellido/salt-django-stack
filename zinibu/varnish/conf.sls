@@ -25,27 +25,25 @@ include:
     - require_in:
       - service: varnish
 
-# Below we deploy the vcl files and we trigger a reload of varnish
-{% for file in settings.get('vcl', {}).get('files', ['default.vcl']) %}
-/etc/varnish/{{ file }}:
+# deploy the vcl file and trigger a reload of varnish
+/etc/varnish/default.vcl:
   file:
     - managed
     - makedirs: true
-    - source: salt://zinibu/varnish/files/etc/varnish/default.vcl
+    - source: salt://zinibu/varnish/files/etc/varnish/default-{{ varnish.version }}.vcl
     - template: jinja
     - require:
       - pkg: varnish
     - watch_in:
       - service: varnish
-{% endfor %}
 
 # Below we delete the "absent" vcl files and we trigger a reload of varnish
-{% for file in settings.get('vcl', {}).get('files_absent', []) %}
-/etc/varnish/{{ file }}:
-  file:
-    - absent
-    - require:
-      - pkg: varnish
-    - watch_in:
-      - service: varnish
-{% endfor %}
+#{% for file in settings.get('vcl', {}).get('files_absent', []) %}
+#/etc/varnish/{{ file }}:
+#  file:
+#    - absent
+#    - require:
+#      - pkg: varnish
+#    - watch_in:
+#      - service: varnish
+#{% endfor %}

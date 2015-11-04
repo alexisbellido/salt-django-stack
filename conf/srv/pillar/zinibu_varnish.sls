@@ -1,7 +1,7 @@
 varnish:
   # Overrides map.jinja
   lookup:
-    version: xxx
+    value: xxx
 
   # List of storage backends
   storages:
@@ -21,9 +21,6 @@ varnish:
 
   # VCL templates and pillar values used in them
   vcl:
-    version: '3.0'
-    backend_default_host: 10.1.1.1
-    backend_default_port: 80
     files:
       - default.vcl
     files_absent:
