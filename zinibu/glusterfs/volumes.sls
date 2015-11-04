@@ -49,3 +49,15 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-start:
     - name: gluster volume start static-{{ zinibu_basic.project.name }}
     - require:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
+      # A stop before starting to make sure user and group stick
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop
+
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: echo -e 'y\n' | gluster volume stop static-{{ zinibu_basic.project.name }}
+    - shell: /bin/bash
+    - onlyif: "gluster volume start static-{{ zinibu_basic.project.name }}"
+    - require:
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-user
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-group
