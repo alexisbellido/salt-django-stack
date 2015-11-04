@@ -4,6 +4,7 @@ TODO
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
 - at this point, all settings in django should be set by salt
+- detect Ubuntu 14.10 to setup vcl for Varnish 4.0, test it manually first: https://www.varnish-cache.org/docs/4.0/whats-new/upgrading.html
 
 - try again with Digital Ocean and 1 Gb. RAM for Varnish
 - try keepalived with digital ocean tutorial, Python script is saved locally
