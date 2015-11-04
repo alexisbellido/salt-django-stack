@@ -10,6 +10,7 @@
 {% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 
 vcl 4.0;
+import directors;
 
 backend bk_appsrv_static {
   .host = "{{ zinibu_basic.project.haproxy_frontend_private_ip }}";
@@ -29,17 +30,23 @@ acl purge {
     "localhost";
 }
 
+sub vcl_init {
+    new b = directors.round_robin();
+    b.add_backend(bk_appsrv_static);
+}
+
 sub vcl_recv {
     # debug bypass
     #return (pass);
     #
     # Health Checking
     if (req.url == "{{ zinibu_basic.project.varnish_check }}") {
-        error 751 "health check OK!";
+        # todo
+        #error 751 "health check OK!";
     }
 
     # Set default backend
-    set req.backend = bk_appsrv_static;
+    set req.backend_hint = b.backend();
 
     # conditions examples
     # if (req.url ~ "^/yte-admin" || req.url ~ "^/accounts/" || req.url ~ "^/api/v1" || req.url ~ "^/sweeps" || req.url ~ "^/questions" || req.url ~ "^/static" || req.url ~ "^/media/"  || req.url ~ "^/dj-admin") {
@@ -86,16 +93,17 @@ sub vcl_recv {
     #}
  
     # Purge request
-    if (req.request == "PURGE") {
+    if (req.method == "PURGE") {
         if (!client.ip ~ purge) {
-            error 405 "Not allowed.";
+	    # todo
+            #error 405 "Not allowed.";
         }
-        return (lookup);
+        return (purge);
     }
 
     # unless sessionid/csrftoken is in the request, don't pass ANY cookies (referral_source, utm, etc)
-    if (req.request == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.cookie !~ "sessionid" && req.http.cookie !~ "csrftoken"))) {
-        remove req.http.Cookie;
+    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.cookie !~ "sessionid" && req.http.cookie !~ "csrftoken"))) {
+        unset req.http.Cookie;
     }
 
     # Always cache the following file types for all users.
@@ -179,18 +187,20 @@ sub vcl_recv {
         
         # Microsoft Internet Explorer 6 is well know to be buggy with compression and css / js
         if (req.url ~ ".(css|js)" && req.http.User-Agent ~ "MSIE 6") {
-            remove req.http.Accept-Encoding;
+            unset req.http.Accept-Encoding;
         }
     }
 
     # Per host/application configuration
     # bk_appsrv_static
     # Stale content delivery
-    if (req.backend.healthy) {
-        set req.grace = 30s;
-    } else {
-        set req.grace = 1d;
-    }
+
+    # todo
+    #if (req.backend.healthy) {
+    #    set req.grace = 30s;
+    #} else {
+    #    set req.grace = 1d;
+    #}
     
     # unneeded?
     # Cookie ignored in these static pages
@@ -198,6 +208,7 @@ sub vcl_recv {
 }
 
 # Routine used to determine the cache key if storing/retrieving a cached page.
+# todo
 sub vcl_hash {
     hash_data(req.url);
     if (req.http.host) {
@@ -205,32 +216,36 @@ sub vcl_hash {
     } else {
         hash_data(server.ip);
     }
-    return (hash);
+    return (lookup);
 }
 
 sub vcl_hit {
     # Purge
-    if (req.request == "PURGE") {
-        set obj.ttl = 0s;
-        error 200 "Purged.";
+    if (req.method == "PURGE") {
+        # todo now read only
+        # set obj.ttl = 0s;
+
+        # todo
+        #error 200 "Purged.";
     }
     return (deliver);
 }
 
 sub vcl_miss {
     # Purge
-    if (req.request == "PURGE") {
-        error 404 "Not in cache.";
+    if (req.method == "PURGE") {
+        # todo
+        #error 404 "Not in cache.";
     }
     return (fetch);
 }
 
-sub vcl_fetch {
+sub vcl_backend_response {
     # Stale content delivery
     set beresp.grace = 1d;
     
     # static files always cached 
-    if (req.url ~ "^/media" || req.url ~ "^/static") {
+    if (bereq.url ~ "^/media" || bereq.url ~ "^/static") {
        unset beresp.http.set-cookie;
        return (deliver);  
     }
@@ -242,18 +257,19 @@ sub vcl_fetch {
 
         # this is to control time to cache this url
         #set beresp.ttl = 10s;
-        return (hit_for_pass);
+        set beresp.uncacheable = true;
+        return (deliver);
     } else {
         return (deliver);
     }
 
     # Some optional logic from Drupal
-    # if (req.url ~ "^/api/v1") {
+    # if (bereq.url ~ "^/api/v1") {
     #   set beresp.ttl = 10s;
     #   return (deliver);
     # }
     # 
-    # if (req.url == "/questions/esi-test/") {
+    # if (bereq.url == "/questions/esi-test/") {
     #    set beresp.ttl = 1s;
     #    #set beresp.ttl = 5m;
     # } else {
@@ -262,17 +278,17 @@ sub vcl_fetch {
     # }
     # 
     # # Don't allow static files to set cookies.
-    # if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
+    # if (bereq.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
     #   # beresp == Back-end response from the web server.
     #   unset beresp.http.set-cookie;
     # }
     # 
     # # static and media files always cached 
-    # if (req.url ~ "^/static" || req.url ~ "^/media") {
+    # if (bereq.url ~ "^/static" || bereq.url ~ "^/media") {
     #    unset beresp.http.set-cookie;
     # }
     # 
-    # if (req.url ~ "^/accounts/login" || req.url ~ "^/accounts/register" || req.url ~ "^/accounts/password" || req.url ~ "^/questions/$" || req.url ~ "^/questions/login/" || req.url ~ "^/questions/from-external-login/") {
+    # if (bereq.url ~ "^/accounts/login" || bereq.url ~ "^/accounts/register" || bereq.url ~ "^/accounts/password" || bereq.url ~ "^/questions/$" || bereq.url ~ "^/questions/login/" || bereq.url ~ "^/questions/from-external-login/") {
     #    return (hit_for_pass);
     # }
     # 
@@ -317,10 +333,10 @@ sub vcl_deliver {
     }
 }
 
-sub vcl_error {
+sub vcl_backend_error {
     # Health check
-    if (obj.status == 751) {
-        set obj.status = 200;
+    if (beresp.status == 751) {
+        set beresp.status = 200;
         return (deliver);
     }
 }
@@ -344,17 +360,17 @@ sub vcl_error {
 # 	    set req.http.X-Forwarded-For = client.ip;
 # 	}
 #     }
-#     if (req.request != "GET" &&
-#       req.request != "HEAD" &&
-#       req.request != "PUT" &&
-#       req.request != "POST" &&
-#       req.request != "TRACE" &&
-#       req.request != "OPTIONS" &&
-#       req.request != "DELETE") {
+#     if (req.method != "GET" &&
+#       req.method != "HEAD" &&
+#       req.method != "PUT" &&
+#       req.method != "POST" &&
+#       req.method != "TRACE" &&
+#       req.method != "OPTIONS" &&
+#       req.method != "DELETE") {
 #         /* Non-RFC2616 or CONNECT which is weird. */
 #         return (pipe);
 #     }
-#     if (req.request != "GET" && req.request != "HEAD") {
+#     if (req.method != "GET" && req.method != "HEAD") {
 #         /* We only deal with GET and HEAD by default */
 #         return (pass);
 #     }

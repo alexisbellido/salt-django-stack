@@ -25,6 +25,7 @@ include:
     - require_in:
       - service: varnish
 
+# verify configuration with "varnishd -C -f /etc/varnish/default.vcl"
 # deploy the vcl file and trigger a reload of varnish
 /etc/varnish/default.vcl:
   file:
