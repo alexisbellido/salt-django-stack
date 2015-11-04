@@ -24,6 +24,22 @@ So far, I have tested with Ubuntu 14.04 and 14.10 on both Linode and Digital Oce
     See the full `Salt Formulas installation and usage instructions
     <http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html>`_.
 
+Start Here
+============
+
+Make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important for GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
+
+`$ adduser --uid 1003 exampleuser`
+`$ usermod -a -G sudo exampleuser`
+
+Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
+
+`echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''`
+
+You can use sed to quickly make changes in zinibu_basic.sls:
+
+`sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls`
+
 Quick Install
 ================
 
@@ -53,14 +69,6 @@ The end result will be the same as using the quick install.
 
 Overview
 ========
-
-Make sure to create a user with the same uid on all servers involved, this is specially important for GlusterFS. One way to do it it with Ubuntu's adduser --uid.
-
-Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
-echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
-
-You can use sed to quickly make changes in zinibu_basic.sls:
-sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls
 
 See the conf directory for sample top.sls and pillar configuration.
 
