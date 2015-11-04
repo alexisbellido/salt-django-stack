@@ -31,3 +31,9 @@ nginx-running:
       - service: nginx-stopped
       - service: upstart_job_running
       - file: {{ upstart_job_file }}
+
+varnish-running:
+  service.running:
+    - name: varnish
+    - require:
+      - service: nginx-running
