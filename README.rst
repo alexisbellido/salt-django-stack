@@ -37,6 +37,14 @@ Add public key to the repositories you will need. This is how to easily create y
 
   ``echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''``
 
+Your public key, which you should add to Github, should be in:
+
+  ``cat ~/.ssh/id_rsa.pub`` 
+
+Optionally, if you want avoid the prompt when cloning this repository from Github (which happens when running the quick install script), you can add the fingerprint like this:
+
+  ``ssh-keyscan github.com >> ~/.ssh/known_hosts``
+
 You can use sed to quickly make changes in zinibu_basic.sls:
 
   ``sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls``
