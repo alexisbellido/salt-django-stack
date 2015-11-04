@@ -96,6 +96,21 @@ glusterfs-mount-static:
     - require:
       - pkg: glusterfs-client
       - file: glusterfs-fstab-static
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-start-before-mount
+
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-start-before-mount:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: gluster volume start static-{{ zinibu_basic.project.name }}
+    - shell: /bin/bash
+    - require:
+      - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop-before-mount
+
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop-before-mount:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: echo -e 'y\n' | gluster volume stop static-{{ zinibu_basic.project.name }}
+    - shell: /bin/bash
 
 setup-git-user-name:
   git.config:

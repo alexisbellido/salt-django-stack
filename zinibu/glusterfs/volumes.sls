@@ -45,7 +45,7 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}:
     - unless: "gluster volume info static-{{ zinibu_basic.project.name }}"
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}-start:
-  glusterfs.started:
-    - name: static-{{ zinibu_basic.project.name }}
+  cmd.run:
+    - name: gluster volume start static-{{ zinibu_basic.project.name }}
     - require:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}

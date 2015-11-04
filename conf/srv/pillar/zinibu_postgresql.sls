@@ -16,14 +16,6 @@ postgres:
       inherit: True
       replication: False
 
-    user2:
-      password: 'supersecret'
-      createdb: False
-      createroles: False
-      createuser: False
-      inherit: True
-      replication: False
-
     owner1:
       password: 'secret'
       createdb: True
@@ -36,13 +28,6 @@ postgres:
     db1:
       owner: 'owner1'
       user: 'user1'
-      template: 'template0'
-      lc_ctype: 'C.UTF-8'
-      lc_collate: 'C.UTF-8'
-
-    db2:
-      owner: 'owner1'
-      user: 'user2'
       template: 'template0'
       lc_ctype: 'C.UTF-8'
       lc_collate: 'C.UTF-8'
@@ -60,4 +45,3 @@ postgres:
     - ['host', 'db1', 'user1', '192.168.33.15/32']
     - ['host', 'db1', 'user1', '192.168.33.16/32']
     - ['host', 'db1', 'user1', '192.168.33.17/32']
-
