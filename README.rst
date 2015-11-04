@@ -167,6 +167,10 @@ It seems Varnish needs to be restarted manually at the end of the first state.hi
 
    ``sudo salt 'hostname' service.restart varnish``
 
+*TypeError encountered executing state.highstate: cannot concatenate 'str' and 'ConstructorError' objects. See debug log for more info.*
+
+You have a duplicate selector in your top.sls. See https://github.com/saltstack/salt/issues/16753.
+
 
 Testing
 ================
