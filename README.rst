@@ -158,12 +158,22 @@ Copy the files from zinibu/pillar_data to /srv/pillar and now you can use the pi
 
 The goal is to keep separate pillar SLS files for each state.
 
+Troubleshooting
+================
+
+*HAProxy shows the cache servers not running*
+
+It seems Varnish needs to be restarted manually at the end of the first state.highstate. You can target the appropiate hosts to do it with just one command:
+
+   ``sudo salt 'hostname' service.restart varnish``
+
+
 Testing
 ================
 
 Run some state on some host for testing, for example:
 
-sudo salt hostname state.sls zinibu.python
+  ``sudo salt 'hostname' state.sls zinibu.python``
 
 
 Available states
@@ -236,7 +246,9 @@ Future Plans
 
 * HAProxy SSL support.
 * HAProxy high availability with Keepalived.
+* Figure out why Varnish needs to be restarted at the end of state.highstate.
 * Control Gunicorn with systemd, the new services manager by Ubuntu 15.04.
+* Varnish 4 support. It's the default starting with Ubuntu 14.10.
 * High availability Redis.
 * High availability PostgreSQL.
 
