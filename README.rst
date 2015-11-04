@@ -29,16 +29,16 @@ Start Here
 
 Make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important for GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
 
-`$ adduser --uid 1003 exampleuser`
-`$ usermod -a -G sudo exampleuser`
+  ``$ adduser --uid 1003 exampleuser``
+  ``$ usermod -a -G sudo exampleuser``
 
 Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
 
-`echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''`
+  ``echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''``
 
 You can use sed to quickly make changes in zinibu_basic.sls:
 
-`sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls`
+  ``sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls``
 
 Quick Install
 ================
