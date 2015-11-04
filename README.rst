@@ -30,6 +30,7 @@ Start Here
 Make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important for GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
 
   ``$ adduser --uid 1003 exampleuser``
+
   ``$ usermod -a -G sudo exampleuser``
 
 Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
