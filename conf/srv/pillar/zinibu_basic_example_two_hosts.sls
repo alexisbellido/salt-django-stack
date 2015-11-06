@@ -1,6 +1,6 @@
 zinibu_basic:
-  app_user: vagrant
-  app_group: vagrant
+  app_user: exampleuser
+  app_group: examplegroup
   root_user: root
   project:
     name: zinibu_dev

@@ -1,6 +1,6 @@
 zinibu_basic:
-  app_user: vagrant
-  app_group: vagrant
+  app_user: exampleuser
+  app_group: examplegroup
   root_user: root
   project:
     name: zinibu_dev
@@ -9,8 +9,8 @@ zinibu_basic:
     # keys of webheads must match minion ids
     webheads:
       django5:
-          public_ip: 192.168.1.95
-          private_ip: 192.168.33.15
+          public_ip: pub1
+          private_ip: priv1
           nginx_port: 81
           gunicorn_port: 8000
           maxconn_dynamic: 250
@@ -22,14 +22,14 @@ zinibu_basic:
     # keys must match minion ids
     varnish_servers:
       django5:
-          public_ip: 192.168.1.95
-          private_ip: 192.168.33.15
+          public_ip: pub1
+          private_ip: priv1
           port: 83
           maxconn_cache: 1000
 
     # if using keepalived, put the virtual IPs in the next two lines
-    haproxy_frontend_public_ip: 192.168.1.95
-    haproxy_frontend_private_ip: 192.168.33.15
+    haproxy_frontend_public_ip: pub1
+    haproxy_frontend_private_ip: priv1
     haproxy_frontend_port: 80
     haproxy_check: '/haproxycheck'
     haproxy_app_check_url: '/myapp/appcheck/'
@@ -39,11 +39,11 @@ zinibu_basic:
     # keys must match minion ids
     haproxy_servers:
       django5:
-          public_ip: 192.168.1.95
-          private_ip: 192.168.33.15
+          public_ip: pub1
+          private_ip: priv1
           port: 80
           keepalived_priority: 101
-          stats_ip: 192.168.1.95
+          stats_ip: pub1
           stats_port: 8998
           stats:
             enable: True
@@ -57,16 +57,15 @@ zinibu_basic:
     # keys must match minion ids
     glusterfs_nodes:
       django5:
-          private_ip: 192.168.33.15
+          private_ip: priv1
 
     # keys must match minion ids
     redis_nodes:
       django5:
-          private_ip: 192.168.33.15
+          private_ip: priv1
 
     # YAML alternative list of objects syntax
     #webheads:
     #  - {public_ip: 192.168.33.15, nginx_port: 80, gunicorn_port: 8000}
     #  - {public_ip: 192.168.33.16, nginx_port: 80, gunicorn_port: 8000}
     #  - {public_ip: 192.168.33.17, nginx_port: 80, gunicorn_port: 8000}
-      

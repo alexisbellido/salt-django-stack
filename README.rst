@@ -92,71 +92,89 @@ The first directory, /srv/salt, is the default used by Salt on Ubuntu.
 
 Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a standard webhead (this is zinibu/init.sls including state files to setup the web stack). To setup other servers include individual state files, like this:
 
-base:
-  'webhead*':
-    - zinibu
-  'cache':
-    - zinibu.varnish
-    - zinibu.varnish.conf
-  'load-balancer':
-    - zinibu.keepalived
-    - zinibu.keepalived.conf
-    - zinibu.haproxy
-    - zinibu.haproxy.conf
-  'redis-server':
-    - zinibu.redis
-  'database':
-    - zinibu.postgresql
+  base:
+    'webhead*':
+      - zinibu
+    'cache':
+      - zinibu.varnish
+      - zinibu.varnish.conf
+    'load-balancer':
+      - zinibu.keepalived
+      - zinibu.keepalived.conf
+      - zinibu.haproxy
+      - zinibu.haproxy.conf
+    'redis-server':
+      - zinibu.redis
+    'database':
+      - zinibu.postgresql
 
 If used, the keepalived states should run before varnish and haproxy states make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.
 
 GlusterFS client is required by collectstatic in zinibu.django. This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
 
-base:
-  'django5':
-    - zinibu.glusterfs
-    - zinibu.glusterfs.volumes
-    - zinibu.postgresql
-    - zinibu.varnish
-    - zinibu.varnish.conf
-    - zinibu.haproxy
-    - zinibu.haproxy.conf
-  'django6':
-    - zinibu.glusterfs
-    - zinibu.glusterfs.volumes
-    - zinibu.varnish
-    - zinibu.varnish.conf
-    - zinibu.haproxy
-    - zinibu.haproxy.conf
-  'django*':
-    - zinibu
+  base:
+    'django5':
+      - zinibu.postgresql
+      - zinibu.varnish
+      - zinibu.varnish.conf
+      - zinibu.haproxy
+      - zinibu.haproxy.conf
+    'django6':
+      - zinibu.varnish
+      - zinibu.varnish.conf
+      - zinibu.haproxy
+      - zinibu.haproxy.conf
+    'django*':
+      - zinibu
 
 If some states are running in the same server they all should be under the same minion id in top.sls.
 
 See http://docs.saltstack.com/en/latest/ref/states/top.html
 
 To make testing easier, run commands locally with salt-call, this way you don't need a target and can use just one server. This means a command like:
-sudo salt '*' test.ping
+  sudo salt '*' test.ping
 
 becomes:
-sudo salt-call test.ping
+  sudo salt-call test.ping
 
-To run all states use:
-sudo salt '*' state.highstate
+Minions Setup
+================
 
+Set minions' ids and the glusterfs_node role as appropiate:
 
-Pillar setup
+  id: my_minion_id
+
+  grains:
+    roles:
+      - glusterfs_node
+
+Restart salt-minion to activate changes:
+
+  ``sudo service salt-minion restart``
+
+Pillar Setup
 ================
 
 Create the pillar directory and point /etc/salt/master to it:
 
-pillar_roots:
-  base:
-    - /srv/pillar
+  pillar_roots:
+    base:
+      - /srv/pillar
 
 Copy the files from zinibu/pillar_data to /srv/pillar and now you can use the pillar data for your configuration. As you make changes to the pillar files in /srv/pillar, copy the changes to pillar_data the repository. Avoid keeping credentials and any other private data in the repository.
 
 The goal is to keep separate pillar SLS files for each state.
+
+Make it All Run
+=================
+
+To run all states in the correct order, run from the salt master:
+
+  ``sudo salt-run state.orchestrate zinibu.bootstrap``
+
+  ``sudo salt '*' state.highstate``
+
+state.orchestrate is important to make sure the GlusterFS volumes are setup in the correct order.
 
 Troubleshooting
 ================

@@ -91,9 +91,13 @@ EOL
   echo "  sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls"
   echo "2. Setup /srv/salt/top.sls and restart salt master"
   echo "3. Setup /etc/hosts to point all hosts to the salt master using the \"salt\" hostname."
-  echo "4. Edit /etc/salt/minion in all minions to set an id and restart salt minion."
+  echo "4. Edit /etc/salt/minion in all minions to set id and roles and restart salt minion."
   echo "5. Accept keys on master using salt-key."
-  echo "6. sudo salt '*' state.highstate"
+  echo "6. Make magic start:"
+  echo "  sudo salt-run state.orchestrate zinibu.bootstrap"
+  echo "  sudo salt '*' state.highstate"
+  echo
+  echo "Checkout the README for more details."
   echo
 
 fi
