@@ -13,3 +13,10 @@ glusterfs-setup-volumes:
       - zinibu.glusterfs.volumes
     - require:
       - salt: glusterfs-setup-server
+
+#test-run-command:
+#  salt.function:
+#    - name: cmd.run
+#    - tgt: '*'
+#    - arg:
+#      - echo "TEST RUN COMMAND"
