@@ -1,5 +1,12 @@
 TODO
 
+* what about a bash script to run the commands to make the whole thing run:
+sudo salt-run state.orchestrate zinibu.bootstrap
+sudo salt '*' state.highstate``
+sudo salt '*' service.restart varnish # make this target just cache servers, need to specify roles in /etc/salt/minion
+
+* Use state.orchestrate to make sure Varnish is restarted at the end of state.highstate.
+
 - find a way to pass the environment to use for starting Django, which will determine the value of DJANGO_SETTINGS_MODULE used when --settings not passed to django-admin.py and used automatically when calling gunicorn, for now,using $PROJECTNAME.settings.local
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django
@@ -11,6 +18,7 @@ TODO
 
 - remove unused data from pillar zinibu_haproxy and zinibu_postgresql and any others
 
+- see about using state.orchestrate for deployment, to make sure code is deployed for all minions before services are restarted
 - States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box. Run from command line after merged to a branch I designate as the one feeding the environment, like "production" and "staging," and probably use git hooks so after something is merged to any of those branches the autodeployment runs
 
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
