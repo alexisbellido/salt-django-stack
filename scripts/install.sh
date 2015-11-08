@@ -6,7 +6,7 @@
 salt-run state.orchestrate zinibu.bootstrap
 
 # Main setup.
-salt '*' state.highstate``
+salt '*' state.highstate
 
 # Restart Varnish servers (requires 'varnish' role grains setup in /etc/salt/minion).
 salt -G 'roles:varnish' service.restart varnish
