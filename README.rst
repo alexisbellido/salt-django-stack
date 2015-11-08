@@ -183,11 +183,13 @@ The goal is to keep separate pillar SLS files for each state.
 Make it All Run
 =================
 
-To run all states in the correct order, run from the salt master:
+To run all states in the correct order, run from the salt master, this is what scripts/install.sh:
 
   ``sudo salt-run state.orchestrate zinibu.bootstrap``
 
   ``sudo salt '*' state.highstate``
+
+  ``salt -G 'roles:varnish' service.restart varnish``
 
 state.orchestrate is important to make sure the GlusterFS volumes are setup in the correct order.
 
