@@ -1,12 +1,5 @@
 TODO
 
-* what about a bash script to run the commands to make the whole thing run:
-sudo salt-run state.orchestrate zinibu.bootstrap
-sudo salt '*' state.highstate``
-sudo salt '*' service.restart varnish # make this target just cache servers, need to specify roles in /etc/salt/minion
-
-* Use state.orchestrate to make sure Varnish is restarted at the end of state.highstate.
-
 - find a way to pass the environment to use for starting Django, which will determine the value of DJANGO_SETTINGS_MODULE used when --settings not passed to django-admin.py and used automatically when calling gunicorn, for now,using $PROJECTNAME.settings.local
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
 - using sqlite db from django5, set it up to create a db in postgresql and use it from django

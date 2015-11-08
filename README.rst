@@ -50,7 +50,7 @@ You can use sed to quickly make changes in zinibu_basic.sls:
   ``sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls``
 
 Quick Install
-================
+===============
 
 Add your public key to Github and then run this from, ideally, your home directory (although the script should be smart enough to work from any directory):
 
@@ -67,14 +67,18 @@ Pay attention to the next steps displayed after the script finishes running and 
 
 You shouldn't worry about overwriting your settings if running the script more than once; files won't be touched if they already exist.
 
-Alternative Install
-================
+Run all the states with:
+
+  ``sudo scripts/install.sh``
+
+Alternative Prerequisites Install
+===================================
 
 You can clone this project to any directory and then cd to it and run it with:
 
   ``sudo scripts/install-prerequisites-ubuntu.sh master|minion|full "Joe Doe" name@example.com``
 
-The end result will be the same as using the quick install.
+The end result will be the same as using curl call from the quick install.
 
 Overview
 ========
@@ -140,13 +144,24 @@ becomes:
 Minions Setup
 ================
 
-Set minions' ids and the glusterfs_node role as appropiate:
+Set minions' ids and the roles as appropiate:
 
   id: my_minion_id
 
   grains:
     roles:
       - glusterfs_node
+      - varnish
+
+The available roles are:
+* glusterfs_node
+* varnish
+* webhead (which includes nginx and gunicorn)
+* redis
+* postgresql
+* haproxy
+
+A host may play more than one of these roles.
 
 Restart salt-minion to activate changes:
 
