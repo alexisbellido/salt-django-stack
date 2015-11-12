@@ -7,9 +7,17 @@
 # thiscript production --log-level=debug
 # Pass no parameter to start a production setup, like Gunicorn.
 
-#export PROJECT_DATABASES_DEFAULT_NAME
-#export PROJECT_DATABASES_DEFAULT_USER
-#export PROJECT_DATABASES_DEFAULT_PASSWORD
+{% set zinibu_postgresql = salt['pillar.get']('postgres', {}) -%}
+export PROJECT_DATABASES_DEFAULT_NAME="{{ zinibu_postgresql.lookup.dummy_db }}"
+{% for db_name, db in salt['pillar.get']('postgres:databases', []).items() -%}
+#export PROJECT_DATABASES_DEFAULT_NAME="{{ db_name }}"
+{% endfor -%}
+{% for user_name, user in salt['pillar.get']('postgres:users', []).items() -%}
+{% if not user.createdb -%}
+#export PROJECT_DATABASES_DEFAULT_USER="{{ user_name }}"
+#export PROJECT_DATABASES_DEFAULT_PASSWORD="{{ user.password }}"
+{% endif -%}
+{% endfor -%}
 #export PROJECT_DATABASES_DEFAULT_HOST
 #export PROJECT_DATABASES_DEFAULT_PORT
 #export PROJECT_REDIS_HOST

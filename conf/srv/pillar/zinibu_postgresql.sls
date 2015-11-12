@@ -6,6 +6,7 @@ postgres:
 
   lookup:
     value: "will overwrite data in map.jinja"
+    dummy_db: "db.sqlite3"
 
   users:
     user1:
