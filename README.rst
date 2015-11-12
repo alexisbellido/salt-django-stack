@@ -52,7 +52,7 @@ You can use sed to quickly make changes in zinibu_basic.sls:
 Quick Install
 ===============
 
-Add your public key to Github and then run this from, ideally, your home directory (although the script should be smart enough to work from any directory):
+**Step 1**: Add your public key to Github and then run this from, ideally, your home directory (although the script should be smart enough to work from any directory):
 
   ``\curl -sSL https://raw.githubusercontent.com/alexisbellido/salt-django-stack/master/scripts/install-prerequisites-ubuntu.sh | sudo bash -s full|master|minion "Joe Doe" name@example.com``
 
@@ -63,11 +63,11 @@ The second and third arguments are used to setup git --global user.name and user
 
 An installation of type full or master will also copy basic top.sls to /srv/salt/top.sls and /srv/pillar/* and files and point to them from /etc/salt/master.
 
-Pay attention to the next steps displayed after the script finishes running and customize your settings before proceeding to run salt states.
+**Step 2**: Pay attention to the next steps displayed after the script finishes running and customize your settings before proceeding to run salt states.
 
 You shouldn't worry about overwriting your settings if running the script more than once; files won't be touched if they already exist.
 
-Run all the states with:
+**Step 3**: Run all the states with:
 
   ``sudo scripts/install.sh``
 
