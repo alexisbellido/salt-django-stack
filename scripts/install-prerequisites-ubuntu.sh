@@ -94,8 +94,7 @@ EOL
   echo "4. Edit /etc/salt/minion in all minions to set id and roles and restart salt minion."
   echo "5. Accept keys on master using salt-key."
   echo "6. Make magic start:"
-  echo "  sudo salt-run state.orchestrate zinibu.bootstrap"
-  echo "  sudo salt '*' state.highstate"
+  echo "   sudo scripts/install.sh"
   echo
   echo "Checkout the README for more details."
   echo
