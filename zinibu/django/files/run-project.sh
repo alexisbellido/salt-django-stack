@@ -67,6 +67,12 @@ if [ "$1" == "dev" ]; then
   django-admin.py runserver --pythonpath=`pwd` $BIND_ADDRESS
   # thin wrapper for django-admin.py, no need for --pythonpath or --settings but it requires to use python first
   #python manage.py runserver $BIND_ADDRESS
+elif [ "$1" == "shell" ]; then
+  django-admin.py shell --pythonpath=`pwd`
+elif [ "$1" == "setenv" ]; then
+  echo "Environment variables to run $PROJECTNAME"
+  echo "You can use any django-admin.py command from $PROJECTDIR (note the use of --pythonpath and pwd between backticks), for example:"
+  echo "django-admin.py shell --pythonpath=\`pwd\`"
 elif [ "$1" == "production" ]; then
   # production server (gunicorn)
   # see http://docs.gunicorn.org/en/latest/settings.html#loglevel

@@ -1,12 +1,10 @@
 TODO
 
+- sync db with postgresql and django settings to use them
 - need to run a state that accepts a file path as parameter to load db dump from tar.gz file in one directory into postgresql server, start test with any file that's copied an uncompressed, see my example of passing pillar via command line
-
-- rerun postgresql states to rearrange user, owner and database data from pillar, simplify jinja logic for EXPORT variables in django/files/run-project.sh
 
 - find a way to pass the environment to use for starting Django, which will determine the value of DJANGO_SETTINGS_MODULE used when --settings not passed to django-admin.py and used automatically when calling gunicorn, for now,using $PROJECTNAME.settings.local
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
-- using sqlite db from django5, set it up to create a db in postgresql and use it from django
 - at this point, all settings in django should be set by salt
 - detect Ubuntu 14.10 to setup vcl for Varnish 4.0, test it manually first: https://www.varnish-cache.org/docs/4.0/whats-new/upgrading.html
 
