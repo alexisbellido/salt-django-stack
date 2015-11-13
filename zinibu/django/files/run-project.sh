@@ -18,11 +18,14 @@ if [ -z "$1" ]; then
     echo "- production --log-level=LOGLEVEL: Django with Nginx/Gunicorn and logging. Called from Upstart service."
     echo
 else
+    {% set db_engine = salt['pillar.get']('postgres:lookup:db_engine', '') -%}
     {% set dummy_db = salt['pillar.get']('postgres:lookup:dummy_db', '') -%}
-    {% if dummy_db != '' -%}
+    {% if db_engine == 'sqlite3' -%}
+    export PROJECT_DATABASES_ENGINE="sqlite3"
     export PROJECT_DATABASES_DEFAULT_NAME="{{ dummy_db }}"
     {% else -%}
     {% for db_name, db_values in salt['pillar.get']('postgres:databases', []).items() -%}
+    export PROJECT_DATABASES_ENGINE="postgresql"
     export PROJECT_DATABASES_DEFAULT_NAME="{{ db_name }}"
     export PROJECT_DATABASES_DEFAULT_USER="{{ db_values.user }}"
     {% for user_name, user_values in salt['pillar.get']('postgres:users', []).items() -%}
