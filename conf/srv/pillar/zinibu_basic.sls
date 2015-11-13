@@ -64,6 +64,12 @@ zinibu_basic:
       django5:
           private_ip: priv1
 
+    postgresql_servers:
+      django5:
+          public_ip: pub1
+          private_ip: priv1
+          port: 5432
+
     # YAML alternative list of objects syntax
     #webheads:
     #  - {public_ip: 192.168.33.15, nginx_port: 80, gunicorn_port: 8000}

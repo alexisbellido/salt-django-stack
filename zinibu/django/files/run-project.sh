@@ -7,20 +7,28 @@
 # thiscript production --log-level=debug
 # Pass no parameter to start a production setup, like Gunicorn.
 
-{% set zinibu_postgresql = salt['pillar.get']('postgres', {}) -%}
-export PROJECT_DATABASES_DEFAULT_NAME="{{ zinibu_postgresql.lookup.dummy_db }}"
-{% for db_name, db in salt['pillar.get']('postgres:databases', []).items() -%}
-#export PROJECT_DATABASES_DEFAULT_NAME="{{ db_name }}"
-{% endfor -%}
-{% for user_name, user in salt['pillar.get']('postgres:users', []).items() -%}
-{% if not user.createdb -%}
-#export PROJECT_DATABASES_DEFAULT_USER="{{ user_name }}"
-#export PROJECT_DATABASES_DEFAULT_PASSWORD="{{ user.password }}"
+{% set dummy_db = salt['pillar.get']('postgres:lookup:dummy_db', '') -%}
+{% if dummy_db != '' -%}
+export PROJECT_DATABASES_DEFAULT_NAME="{{ dummy_db }}"
+{% else -%}
+{% for db_name, db_values in salt['pillar.get']('postgres:databases', []).items() -%}
+export PROJECT_DATABASES_DEFAULT_NAME="{{ db_name }}"
+export PROJECT_DATABASES_DEFAULT_USER="{{ db_values.user }}"
+{% for user_name, user_values in salt['pillar.get']('postgres:users', []).items() -%}
+{% if user_name == db_values.user -%}
+export PROJECT_DATABASES_DEFAULT_PASSWORD="{{ user_values.password }}"
 {% endif -%}
 {% endfor -%}
-#export PROJECT_DATABASES_DEFAULT_HOST
-#export PROJECT_DATABASES_DEFAULT_PORT
-#export PROJECT_REDIS_HOST
+{% endfor -%}
+{% for id, postgresql_server in salt['pillar.get']('zinibu_basic:project:postgresql_servers', {}).iteritems() %}
+export PROJECT_DATABASES_DEFAULT_HOST="{{ postgresql_server.private_ip }}"
+export PROJECT_DATABASES_DEFAULT_PORT="{{ postgresql_server.port }}"
+{% endfor -%}
+{% endif -%}
+
+{% for id, redis_node in salt['pillar.get']('zinibu_basic:project:redis_nodes', {}).iteritems() %}
+export PROJECT_REDIS_HOST="{{ redis_node.private_ip }}"
+{% endfor -%}
 
 # user/group to run as
 USER={{ user }}

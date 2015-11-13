@@ -1,5 +1,7 @@
 TODO
 
+- need to run a state that accepts a file path as parameter to load db dump from tar.gz file in one directory into postgresql server, start test with any file that's copied an uncompressed, see my example of passing pillar via command line
+
 - rerun postgresql states to rearrange user, owner and database data from pillar, simplify jinja logic for EXPORT variables in django/files/run-project.sh
 
 - find a way to pass the environment to use for starting Django, which will determine the value of DJANGO_SETTINGS_MODULE used when --settings not passed to django-admin.py and used automatically when calling gunicorn, for now,using $PROJECTNAME.settings.local
