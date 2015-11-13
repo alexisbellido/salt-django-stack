@@ -7,7 +7,7 @@ install-postgresql:
 
 pg_hba.conf:
   file.managed:
-    - name: {{ postgres.conf_dir }}pg_hba.conf
+    - name: {{ postgres.conf_dir }}/pg_hba.conf
     - source: {{ postgres['pg_hba.conf'] }}
     - template: jinja
     - user: postgres
