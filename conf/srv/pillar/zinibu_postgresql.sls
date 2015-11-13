@@ -18,7 +18,7 @@ postgres:
       replication: False
 
     owner1:
-      password: 'secret'
+      password: 'owner_secret'
       createdb: True
       createroles: False
       createuser: False
