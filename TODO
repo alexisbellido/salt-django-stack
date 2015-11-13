@@ -2,20 +2,9 @@ TODO
 
 - sync db with postgresql and set django settings to use them
 
-- some psql info here:
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/linkin-vim-files:This is in this file [how-to-pass-password-psql]
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/django-test-db-psql-permission:(django13)alexis@amber:~/djcode/marketr$ sudo -u postgres psql
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/django-test-db-psql-permission:psql (8.4.8)
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/how-to-pass-password-psql:psql -h localhost -d playwithdjango
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/psql-database-setup:$ sudo -u postgres psql
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/psql-database-setup:psql -U alexis -d cataybea -f cataybea.sql
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/psql-database-setup:psql -d cataybea
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/dump-pg-database:$ psql -d payroll -f payroll.dump.out
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/fabric-deployment:dump/restore pg db [how-to-pass-password-psql]
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/fabric-deployment:psql -h 192.168.0.182 -d alexistestdb -U alexis
-/home/alexis/Documents/zinibu-data/zinibu-articles/development/fabric-deployment:more on [psql-stuff]
-/home/alexis/Documents/zinibu-data/zinibu-articles/to-polish/data/psql-stuff:more about psql on [fabric-deployment]
-
+- psql dump and restore using (add cmd.run in state):
+sudo -u postgres pg_dump -Fc db1 > db1.dump
+sudo -u postgres pg_restore -d db1 --clean db1.dump
 
 - need to run a state that accepts a file path as parameter to load db dump from tar.gz file in one directory into postgresql server, start test with any file that's copied an uncompressed, see my example of passing pillar via command line
 
