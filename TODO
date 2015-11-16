@@ -1,12 +1,20 @@
 TODO
 
-- sync db with postgresql and set django settings to use them
+- floating ips with digitalocean
 
-- psql dump and restore using (add cmd.run in state):
-sudo -u postgres pg_dump -Fc db1 > db1.dump
-sudo -u postgres pg_restore -d db1 --clean db1.dump
+get private ip to be used by frontend ft_web_static in /etc/haproxy/haproxy.cfg :
+curl 169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address && echo
 
-- need to run a state that accepts a file path as parameter to load db dump from tar.gz file in one directory into postgresql server, start test with any file that's copied an uncompressed, see my example of passing pillar via command line
+set env to private ip from bash:
+export PRIV=`curl 169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address`
+echo $PRIV
+
+get anchor ip (private ip used to bind floating ip):
+curl 169.254.169.254/metadata/v1/interfaces/public/0/anchor_ipv4/address && echo
+
+
+
+===
 
 - find a way to pass the environment to use for starting Django, which will determine the value of DJANGO_SETTINGS_MODULE used when --settings not passed to django-admin.py and used automatically when calling gunicorn, for now,using $PROJECTNAME.settings.local
 - postgresql user and db are already being created, need to update django settings correctly, use basic settings for now, later I'll move to scoops-style settings
