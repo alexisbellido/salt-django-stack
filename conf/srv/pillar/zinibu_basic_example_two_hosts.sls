@@ -93,3 +93,9 @@ zinibu_basic:
     redis_nodes:
       django5:
           private_ip: priv1
+
+    postgresql_servers:
+      django5:
+          public_ip: pub1
+          private_ip: priv1
+          port: 5432
