@@ -150,16 +150,18 @@ Set minions' ids and the roles as appropiate:
 
   grains:
     roles:
+      - first_glusterfs_node
       - glusterfs_node
       - varnish
 
 The available roles are:
-* glusterfs_node
-* varnish
-* webhead (which includes nginx and gunicorn)
-* redis
-* postgresql
-* haproxy
+- first_glusterfs_node (this is the one that will setup the volume and should be set just for one minion)
+- glusterfs_node
+- varnish
+- webhead (which includes nginx and gunicorn)
+- redis
+- postgresql
+- haproxy
 
 A host may play more than one of these roles.
 

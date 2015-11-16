@@ -7,7 +7,7 @@ glusterfs-setup-server:
 
 glusterfs-setup-volumes:
   salt.state:
-    - tgt: 'roles:glusterfs_node'
+    - tgt: 'roles:first_glusterfs_node'
     - tgt_type: grain
     - sls:
       - zinibu.glusterfs.volumes
