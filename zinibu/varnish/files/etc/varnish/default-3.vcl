@@ -22,6 +22,39 @@ backend bk_appsrv_static {
     .initial = 2;
   }
 }
+# enable this
+#backend bk_appsrv_static_django5 {
+#  .host = "192.168.33.15";
+#  .port = "80";
+#  .probe = {
+#    .url = "/haproxycheck";
+#    .expected_response = 200;
+#    .timeout = 1s;
+#    .interval = 3s;
+#    .window = 2;
+#    .threshold = 2;
+#    .initial = 2;
+#  }
+#}
+#
+#backend bk_appsrv_static_django6 {
+#  .host = "192.168.33.16";
+#  .port = "80";
+#  .probe = {
+#    .url = "/haproxycheck";
+#    .expected_response = 200;
+#    .timeout = 1s;
+#    .interval = 3s;
+#    .window = 2;
+#    .threshold = 2;
+#    .initial = 2;
+#  }
+#}
+#
+#director bk_appsrv_static_director fallback {
+#  { .backend = bk_appsrv_static_django5; }
+#  { .backend = bk_appsrv_static_django6; }
+#}
 
 acl purge {
     "localhost";
@@ -38,6 +71,8 @@ sub vcl_recv {
 
     # Set default backend
     set req.backend = bk_appsrv_static;
+    # enable this
+    #set req.backend = bk_appsrv_static_director;
 
     # conditions examples
     # if (req.url ~ "^/yte-admin" || req.url ~ "^/accounts/" || req.url ~ "^/api/v1" || req.url ~ "^/sweeps" || req.url ~ "^/questions" || req.url ~ "^/static" || req.url ~ "^/media/"  || req.url ~ "^/dj-admin") {

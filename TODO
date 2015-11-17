@@ -2,15 +2,9 @@ TODO
 
 - floating ips with digitalocean
 - copy keepalived, master.sh and ip-assign
-- update private frontend of haproxy using DO metadata service, haproxy needs to be restarted
-- this is just for the private haproxy frontend and varnish, alternatives to avoid making changes to haproxy and varnish when keepalived kicks in: haproxy bind multiple addresses http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#bind and varnish director fallback https://www.varnish-cache.org/docs/3.0/reference/vcl.html#backend-declarations
+- document: this is just for the private haproxy frontend and varnish, to avoid making changes to haproxy and varnish when keepalived kicks in: haproxy binds to multiple addresses http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#bind and varnish uses a director fallback https://www.varnish-cache.org/docs/3.0/reference/vcl.html#backend-declarations
 
-haproxy using multiple private IPs:
-frontend ft_web_static
-    bind 192.168.33.15:80,192.168.33.16:80 # private IP
-
-change here haproxy/files/etc/haproxy/haproxy.cfg:
-    bind {{ zinibu_basic.project.haproxy_frontend_private_ip }}:{{ zinibu_basic.project.haproxy_frontend_port }} # private IP
+haproxy part done, continue to varnish
 
 varnish using fallback director:
 backend bk_appsrv_static_django5 {

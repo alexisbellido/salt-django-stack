@@ -40,9 +40,8 @@ zinibu_basic:
           port: 83
           maxconn_cache: 1000
 
-    # if using keepalived, put the virtual IPs in the next two lines
+    # if using keepalived, put the floating IP here
     haproxy_frontend_public_ip: pub1
-    haproxy_frontend_private_ip: priv1
     haproxy_frontend_port: 80
     haproxy_check: '/haproxycheck'
     haproxy_app_check_url: '/myapp/appcheck/'
@@ -56,7 +55,6 @@ zinibu_basic:
           private_ip: priv1
           port: 80
           keepalived_priority: 101
-          stats_ip: pub1
           stats_port: 8998
           stats:
             enable: True
@@ -71,7 +69,6 @@ zinibu_basic:
           private_ip: priv2
           port: 80
           keepalived_priority: 101
-          stats_ip: pub2
           stats_port: 8998
           stats:
             enable: True
