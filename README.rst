@@ -112,9 +112,11 @@ Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a st
     'database':
       - zinibu.postgresql
 
+GlusterFS client is required by collectstatic in zinibu.django. 
+
 If used, the keepalived states should run before varnish and haproxy states make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.
 
-GlusterFS client is required by collectstatic in zinibu.django. This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
+This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
 
   base:
     'django5':
@@ -136,10 +138,10 @@ If some states are running in the same server they all should be under the same 
 See http://docs.saltstack.com/en/latest/ref/states/top.html
 
 To make testing easier, run commands locally with salt-call, this way you don't need a target and can use just one server. This means a command like:
-  sudo salt '*' test.ping
+  ``sudo salt '*' test.ping``
 
 becomes:
-  sudo salt-call test.ping
+  ``sudo salt-call test.ping``
 
 Minions Setup
 ================
@@ -155,13 +157,13 @@ Set minions' ids and the roles as appropiate:
       - varnish
 
 The available roles are:
-- first_glusterfs_node (this is the one that will setup the volume and should be set just for one minion)
-- glusterfs_node
-- varnish
-- webhead (which includes nginx and gunicorn)
-- redis
-- postgresql
-- haproxy
+* first_glusterfs_node (this is the one that will setup the volume and should be set just for one minion)
+* glusterfs_node
+* varnish
+* webhead (which includes nginx and gunicorn)
+* redis
+* postgresql
+* haproxy
 
 A host may play more than one of these roles.
 
@@ -264,7 +266,7 @@ salt '*' state.highstate pillar='["cheese", "milk", "bread"]'
 ``zinibu.python.python_test``
 -----------------------
 
-sudo salt-call state.sls zinibu.python.python_test
+  ``sudo salt-call state.sls zinibu.python.python_test``
 
 ``zinibu.django``
 ----------------
@@ -295,17 +297,17 @@ Future Plans
 Some test commands
 ====================
 
-$ sudo salt-key -L
-$ sudo salt-key -a django*
-$ sudo salt '*' test.ping
-$ sudo salt '*' pillar.items
-$ sudo salt '*' grains.item lsb_distrib_release
-$ sudo salt '*' state.highstate
-$ sudo salt django5 pillar.items
-$ sudo salt '*' pillar.items
-$ sudo salt django5 state.sls zinibu.python
-$ history | grep "sudo salt"
-$ sudo salt-call test.ping
-$ sudo salt-call state.sls zinibu.python
+  ``sudo salt-key -L``
+  ``sudo salt-key -a django*``
+  ``sudo salt '*' test.ping``
+  ``sudo salt '*' pillar.items``
+  ``sudo salt '*' grains.item lsb_distrib_release``
+  ``sudo salt '*' state.highstate``
+  ``sudo salt django5 pillar.items``
+  ``sudo salt '*' pillar.items``
+  ``sudo salt django5 state.sls zinibu.python``
+  ``history | grep "sudo salt"``
+  ``sudo salt-call test.ping``
+  ``sudo salt-call state.sls zinibu.python``
 
 .. _`Baptiste Assmann`: http://blog.haproxy.com/2012/08/25/haproxy-varnish-and-the-single-hostname-website/
