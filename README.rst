@@ -298,16 +298,28 @@ Some test commands
 ====================
 
   ``sudo salt-key -L``
+
   ``sudo salt-key -a django*``
+
   ``sudo salt '*' test.ping``
+
   ``sudo salt '*' pillar.items``
+
   ``sudo salt '*' grains.item lsb_distrib_release``
+
   ``sudo salt '*' state.highstate``
+
   ``sudo salt django5 pillar.items``
+
   ``sudo salt '*' pillar.items``
+
   ``sudo salt django5 state.sls zinibu.python``
+
   ``history | grep "sudo salt"``
+
   ``sudo salt-call test.ping``
+
   ``sudo salt-call state.sls zinibu.python``
+
 
 .. _`Baptiste Assmann`: http://blog.haproxy.com/2012/08/25/haproxy-varnish-and-the-single-hostname-website/
