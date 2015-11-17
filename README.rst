@@ -157,6 +157,7 @@ Set minions' ids and the roles as appropiate:
       - varnish
 
 The available roles are:
+
 * first_glusterfs_node (this is the one that will setup the volume and should be set just for one minion)
 * haproxy_master (used by Keepalived for HAProxy's high availability)
 * haproxy_backup (used by Keepalived for HAProxy's high availability)
