@@ -6,12 +6,14 @@
 # 
 
 # Managed by saltstack.
+# host id: {{ salt['grains.get']('id', '') }}
 {% set settings = salt['pillar.get']('varnish', {}) -%}
 {% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 
-backend bk_appsrv_static {
-  .host = "{{ zinibu_basic.project.haproxy_frontend_private_ip }}";
-  .port = "{{ zinibu_basic.project.haproxy_frontend_port }}";
+{%- for id, haproxy_server in zinibu_basic.project.haproxy_servers.iteritems() %}
+backend bk_appsrv_static_{{ id }} {
+  .host = "{{ haproxy_server.private_ip }}";
+  .port = "{{ haproxy_server.port }}";
   .probe = {
     .url = "{{ zinibu_basic.project.haproxy_check }}";
     .expected_response = 200;
@@ -22,39 +24,13 @@ backend bk_appsrv_static {
     .initial = 2;
   }
 }
-# enable this
-#backend bk_appsrv_static_django5 {
-#  .host = "192.168.33.15";
-#  .port = "80";
-#  .probe = {
-#    .url = "/haproxycheck";
-#    .expected_response = 200;
-#    .timeout = 1s;
-#    .interval = 3s;
-#    .window = 2;
-#    .threshold = 2;
-#    .initial = 2;
-#  }
-#}
-#
-#backend bk_appsrv_static_django6 {
-#  .host = "192.168.33.16";
-#  .port = "80";
-#  .probe = {
-#    .url = "/haproxycheck";
-#    .expected_response = 200;
-#    .timeout = 1s;
-#    .interval = 3s;
-#    .window = 2;
-#    .threshold = 2;
-#    .initial = 2;
-#  }
-#}
-#
-#director bk_appsrv_static_director fallback {
-#  { .backend = bk_appsrv_static_django5; }
-#  { .backend = bk_appsrv_static_django6; }
-#}
+{%- endfor %}
+
+director bk_appsrv_static_director fallback {
+{%- for id, haproxy_server in zinibu_basic.project.haproxy_servers.iteritems() %}
+  { .backend = bk_appsrv_static_{{ id }}; }
+{%- endfor %}
+}
 
 acl purge {
     "localhost";
@@ -70,9 +46,7 @@ sub vcl_recv {
     }
 
     # Set default backend
-    set req.backend = bk_appsrv_static;
-    # enable this
-    #set req.backend = bk_appsrv_static_director;
+    set req.backend = bk_appsrv_static_director;
 
     # conditions examples
     # if (req.url ~ "^/yte-admin" || req.url ~ "^/accounts/" || req.url ~ "^/api/v1" || req.url ~ "^/sweeps" || req.url ~ "^/questions" || req.url ~ "^/static" || req.url ~ "^/media/"  || req.url ~ "^/dj-admin") {
