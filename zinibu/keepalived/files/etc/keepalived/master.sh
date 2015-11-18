@@ -1,5 +1,6 @@
-export DO_TOKEN='digitalocean_api_token'
-IP='floating_ip_addr'
+{% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
+export DO_TOKEN='{{ zinibu_basic.do_token }}'
+IP='{{ zinibu_basic.project.haproxy_frontend_public_ip }}'
 ID=$(curl -s http://169.254.169.254/metadata/v1/id)
 HAS_FLOATING_IP=$(curl -s http://169.254.169.254/metadata/v1/floating_ip/ipv4/active)
 

@@ -114,8 +114,6 @@ Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a st
 
 GlusterFS client is required by collectstatic in zinibu.django. 
 
-If used, the keepalived states should run before varnish and haproxy states make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.
-
 This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
 
   base:
@@ -142,6 +140,7 @@ To make testing easier, run commands locally with salt-call, this way you don't 
 
 becomes:
   ``sudo salt-call test.ping``
+
 
 Minions Setup
 ================
@@ -173,6 +172,17 @@ A host may play more than one of these roles.
 Restart salt-minion to activate changes:
 
   ``sudo service salt-minion restart``
+
+  
+Keepalived and high availability
+=================================
+
+Currently, high availability for HAProxy with Keepalived only works with floating IPs as provided by `Digital Ocean`_, so you need to setup pillar data for zinibu_basic.do_token and zinibu_basic.project.haproxy_frontend_public_ip.
+
+You should setup the roles grain in one and only one minion as haproxy_master and another as haproxy_backup.
+
+Also, the keepalived states should run before varnish and haproxy states to make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.
+
 
 Pillar Setup
 ================
@@ -324,5 +334,5 @@ Some test commands
 
   ``sudo salt-call state.sls zinibu.python``
 
-
+.. _`Digital Ocean`: https://www.digitalocean.com/community/tutorials/how-to-set-up-highly-available-haproxy-servers-with-keepalived-and-floating-ips-on-ubuntu-14-04
 .. _`Baptiste Assmann`: http://blog.haproxy.com/2012/08/25/haproxy-varnish-and-the-single-hostname-website/

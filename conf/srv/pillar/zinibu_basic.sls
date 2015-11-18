@@ -1,6 +1,7 @@
 zinibu_basic:
   app_user: exampleuser
   app_group: examplegroup
+  do_token: xyz
   root_user: root
   project:
     name: zinibu_dev
