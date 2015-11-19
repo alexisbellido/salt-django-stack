@@ -1,53 +1,10 @@
 TODO
 
-- floating ips with digitalocean
-- copy keepalived, master.sh and ip-assign
-- document: this is just for the private haproxy frontend and varnish, to avoid making changes to haproxy and varnish when keepalived kicks in: haproxy binds to multiple addresses http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#bind and varnish uses a director fallback https://www.varnish-cache.org/docs/3.0/reference/vcl.html#backend-declarations
+- use anchor instead of public ip for haproxy if there's one to use use floating
+- get anchor with:
+curl 169.254.169.254/metadata/v1/interfaces/public/0/anchor_ipv4/address && echo
 
-haproxy part done, continue to varnish
-
-varnish using fallback director:
-backend bk_appsrv_static_django5 {
-  .host = "192.168.33.15";
-  .port = "80";
-  .probe = {
-    .url = "/haproxycheck";
-    .expected_response = 200;
-    .timeout = 1s;
-    .interval = 3s;
-    .window = 2;
-    .threshold = 2;
-    .initial = 2;
-  }
-}
-
-backend bk_appsrv_static_django6 {
-  .host = "192.168.33.16";
-  .port = "80";
-  .probe = {
-    .url = "/haproxycheck";
-    .expected_response = 200;
-    .timeout = 1s;
-    .interval = 3s;
-    .window = 2;
-    .threshold = 2;
-    .initial = 2;
-  }
-}
-
-director bk_appsrv_static_director fallback {
-  { .backend = bk_appsrv_static_django5; }
-  { .backend = bk_appsrv_static_django6; }
-}
-
-and then
-
-sub vcl_recv {
-    ...
-    ...
-    set req.backend = bk_appsrv_static_director;
-
-in varnish/files/etc/varnish/default-3.vcl
+- cpmment on article floating ips with digitalocean, weights should be 101 and not 200, because weight is 2, share my salt project
 
 - add notes about keepalived and DO, in haproxy.cfg {{ zinibu_basic.project.haproxy_frontend_public_ip }} is the floating ip and {{ zinibu_basic.project.haproxy_frontend_private_ip }} for frontend ft_web_static comes from the metadata when switching
 

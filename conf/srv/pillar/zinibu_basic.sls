@@ -39,6 +39,7 @@ zinibu_basic:
     # keys must match minion ids
     haproxy_servers:
       django5:
+          anchor_ip: 0.0.0.0
           public_ip: pub1
           private_ip: priv1
           port: 80
