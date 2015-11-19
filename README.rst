@@ -8,7 +8,7 @@ This Salt formula will setup a stack of one or more servers to run a Django proj
 * Gunicorn process managed via Upstart.
 * Varnish 3.x to cache static files and dynamic pages for non-logged in users.
 * HAProxy 1.5x load balancing inspired by `Baptiste Assmann`_.
-* HAProxy basic high availability support via Keepalived.
+* HAProxy high availability support via Keepalived and floating IPs on Digital Ocean.
 * Redis.
 * PostgreSQL.
 * GlusterFS cluster for managing and sharing a volume for Django's static directory. Replica support is automatic if the number of hosts used as GlusterFS nodes is a multiple of two.
@@ -177,11 +177,13 @@ Restart salt-minion to activate changes:
 Keepalived and high availability
 =================================
 
-Currently, high availability for HAProxy with Keepalived only works with floating IPs as provided by `Digital Ocean`_, so you need to setup pillar data for zinibu_basic.do_token and zinibu_basic.project.haproxy_frontend_public_ip.
+Currently, high availability for HAProxy with Keepalived only works with floating IPs as provided by `Digital Ocean`_, so you need to setup pillar data for zinibu_basic.do_token and anchor_ip for each haproxy_server to be used instead of zinibu_basic.project.haproxy_frontend_public_ip.
 
 You should setup the roles grain in one and only one minion as haproxy_master and another as haproxy_backup.
 
 Also, the keepalived states should run before varnish and haproxy states to make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.
+
+Note that the priority value in keepalived.conf for the master and backup hosts has to be changed to 101 and 100 because the weight is 2 or the track script won't run.
 
 
 Pillar Setup
