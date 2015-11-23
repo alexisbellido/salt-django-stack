@@ -1,3 +1,8 @@
+# necessary to bind haproxy frontend to IPs not configured on this host
+net.ipv4.ip_nonlocal_bind:
+  sysctl.present:
+    - value: 1
+
 haproxy.service:
 {% if salt['pillar.get']('haproxy:enable', True) %}
   service.running:
@@ -6,6 +11,7 @@ haproxy.service:
     - reload: True
     - require:
       - file: haproxy.start_file
+      - sysctl: net.ipv4.ip_nonlocal_bind
 # to avoid apt-get update from haproxy_ppa_repo
 #      - pkg: haproxy
     - watch:
