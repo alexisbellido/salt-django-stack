@@ -1,0 +1,43 @@
+#!/usr/bin/python
+
+import os
+import sys
+import requests
+import json
+
+api_base = 'https://api.linode.com/'
+
+
+def usage():
+    print('Two possible usage options for now:')
+    print('{} linode.ip.list'.format(sys.argv[0]))
+    print('{} linode.ip.swap IPAddressID toLinodeID'.format(sys.argv[0]))
+    print('\nYour Linode API key must be in the "LINODE_API_KEY"'
+          ' environmental variable.')
+
+
+def main(args):
+    action = args[1]
+    url = api_base + "?api_key={}&api_action={}".format(os.environ['LINODE_API_KEY'], action)
+
+    if action == 'linode.ip.list':
+        pass
+
+    if action == 'linode.ip.swap':
+        url = url + "&IPAddressID={}&toLinodeID={}".format(args[2], args[3])
+
+    r = requests.post(url)
+    resp = r.json()
+
+    if action == 'linode.ip.list':
+    	for ip_address in resp['DATA']:
+    	    print ip_address
+
+    if action == 'linode.ip.swap':
+	print "swapping..."
+
+if __name__ == "__main__":
+    if 'LINODE_API_KEY' not in os.environ or not len(sys.argv) > 1:
+        usage()
+        sys.exit()
+    main(sys.argv)
