@@ -1,0 +1,26 @@
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# Configuration for eth0
+# We no longer need to use aliases (eg. eth0:0 eth0:1 eth0:2)
+# This line ensures that the interface will be brought up during boot
+auto eth0
+allow-hotplug eth0
+
+# The address and gateway are necessary.
+# The netmask is taken automatically from the block.
+# Example: /24 is considered to be a public IP address: netmask 255.255.255.0
+iface eth0 inet static
+    address 198.51.100.5/24
+    gateway 198.51.100.1
+
+# This is a second public IP address
+iface eth0 inet static
+    address 192.0.2.6/24
+
+# This is a private IP address. Private IPs do not have a gateway (they are not publicly routable).
+# All you need to specify is the address and the block. The netmask is taken from the block.
+# Example: /17 is considered to be a private IP address: netmask 255.255.128.0
+iface eth0 inet static
+    address 192.168.133.234/17

@@ -185,6 +185,8 @@ Also, the keepalived states should run before varnish and haproxy states to make
 
 Note that the priority value in keepalived.conf for the master and backup hosts has to be changed to 101 and 100 because the weight is 2 or the track script won't run.
 
+In progress: See linode/conf/etc/network/interfaces for an example of how to configure an extra public IP and private IP for a Linode to use with IP swapping.
+
 
 Pillar Setup
 ================
@@ -303,7 +305,7 @@ Future Plans
 ============
 
 * HAProxy SSL support.
-* HAProxy high availability with Keepalived.
+* HAProxy high availability with Keepalived for Linode.
 * Control Gunicorn with systemd, the new services manager by Ubuntu 15.04.
 * Varnish 4 support. It's the default starting with Ubuntu 14.10.
 * High availability Redis.
