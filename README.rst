@@ -27,11 +27,13 @@ So far, I have tested with Ubuntu 14.04 and 14.10 on both Linode and Digital Oce
 Start Here
 ============
 
-Make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important for GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
+SSH to your server as root and make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important for GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
 
   ``$ adduser --uid 1003 exampleuser``
 
   ``$ usermod -a -G sudo exampleuser``
+
+Now logout and ssh with this new user to continue.
 
 Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
 
