@@ -83,9 +83,14 @@ else
     elif [ "$1" == "shell" ]; then
       django-admin.py shell --pythonpath=`pwd`
     elif [ "$1" == "setenv" ]; then
-      echo "Environment variables to run $PROJECTNAME"
-      echo "You can use any django-admin.py command from $PROJECTDIR (note the use of --pythonpath and pwd between backticks), for example:"
+      echo "==================================="
+      echo "Done! The environment variables have been set to run the $PROJECTNAME project."
+      echo "You can now run any django-admin.py command from $PROJECTDIR (note the use of --pythonpath with pwd to get the working directory):"
       echo "django-admin.py shell --pythonpath=\`pwd\`"
+      echo
+      echo "Or, to avoid backticks:"
+      echo "django-admin.py shell --pythonpath=\$(pwd)"
+      echo "==================================="
     elif [ "$1" == "production" ]; then
       # production server (gunicorn)
       # see http://docs.gunicorn.org/en/latest/settings.html#loglevel
@@ -115,7 +120,9 @@ else
       gunicorn --workers=$NUM_WORKERS --user=$USER --group=$GROUP --bind $BIND_ADDRESS $PROJECTNAME.wsgi:application
     else
       echo
+      echo "==================================="
       echo "Invalid parameter. Run without parameters for help."
+      echo "==================================="
       echo
     fi
 fi
