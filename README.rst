@@ -27,7 +27,7 @@ So far, I have tested with Ubuntu 14.04 and 14.10 on both Linode and Digital Oce
 Start Here
 ============
 
-SSH to your server as root and make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important for GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
+SSH to your server as root and make sure to create a user with sudo permissions and the same uid on all servers involved, this is specially important if you will used GlusterFS, one way to do it is with Ubuntu's adduser --uid, for example:
 
   ``$ adduser --uid 1003 exampleuser``
 
@@ -114,7 +114,9 @@ Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a st
     'database':
       - zinibu.postgresql
 
-GlusterFS client is required by collectstatic in zinibu.django. 
+GlusterFS client is required by collectstatic in zinibu.django if glusterfs_nodes are defined in zinibu_basic.
+
+GlusterFS is optional if you will use just one webhead, which is the case for most development situations. Don't include glusterfs_nodes in zinibu_basic and zinibu.django won't run operations related to GlusterFS.
 
 This is another example, more complete, /etc/salt/top.sls, with the correct execution order:
 

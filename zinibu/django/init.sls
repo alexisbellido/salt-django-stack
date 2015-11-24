@@ -5,6 +5,9 @@
 {% set run_project_script = '/home/' + zinibu_basic.app_user + '/run-' + zinibu_basic.project.name + '.sh' %}
 {% set project_static_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/static' %}
 
+# GlusterFS related operations only run if there are 'glusterfs_nodes' defined
+# in zinibu_basic.project
+
 {{ run_project_script }}:
   file.managed:
     - name: 
@@ -59,10 +62,15 @@ collectstatic:
       - git: clone-git-repo
       - file: {{ project_dir }}
       - file: {{ run_project_script }}
+      - file: {{ project_static_dir }}
+{%- if 'glusterfs_nodes' in zinibu_basic.project %}
       - cmd: glusterfs-mount-static
+{%- endif %}
 
+{%- if 'glusterfs_nodes' in zinibu_basic.project %}
 glusterfs-client:
   pkg.installed
+{%- endif %}
 
 {{ project_static_dir }}:
   file.directory:
@@ -87,6 +95,7 @@ glusterfs-fstab-static:
   {%- endfor %}
 {%- endif %}
 
+{%- if 'glusterfs_nodes' in zinibu_basic.project %}
 glusterfs-mount-static:
   cmd.run:
     - user: {{ zinibu_basic.root_user }}
@@ -96,6 +105,7 @@ glusterfs-mount-static:
     - require:
       - pkg: glusterfs-client
       - file: glusterfs-fstab-static
+{%- endif %}
 
 setup-git-user-name:
   git.config:
