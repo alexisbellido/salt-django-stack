@@ -53,8 +53,8 @@ else
     PROJECTNAME={{ project_name }}
     PROJECTDIR=/home/$USER/$PROJECTNAME
     PROJECTENV=/home/$USER/pyvenvs/$PROJECTNAME
-    export DJANGO_SETTINGS_MODULE=$PROJECTNAME.settings.local
-    
+    {% from "zinibu/map.jinja" import django with context %}
+    export DJANGO_SETTINGS_MODULE=$PROJECTNAME.settings.{{ django.env }}
     LOGFILE=/var/log/upstart/$PROJECTNAME.log
     LOGDIR=$(dirname $LOGFILE)
     

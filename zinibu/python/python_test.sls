@@ -1,4 +1,16 @@
+{% from "zinibu/map.jinja" import django with context %}
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
+
+# Examples passing pillar data as a dictionary parameter. See how the variables and their defaults are defined following pillar's structure:
+# sudo salt '*' state.sls zinibu.python.python_test pillar='{"django": {"lookup": {"env": "staging"}}, "zinibu_basic": {"app_user": "joe", "app_group": "his_group", "project": {"name": "zinibu_dev", "pyvenvs_dir": "pyvenvs", "webheads": {}}} }'
+
+test-params-1:
+  cmd.run:
+    - name: echo 'Parameters zinibu_basic.app_user {{ zinibu_basic.app_user }} and zinibu_basic.project.name {{ zinibu_basic.project.name }}'
+
+test-params-2:
+  cmd.run:
+    - name: echo 'Parameters django.env {{ django.env }}'
 
 python-test:
   cmd.run:
@@ -23,7 +35,7 @@ pillar-dict-names:
 
 show-grains:
   cmd.run:
-    - name: echo echo "grains id {{ grains['id'] }} public ip {{ grains['ip_interfaces']['eth1'][0] }}"
+    - name: echo echo "grains id {{ grains['id'] }} public ip {{ grains['ip_interfaces']['eth0'][0] }}"
 
 python-test-webheads:
   cmd.run:

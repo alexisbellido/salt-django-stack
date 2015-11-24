@@ -30,8 +30,10 @@
 
 {% set django = salt['grains.filter_by']({
     'Debian': {
+        'env': 'local',
     },
     'RedHat': {
+        'env': 'local',
     },
 }, merge=salt['pillar.get']('django:lookup')) %}
 
