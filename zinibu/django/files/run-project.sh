@@ -53,8 +53,13 @@ else
     PROJECTNAME={{ project_name }}
     PROJECTDIR=/home/$USER/$PROJECTNAME
     PROJECTENV=/home/$USER/pyvenvs/$PROJECTNAME
+    {% if salt['pillar.get']('zinibu_django_env', '') != '' -%}
+    {% set django_env = salt['pillar.get']('zinibu_django_env') -%}
+    {% else -%}
     {% from "zinibu/map.jinja" import django with context %}
-    export DJANGO_SETTINGS_MODULE=$PROJECTNAME.settings.{{ django.env }}
+    {% set django_env = django.env -%}
+    {% endif -%}
+    export DJANGO_SETTINGS_MODULE=$PROJECTNAME.settings.{{ django_env }}
     LOGFILE=/var/log/upstart/$PROJECTNAME.log
     LOGDIR=$(dirname $LOGFILE)
     

@@ -146,6 +146,10 @@ becomes:
   ``sudo salt-call test.ping``
 
 
+Pillar parameters can be passed from the command line. This is done, for example, to override the Django settings module:
+  ``sudo salt '*' state.sls zinibu.django pillar='{"zinibu_django_env": "staging"}'``
+
+
 Minions Setup
 ================
 
