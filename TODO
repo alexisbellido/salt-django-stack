@@ -9,10 +9,19 @@ curl 169.254.169.254/metadata/v1/interfaces/public/0/anchor_ipv4/address && echo
 - add notes about keepalived and DO, in haproxy.cfg {{ zinibu_basic.project.haproxy_frontend_public_ip }} is the floating ip and {{ zinibu_basic.project.haproxy_frontend_private_ip }} for frontend ft_web_static comes from the metadata when switching
 
 - create django projects that are distributable with pip (https://packaging.python.org/en/latest/installing/)
-- to install from source with pip:
+- to install from source use --editable (-e) with pip:
 pip install -e git://git.myproject.org/MyProject.git@master#egg=MyProject
 example:
 pip install -e git://github.com/ubernostrum/django-registration#egg=django-registration
+
+MyProject (django-registration) is what will be used for uninstalling:
+pip uninstall django-registration
+
+Install from source path:
+pip install -e /home/alexis/Downloads/django-registration
+
+--editable is actually optional so you can:
+pip install /home/alexis/Downloads/django-registration
 
 
 
