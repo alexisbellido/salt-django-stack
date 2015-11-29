@@ -187,6 +187,9 @@ Keepalived and high availability
 
 Currently, high availability for HAProxy with Keepalived only works with floating IPs as provided by `Digital Ocean`_, so you need to setup pillar data for zinibu_basic.do_token and anchor_ip for each haproxy_server to be used instead of zinibu_basic.project.haproxy_frontend_public_ip.
 
+Get anchor with:
+  ``curl 169.254.169.254/metadata/v1/interfaces/public/0/anchor_ipv4/address && echo``
+
 You should setup the roles grain in one and only one minion as haproxy_master and another as haproxy_backup.
 
 Also, the keepalived states should run before varnish and haproxy states to make sure ip addresses are bound. The states are zinibu.keepalived and zinibu.keepalived.conf, in that order.

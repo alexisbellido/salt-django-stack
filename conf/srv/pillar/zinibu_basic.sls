@@ -37,6 +37,7 @@ zinibu_basic:
     haproxy_static_check_url: '/static/myapp/staticcheck.txt'
 
     # keys must match minion ids
+    # set anchor_ip when using floating IPs with Digital Ocean
     haproxy_servers:
       django5:
           anchor_ip: 0.0.0.0
