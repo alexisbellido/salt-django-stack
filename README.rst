@@ -301,16 +301,23 @@ salt '*' state.highstate pillar='["cheese", "milk", "bread"]'
 
 zinibu.python installed the Python packages and zinibu.django will install a Django project and related applications. Logged in as the user who owns the project (app_user in zinibu_basic pillar) you can activate the Python environment like this:
 
-$ source ~/pyvenvs/zinibu_dev/bin/activate
+  ``$ source ~/pyvenvs/zinibu_dev/bin/activate``
 
 then change to the directory of the project, e.g. /home/user/zinibu_dev, and manage it with django-admin.py:
-$ django-admin.py help --pythonpath=`pwd` --settings=zinibu_dev.settings
+  ``$ django-admin.py help --pythonpath=`pwd` --settings=zinibu_dev.settings``
 
 Instead of django-admin.py, you can also use manage.py, a thin wrapper, from the directory of the project and may require to call it with python:
-$ python manage.py  help
+  ``$ python manage.py help``
 
 or without:
-$ ./manage.py  help
+  ``$ ./manage.py  help``
+
+
+Additional Resources
+====================
+
+* `Django Zinibu Skeleton`_ application.
+
 
 Future Plans
 ============
@@ -351,3 +358,4 @@ Some test commands
 
 .. _`Digital Ocean`: https://www.digitalocean.com/community/tutorials/how-to-set-up-highly-available-haproxy-servers-with-keepalived-and-floating-ips-on-ubuntu-14-04
 .. _`Baptiste Assmann`: http://blog.haproxy.com/2012/08/25/haproxy-varnish-and-the-single-hostname-website/
+.. _`Django Zinibu Skeleton`: https://github.com/alexisbellido/django-zinibu-skeleton
