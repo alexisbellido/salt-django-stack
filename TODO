@@ -1,6 +1,8 @@
 TODO
 
-- make django skeleton app work with the basic project install
+- make django skeleton app work with the basic project install, use PyPi test server
+- investigate git hooks (standard and managed by github) for some deploy operations
+- edit scripts/fabric.py to run salt commands, use for inspiration: https://github.com/alexisbellido/The-Django-gunicorn-fabfile-project/blob/master/fabfile.py, this should accept parameters
 - install redis and change settings to use it
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
 

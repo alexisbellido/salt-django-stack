@@ -225,6 +225,17 @@ To run all states in the correct order, run from the salt master, this is what s
 
 state.orchestrate is important to make sure the GlusterFS volumes are setup in the correct order.
 
+Run remotely with Fabric
+==========================
+
+Install Fabric locally (via pip, just for Python 2.5-2.7) and change to the scripts directory to run commands against the master host like this:
+
+  ``fab -H host salt_ping``
+
+This will probably be the preferred method to deploy.
+
+
+
 Troubleshooting
 ================
 
