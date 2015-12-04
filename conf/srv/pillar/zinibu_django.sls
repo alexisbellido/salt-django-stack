@@ -1,7 +1,10 @@
 django:
   lookup:
     env: local
+    # using a public Github repository
     repo: git@github.com:alexisbellido/basic-django-project.git
+    # using a private repository
+    #repo: user@example.com:/home/user/git/basic-django-project.git
     user:
       name: Joe Doe
       email: joe@example.com
