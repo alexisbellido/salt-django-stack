@@ -6,36 +6,18 @@
 
 # Assume virtual environment was already created in zinibu.python
 {%- if 'pip_packages' in django %}
-{% for pip_package in django.pip_packages %}
+  {%- for pip_package, properties in django.pip_packages.iteritems() %}
 django_install_pip_package_{{ pip_package }}:
   pip.installed:
     - name: {{ pip_package }}
     - bin_env: {{ pyvenvs_dir }}/{{ pyvenv_name }}
     - user: {{ zinibu_basic.app_user }}
     - upgrade: True
-{% endfor%}
-{%- endif %}
-
-{%- if 'pip_editable_packages' in django %}
-{% for pip_package in django.pip_editable_packages %}
-django_install_pip_editable_package_{{ pip_package }}:
-  pip.installed:
-    - name: {{ pip_package }}
+    {%- if 'editable' in properties %}
     - editable: {{ pip_package }}
-    - bin_env: {{ pyvenvs_dir }}/{{ pyvenv_name }}
-    - user: {{ zinibu_basic.app_user }}
-    - upgrade: True
-{% endfor%}
-{%- endif %}
-
-{%- if 'pip_test_packages' in django %}
-{% for pip_package in django.pip_test_packages %}
-django_install_pip_test_package_{{ pip_package }}:
-  pip.installed:
-    - name: {{ pip_package }}
-    - bin_env: {{ pyvenvs_dir }}/{{ pyvenv_name }}
-    - user: {{ zinibu_basic.app_user }}
-    - upgrade: True
+    {%- endif %}
+    {%- if 'test_pypi' in properties %}
     - index_url: https://testpypi.python.org/pypi
-{% endfor%}
+    {%- endif %}
+  {%- endfor %}
 {%- endif %}
