@@ -7,8 +7,9 @@ django:
       email: joe@example.com
 
     # Django-specific packages go here. Always indicate version.
+    # A package should have just one of pypi, editable or test_pypi set to True.
     pip_packages:
-      Django==1.8.7:
+      django-registration==2.0.3:
         pypi: True # the default for production packages from PyPi
       /home/user/djapps/django-zinibu-skeleton:
         editable: True # local source code, useful for development
