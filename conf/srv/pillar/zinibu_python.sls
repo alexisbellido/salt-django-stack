@@ -1,6 +1,6 @@
 # Python, non Django-specific packages go here
 pip_packages:
-  - Django==1.8.7
+  - Django==1.9
   - requests==2.7.0
   - Jinja2==2.7.3
   - psycopg2==2.6.1
