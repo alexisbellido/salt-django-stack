@@ -8,4 +8,5 @@ pip_packages:
   - gunicorn==19.3.0
   - pyinotify==0.9.6
   - Unipath==1.1
+  - docutils==0.12
   - restview==2.5.2
