@@ -2,7 +2,13 @@ TODO
 
 - django skeleton app doing common Django stuff to use as inspiration for specific apps
 - investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
-- salt state to setup postgresql for running django tests
+
+- salt state to setup postgresql for running django tests locally, something like this needs to be added to pg_hba.conf:
+host   test_db1      user1   192.168.1.203/32     md5
+host   postgres      user1   192.168.1.203/32     md5
+
+where the user1 and db1 parts are the ones setup from pillar
+
 - edit scripts/fabric.py to run salt commands, use for inspiration: https://github.com/alexisbellido/The-Django-gunicorn-fabfile-project/blob/master/fabfile.py, this should accept parameters
 - install redis and change settings to use it
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
