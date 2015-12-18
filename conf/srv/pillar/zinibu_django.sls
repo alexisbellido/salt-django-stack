@@ -12,6 +12,8 @@ django:
     # Django-specific packages go here. Always indicate version.
     # A package should have just one of pypi, editable or test_pypi set to True.
     pip_packages:
+      django-braces==1.8.1:
+        pypi: True
       django-registration==2.0.3:
         pypi: True # the default for production packages from PyPi
       /home/user/djapps/django-zinibu-skeleton:
