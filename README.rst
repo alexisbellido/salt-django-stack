@@ -181,6 +181,11 @@ Restart salt-minion to activate changes:
 
   ``sudo service salt-minion restart``
 
+HAProxy and high availability
+=================================
+
+frontend ft_web uses a public IP or, if using Keepalived with Digital Ocean's floating IPs, an anchor IP.
+frontend ft_web_static uses a private IP.
   
 Keepalived and high availability
 =================================
