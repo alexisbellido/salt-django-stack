@@ -32,9 +32,9 @@ zinibu_basic:
     haproxy_frontend_public_ip: pub1
     haproxy_frontend_port: 80
     haproxy_check: '/haproxycheck'
-    haproxy_app_check_url: '/myapp/appcheck/'
+    haproxy_app_check_url: '/znbmain/app-check'
     haproxy_app_check_expect: '[oO][kK]'
-    haproxy_static_check_url: '/static/myapp/staticcheck.txt'
+    haproxy_static_check_url: '/static/znbmain/static-check.txt'
 
     # keys must match minion ids
     # set anchor_ip when using floating IPs with Digital Ocean
