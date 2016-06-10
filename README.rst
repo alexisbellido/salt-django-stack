@@ -315,7 +315,13 @@ salt '*' state.highstate pillar='["cheese", "milk", "bread"]'
 ``zinibu.django``
 ----------------
 
-zinibu.python installed the Python packages and zinibu.django will install a Django project and related applications. Logged in as the user who owns the project (app_user in zinibu_basic pillar) you can activate the Python environment like this:
+zinibu.python installed the Python packages and zinibu.django will install a Django project and related applications. 
+
+To install Python packages in the webheads, including the latest version of Django, which needs to be set in /srv/pillar/zinibu_python.sls, run:
+
+  ``sudo salt '*' state.sls zinibu.python``
+
+Logged in as the user who owns the project (app_user in zinibu_basic pillar) you can activate the Python environment like this:
 
   ``$ source ~/pyvenvs/zinibu_dev/bin/activate``
 
@@ -327,6 +333,15 @@ Instead of django-admin.py, you can also use manage.py, a thin wrapper, from the
 
 or without:
   ``$ ./manage.py  help``
+
+And easier way of setting the Python environment is using the bash script created by Salt, which we call the runner. For a project of name zinibu this would be:
+
+    ``source ~/run-zinibu.sh setenv``
+
+This will point DJANGO_SETTINGS_MODULE to the correct settings module so that you can just change directory to the project and run:
+
+    ``django-admin help --pythonpath=$(pwd)``
+
 
 
 Additional Resources
