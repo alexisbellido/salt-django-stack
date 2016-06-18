@@ -18,5 +18,6 @@ django:
         pypi: True # the default for production packages from PyPi
       /home/user/djapps/django-zinibu-skeleton:
         editable: True # local source code, useful for development
-      django-zinibu-skeleton==0.0.2a0:
-        test_pypi: True # from test PyPi server
+        repo: user@example.com:/home/user/git/django-zinibu-skeleton.git
+      #django-zinibu-skeleton==0.0.2a0:
+      #  test_pypi: True # from test PyPi server

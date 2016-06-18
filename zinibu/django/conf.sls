@@ -1,13 +1,40 @@
 {% from "zinibu/map.jinja" import django with context %}
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
+{% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
 {% set pyvenvs_dir = '/home/' + zinibu_basic.app_user + '/' + salt['pillar.get']('zinibu_basic:project:pyvenvs_dir', 'pyvenvs') %}
 {% set pyvenv_name = salt['pillar.get']('zinibu_basic:project:name', 'venv') %}
 
 # Assume virtual environment was already created in zinibu.python
 {%- if 'pip_packages' in django %}
   {%- for pip_package, properties in django.pip_packages.iteritems() %}
-django_install_pip_package_{{ pip_package }}:
+
+{%- if 'editable' in properties %}
+
+create_django_app_directory_{{ pip_package }}:
+  file.directory:
+    - name: {{ pip_package }}
+    - user: {{ zinibu_basic.app_user }}
+    - group: {{ zinibu_basic.app_group }}
+    - mode: 755
+    - makedirs: True
+
+clone-django-app-repo-{{ pip_package }}:
+  git.latest:
+    - name: {{ properties.repo }}
+    - rev: master
+    - user: {{ zinibu_basic.app_user }}
+    - target: {{ pip_package }}
+    - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
+    - force: True # Deprecated since version 2015.8.0: Use force_clone instead.
+    - require:
+      - file: create_django_app_directory_{{ pip_package }}
+      - git: conf-setup-git-user-name
+      - git: conf-setup-git-user-email
+
+{%- endif %}
+
+django-install-pip-package-{{ pip_package }}:
   pip.installed:
     - name: {{ pip_package }}
     - bin_env: {{ pyvenvs_dir }}/{{ pyvenv_name }}
@@ -20,4 +47,20 @@ django_install_pip_package_{{ pip_package }}:
     - index_url: https://testpypi.python.org/pypi
     {%- endif %}
   {%- endfor %}
+
 {%- endif %}
+
+# see if I can avoid duplication of these with django/init.sls
+conf-setup-git-user-name:
+  git.config:
+    - name: user.name
+    - value: {{ django.user.name }}
+    - user: {{ zinibu_basic.app_user }}
+    - is_global: True
+
+conf-setup-git-user-email:
+  git.config:
+    - name: user.email
+    - value: {{ django.user.email }}
+    - user: {{ zinibu_basic.app_user }}
+    - is_global: True
