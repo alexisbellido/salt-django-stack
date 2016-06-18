@@ -4,7 +4,7 @@ zinibu
 
 This Salt formula will setup a stack of one or more servers to run a Django project with some high availability and scalability features. The stack includes:
 
-* Gunicorn and Nginx webheads running * Django 1.8.x with Python 3.x and venv.
+* Gunicorn and Nginx webheads running * Django 1.9.x with Python 3.x and venv.
 * Gunicorn process managed via Upstart.
 * Varnish 3.x to cache static files and dynamic pages for non-logged in users.
 * HAProxy 1.5x load balancing inspired by `Baptiste Assmann`_.

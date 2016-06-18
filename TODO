@@ -1,5 +1,10 @@
 TODO
 
+- for each minion run:
+sudo salt-call state.highstate | tee /tmp/test
+and then review Return: False lines
+
+
 - django skeleton app doing common Django stuff to use as inspiration for specific apps
 - investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
 

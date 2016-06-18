@@ -16,6 +16,19 @@ pip:
   pkg.installed:
     - name: {{ python.pip_pkg }}
 
+pillow-prerequisites:
+  pkg.installed:
+    - pkgs:
+      - libtiff5-dev
+      - libjpeg8-dev 
+      - zlib1g-dev 
+      - libfreetype6-dev 
+      - liblcms2-dev 
+      - libwebp-dev 
+      - tcl8.6-dev 
+      - tk8.6-dev 
+      - python-tk
+
 python3-dev:
   pkg.installed:
     - name: {{ python.dev_pkg }}
@@ -79,5 +92,6 @@ install_pip_package_{{ pip_package }}:
       - pkg: pip
       - pkg: python3-dev
       - pkg: install-postgres-libpq-dev
+      - pkg: pillow-prerequisites
       - user: user_{{ zinibu_basic.app_user }}_user
 {% endfor%}

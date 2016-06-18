@@ -4,6 +4,7 @@
 {% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
 {% set run_project_script = '/home/' + zinibu_basic.app_user + '/run-' + zinibu_basic.project.name + '.sh' %}
 {% set project_static_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/static' %}
+{% set project_media_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/media' %}
 
 # GlusterFS related operations only run if there are 'glusterfs_nodes' defined
 # in zinibu_basic.project
@@ -79,10 +80,18 @@ glusterfs-client:
     - mode: 755
     - makedirs: True
 
+{{ project_media_dir }}:
+  file.directory:
+    - user: {{ zinibu_basic.app_user }}
+    - group: {{ zinibu_basic.app_group }}
+    - mode: 755
+    - makedirs: True
+
 # Just need to mount one of the nodes from each client to get to the volume.
 {%- if 'glusterfs_nodes' in zinibu_basic.project %}
   {%- for id, node in zinibu_basic.project.glusterfs_nodes.iteritems() %}
     {%- if loop.index == 1 %}
+
 glusterfs-fstab-static:
   file.append:
     - name: /etc/fstab
@@ -91,11 +100,22 @@ glusterfs-fstab-static:
         {{ node.private_ip }}:static-{{ zinibu_basic.project.name }} {{ project_static_dir }} glusterfs defaults,_netdev 0 0
     - require:
       - file: {{ project_static_dir }}
+
+glusterfs-fstab-media:
+  file.append:
+    - name: /etc/fstab
+    - text: |
+        # GlusterFS mount
+        {{ node.private_ip }}:media-{{ zinibu_basic.project.name }} {{ project_media_dir }} glusterfs defaults,_netdev 0 0
+    - require:
+      - file: {{ project_media_dir }}
     {%- endif %}
   {%- endfor %}
+
 {%- endif %}
 
 {%- if 'glusterfs_nodes' in zinibu_basic.project %}
+
 glusterfs-mount-static:
   cmd.run:
     - user: {{ zinibu_basic.root_user }}
@@ -105,6 +125,17 @@ glusterfs-mount-static:
     - require:
       - pkg: glusterfs-client
       - file: glusterfs-fstab-static
+
+glusterfs-mount-media:
+  cmd.run:
+    - user: {{ zinibu_basic.root_user }}
+    - name: mount {{ project_media_dir }}
+    - shell: /bin/bash
+    - unless: mount | grep media-{{ zinibu_basic.project.name }}
+    - require:
+      - pkg: glusterfs-client
+      - file: glusterfs-fstab-media
+
 {%- endif %}
 
 setup-git-user-name:
