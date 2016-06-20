@@ -1,9 +1,6 @@
 TODO
 
-- for each minion run:
-sudo salt-call state.highstate | tee /tmp/test
-and then review Return: False lines
-
+- modify salt formular to build run script running different settings, useful for MEDIA_URL, see local.py in django5 and 6
 
 - django skeleton app doing common Django stuff to use as inspiration for specific apps
 - investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
