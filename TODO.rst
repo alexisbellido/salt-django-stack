@@ -1,6 +1,13 @@
 TODO
 
 - haproxy ssl
+- check new haproxy.cfg for ssl and include it in salt formula with some settings in pillar to use it, point to .pem from pillar too
+mkdir /etc/haproxy/ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/haproxy/ssl/haproxy.key -out /etc/haproxy/ssl/haproxy.crt
+cd /etc/haproxy/ssl/
+cat haproxy.crt haproxy.key > haproxy.pem
+- add docs to setup ssl
+buy ssl for domain.com and use it locally with something like local.domain.com and vagrant.domain.com
 
 - django skeleton app doing common Django stuff to use as inspiration for specific apps
 - investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
