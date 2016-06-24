@@ -1,5 +1,9 @@
 TODO
 
+- check redirect prefix line in haproxy for:
+http://example.com > https://www.example.com
+https://example.com > https://www.example.com
+- do not automate copying of ssl cert, do it manually and put it in a place like / /etc/haproxy/ssl/haproxy.pem and define in zinibu_basic pillar
 - haproxy ssl
 - check new haproxy.cfg for ssl and include it in salt formula with some settings in pillar to use it, point to .pem from pillar too
 mkdir /etc/haproxy/ssl
