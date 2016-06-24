@@ -36,14 +36,15 @@ sub vcl_init {
 }
 
 sub vcl_recv {
-    # debug bypass
-    #return (pass);
-    #
     # Health Checking
     if (req.url == "{{ zinibu_basic.project.varnish_check }}") {
         # todo
         #error 751 "health check OK!";
     }
+
+    # debug bypass
+    #return (pass);
+    #
 
     # Set default backend
     set req.backend_hint = b.backend();

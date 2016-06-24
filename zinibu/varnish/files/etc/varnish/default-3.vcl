@@ -37,13 +37,14 @@ acl purge {
 }
 
 sub vcl_recv {
-    # debug bypass
-    #return (pass);
-    #
     # Health Checking
     if (req.url == "{{ zinibu_basic.project.varnish_check }}") {
         error 751 "health check OK!";
     }
+
+    # debug bypass
+    #return (pass);
+    #
 
     # Set default backend
     set req.backend = bk_appsrv_static_director;
