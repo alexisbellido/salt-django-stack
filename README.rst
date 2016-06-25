@@ -184,8 +184,24 @@ Restart salt-minion to activate changes:
 HAProxy and high availability
 =================================
 
-frontend ft_web uses a public IP or, if using Keepalived with Digital Ocean's floating IPs, an anchor IP.
-frontend ft_web_static uses a private IP.
+frontend ft_web and www-https (if using SSL) use public IP or, if using Keepalived with Digital Ocean's floating IPs, an anchor IP.
+frontend ft_web_static uses a private IP and it's used by Varnish servers to update their cache.
+
+To enable SSL termination obtain an SSL certificate or create a self-signed one (see instructions below), we're using .pem for this example, and put it in a directory for each of your HAProxy servers, like /etc/haproxy/ssl, then add the following pillar data to zinibu_basic.sls:
+
+  ``haproxy_ssl_cert: /etc/haproxy/ssl/haproxy.pem``
+
+  
+To create a self-signed SSL certificate
+========================================
+
+When asked for a fully qualified domain name (FQDN) you can enter subdomain.example.com or *.example.com
+
+  ``$ mkdir /etc/haproxy/ssl``
+  ``$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/haproxy/ssl/haproxy.key -out /etc/haproxy/ssl/haproxy.crt``
+  ``$ cd /etc/haproxy/ssl/``
+  ``$ cat haproxy.crt haproxy.key > haproxy.pem``
+
   
 Keepalived and high availability
 =================================
@@ -353,7 +369,6 @@ Additional Resources
 Future Plans
 ============
 
-* HAProxy SSL support.
 * HAProxy high availability with Keepalived for Linode.
 * Control Gunicorn with systemd, the new services manager by Ubuntu 15.04.
 * Varnish 4 support. It's the default starting with Ubuntu 14.10.
