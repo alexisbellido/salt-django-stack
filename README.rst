@@ -202,6 +202,18 @@ When asked for a fully qualified domain name (FQDN) you can enter subdomain.exam
   ``$ cd /etc/haproxy/ssl/``
   ``$ cat haproxy.crt haproxy.key > haproxy.pem``
 
+
+Create .pem to use with HAProxy from Comodo PositiveSSL
+=========================================================
+
+For this example we're creating a new file at /etc/haproxy/ssl/haproxy.pem using the key file generated when requesting the certificate and the bundle and crt files provided by Comodo.
+
+  ``$ cd /etc/haproxy/ssl``
+  ``$ rm haproxy.pem``
+  ``$ cat zinibu.com.key >> haproxy.pem``
+  ``$ cat zinibu_com.crt >> haproxy.pem``
+  ``$ cat zinibu_com.ca-bundle >> haproxy.pem``
+
   
 Keepalived and high availability
 =================================
