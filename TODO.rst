@@ -1,6 +1,8 @@
 TODO
 
-- buy ssl for domain.com and use it locally with something like local.domain.com and vagrant.domain.com
+- complete zinibu.deploy to work with apps to update
+- start from scratch with latest salt versions and see that force_clone for git.latest in zinibu.django
+- zinibu.deploy should be able to tell which branch to git pull for the project and which apps and branch for each app should be used. We can assume master is the default in most cases but see how git.latest work with branches
 
 - django skeleton app doing common Django stuff to use as inspiration for specific apps
 - investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
@@ -17,7 +19,6 @@ where the user1 and db1 parts are the ones setup from pillar
 
 - don't worry about high availability for redis and postgresql yet
 - most destructive operations (umount, removing directories, uninstalls, etc) should be handled manually to avoid errors
-- States for deployment, probably named zinibu.deploy, and find best way to indicate if it's development, staging, production (pass via pillar in command line, see README and python states). I think I just need to consider one box as one environment so minions' ids are enough to target the states. This means no more having dev, staging and production all on the same box. Run from command line after merged to a branch I designate as the one feeding the environment, like "production" and "staging," and probably use git hooks so after something is merged to any of those branches the autodeployment runs
 - modifying settings.py in django to connect to db and dbsync/migrate as needed, see django formula for ideas
 
 - logrotate to keep all logs under control (syslog-ng for something else?)

@@ -6,8 +6,20 @@
 {% set project_static_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/static' %}
 {% set project_media_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/media' %}
 
+# This is used with salt-run state.orchestrate zinibu.deploy, see README.rst
+{% set deploy = salt['pillar.get']('deploy', False) %}
+
+{% set project_branch = salt['pillar.get']('project_branch', '') %}
+
 # GlusterFS related operations only run if there are 'glusterfs_nodes' defined
 # in zinibu_basic.project
+
+{% if deploy %}
+
+deploying:
+  cmd.run:
+    - name: echo "Deploying project_branch {{ project_branch }}..."
+{% else %}
 
 {{ run_project_script }}:
   file.managed:
@@ -38,6 +50,8 @@
     - mode: 755
     - makedirs: True
 
+{% endif %}
+
 clone-git-repo:
   git.latest:
     - name: {{ django.repo }}
@@ -45,11 +59,13 @@ clone-git-repo:
     - user: {{ zinibu_basic.app_user }}
     - target: {{ project_dir }}
     - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
-    - force: True # Deprecated since version 2015.8.0: Use force_clone instead.
+    - force: True # deprecated since version 2015.8.0: Use force_clone instead.
+{% if not deploy %}
     - require:
       - file: {{ project_dir }}
       - git: setup-git-user-name
       - git: setup-git-user-email
+{% endif %}
 
 # GlusterFS directories are mounted before this.
 collectstatic:
@@ -61,12 +77,16 @@ collectstatic:
     - cwd: {{ project_dir }}
     - require:
       - git: clone-git-repo
+{% if not deploy %}
       - file: {{ project_dir }}
       - file: {{ run_project_script }}
       - file: {{ project_static_dir }}
 {%- if 'glusterfs_nodes' in zinibu_basic.project %}
       - cmd: glusterfs-mount-static
 {%- endif %}
+{%- endif %}
+
+{% if not deploy %}
 
 {%- if 'glusterfs_nodes' in zinibu_basic.project %}
 glusterfs-client:
@@ -151,3 +171,5 @@ setup-git-user-email:
     - value: {{ django.user.email }}
     - user: {{ zinibu_basic.app_user }}
     - is_global: True
+
+{% endif %}

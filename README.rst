@@ -162,6 +162,7 @@ Set minions' ids and the roles as appropiate:
       - first_glusterfs_node
       - glusterfs_node
       - varnish
+      - webhead
 
 The available roles are:
 
@@ -370,6 +371,15 @@ This will point DJANGO_SETTINGS_MODULE to the correct settings module so that yo
 
     ``django-admin help --pythonpath=$(pwd)``
 
+
+Deploying
+===========
+
+The project and the application it uses should be deployed via orchestration like this:
+
+  ``sudo salt-run state.orchestrate zinibu.deploy pillar='{"project_branch": "master"}'``
+
+This is currently work in progress and and applies only to the Django project at this point. We should try to reuse the states used for the initial setup. See more details in TODO.rst and note the checks for the deploy value in zinibu.django.init.
 
 
 Additional Resources
