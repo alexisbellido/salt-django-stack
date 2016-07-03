@@ -18,18 +18,22 @@ if [ -z "$1" ]; then
 
 else
 
-  echo
-  echo "Preparing Salt..."
-  echo
+  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
 
-  apt-get update
-  apt-get install -y git
+    echo
+    echo "Preparing Salt..."
+    echo
 
-  apt-get install -y python-software-properties
-  apt-get install -y software-properties-common
-  apt-get install -y vim-gnome
-  add-apt-repository -y ppa:saltstack/salt
-  apt-get update
+    apt-get update
+    apt-get install -y git
+
+    apt-get install -y python-software-properties
+    apt-get install -y software-properties-common
+    apt-get install -y vim-gnome
+    add-apt-repository -y ppa:saltstack/salt
+    apt-get update
+
+  fi
   
   if [ "$1" == "master" -o "$1" == "full" ]; then
 
@@ -85,8 +89,10 @@ EOL
     apt-get install -y salt-minion
   fi
   
-  git config --global user.name "$2"
-  git config --global user.email $3
+  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
+    git config --global user.name "$2"
+    git config --global user.email $3
+  fi
 
   if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" -o "$1" == "steps" ]; then
   echo
