@@ -1,9 +1,9 @@
 TODO
 
-- see how to use environments with pillar to have values for production and staging as well as csome common values targetting the minions from the pillar base in top.sls
 - continue testing pillar per environmetn with:
 sudo salt '*' state.sls zinibu.python.test_env
-- document pilla rwith environment
+- document pillar with environments
+- create fresh minions from scratch to have new prod and stag environments createed, DOCUMENT!
 
 - complete zinibu.deploy to work with apps to update
 - follow https://repo.saltstack.com/#ubuntu to update saltstack (salt-master and salt-minion) to salt-master 2016.3.1 (Boron) 
