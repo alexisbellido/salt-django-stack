@@ -3,6 +3,7 @@ django:
     env: local
     # using a public Github repository
     repo: git@github.com:alexisbellido/basic-django-project.git
+    branch: master
     # using a private repository
     #repo: user@example.com:/home/user/git/basic-django-project.git
     user:

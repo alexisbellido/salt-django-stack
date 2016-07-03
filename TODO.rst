@@ -1,6 +1,7 @@
 TODO
 
 - complete zinibu.deploy to work with apps to update
+- follow https://repo.saltstack.com/#ubuntu to update saltstack (salt-master and salt-minion) to salt-master 2016.3.1 (Boron) 
 - start from scratch with latest salt versions and see that force_clone for git.latest in zinibu.django
 - zinibu.deploy should be able to tell which branch to git pull for the project and which apps and branch for each app should be used. We can assume master is the default in most cases but see how git.latest work with branches
 

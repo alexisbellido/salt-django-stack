@@ -55,11 +55,12 @@ deploying:
 clone-git-repo:
   git.latest:
     - name: {{ django.repo }}
-    - rev: master
+    - rev: {{ django.branch }}
     - user: {{ zinibu_basic.app_user }}
     - target: {{ project_dir }}
     - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
-    - force: True # deprecated since version 2015.8.0: Use force_clone instead.
+    - force_checkout: True
+    - force_clone: True
 {% if not deploy %}
     - require:
       - file: {{ project_dir }}
