@@ -56,7 +56,7 @@ else
     if [ ! -d  "$PILLAR_DIR" ]; then
       echo "Creating $PILLAR_DIR..."
       mkdir -p $PILLAR_DIR
-      cp $ROOT_DIR/conf/srv/pillar/* $PILLAR_DIR
+      cp -r $ROOT_DIR/conf/srv/pillar/* $PILLAR_DIR
     fi
 
     sed -i '/^# Added by install script$/,$d' /etc/salt/master
@@ -70,7 +70,11 @@ file_roots:
 
 pillar_roots:
   base:
-    - /srv/pillar
+    - ${PILLAR_DIR}
+  staging:
+    - ${PILLAR_DIR}/staging
+  production:
+    - ${PILLAR_DIR}/production
 EOL
 
     service salt-master restart
@@ -86,9 +90,9 @@ EOL
 
   echo
   echo "Next steps:"
-  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR."
+  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR. Check production and staging subdirectories for environment-specific data."
   echo "  You can use sed to quickly make changes in zinibu_basic.sls:"
-  echo "  sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls"
+  echo "  sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls"
   echo "2. Setup /srv/salt/top.sls and restart salt master"
   echo "3. Setup /etc/hosts to point all hosts to the salt master using the \"salt\" hostname."
   echo "4. Edit /etc/salt/minion in all minions to set id and roles and restart salt minion."

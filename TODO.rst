@@ -1,5 +1,10 @@
 TODO
 
+- see how to use environments with pillar to have values for production and staging as well as csome common values targetting the minions from the pillar base in top.sls
+- continue testing pillar per environmetn with:
+sudo salt '*' state.sls zinibu.python.test_env
+- document pilla rwith environment
+
 - complete zinibu.deploy to work with apps to update
 - follow https://repo.saltstack.com/#ubuntu to update saltstack (salt-master and salt-minion) to salt-master 2016.3.1 (Boron) 
 - start from scratch with latest salt versions and see that force_clone for git.latest in zinibu.django

@@ -241,10 +241,16 @@ Create the pillar directory and point /etc/salt/master to it:
   pillar_roots:
     base:
       - /srv/pillar
+  staging:
+    - /srv/pillar/staging
+  production:
+    - /srv/pillar/production
 
 Copy the files from zinibu/pillar_data to /srv/pillar and now you can use the pillar data for your configuration. As you make changes to the pillar files in /srv/pillar, copy the changes to pillar_data the repository. Avoid keeping credentials and any other private data in the repository.
 
 The goal is to keep separate pillar SLS files for each state.
+
+Check example in conf/srv/pillar/top.sls to see how environments and minion targeting are used for pillar data.
 
 Make it All Run
 =================
@@ -377,7 +383,7 @@ Deploying
 
 The project and the application it uses should be deployed via orchestration like this:
 
-  ``sudo salt-run state.orchestrate zinibu.deploy pillar='{"project_branch": "master"}'``
+  ``sudo salt-run state.orchestrate zinibu.deploy``
 
 This is currently work in progress and and applies only to the Django project at this point. We should try to reuse the states used for the initial setup. See more details in TODO.rst and note the checks for the deploy value in zinibu.django.init.
 

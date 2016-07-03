@@ -56,11 +56,13 @@ clone-git-repo:
   git.latest:
     - name: {{ django.repo }}
     - rev: {{ django.branch }}
+    - branch: {{ django.branch }}
     - user: {{ zinibu_basic.app_user }}
     - target: {{ project_dir }}
     - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
     - force_checkout: True
     - force_clone: True
+    - force_reset: True
 {% if not deploy %}
     - require:
       - file: {{ project_dir }}
