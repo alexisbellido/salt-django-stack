@@ -88,6 +88,7 @@ EOL
   git config --global user.name "$2"
   git config --global user.email $3
 
+  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" -o "$1" == "steps" ]; then
   echo
   echo "Next steps:"
   echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR. Check production and staging subdirectories for environment-specific data."
@@ -102,5 +103,6 @@ EOL
   echo
   echo "Checkout the README for more details."
   echo
+  fi
 
 fi
