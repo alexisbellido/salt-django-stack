@@ -30,7 +30,14 @@ else
     apt-get install -y python-software-properties
     apt-get install -y software-properties-common
     apt-get install -y vim-gnome
-    add-apt-repository -y ppa:saltstack/salt
+
+#   Install a specific version of Salt for this version of Ubuntu
+#   TODO: detect Ubuntu version or pass it as parameter.
+#   See https://repo.saltstack.com/#ubuntu
+    wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+    cat >> /etc/apt/sources.list.d/saltstack.list << EOL
+deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main
+EOL
     apt-get update
 
   fi
