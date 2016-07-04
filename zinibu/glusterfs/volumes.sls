@@ -62,14 +62,6 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-user
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-group
 
-
-
-
-
-
-
-
-
 glusterfs-volume-media-{{ zinibu_basic.project.name }}-set-user:
   cmd.run:
     - user: {{ zinibu_basic.root_user }}
