@@ -1,6 +1,9 @@
 {% from "zinibu/map.jinja" import django with context %}
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
+include:
+  - zinibu.django.git_setup
+
 {% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
 {% set pyvenvs_dir = '/home/' + zinibu_basic.app_user + '/' + salt['pillar.get']('zinibu_basic:project:pyvenvs_dir', 'pyvenvs') %}
 {% set pyvenv_name = salt['pillar.get']('zinibu_basic:project:name', 'venv') %}
@@ -29,8 +32,8 @@ clone-django-app-repo-{{ pip_package }}:
     - force: True # Deprecated since version 2015.8.0: Use force_clone instead.
     - require:
       - file: create_django_app_directory_{{ pip_package }}
-      - git: conf-setup-git-user-name
-      - git: conf-setup-git-user-email
+      - git: setup-git-user-name
+      - git: setup-git-user-email
 
 {%- endif %}
 
@@ -49,18 +52,3 @@ django-install-pip-package-{{ pip_package }}:
   {%- endfor %}
 
 {%- endif %}
-
-# see if I can avoid duplication of these with django/init.sls
-conf-setup-git-user-name:
-  git.config:
-    - name: user.name
-    - value: {{ django.user.name }}
-    - user: {{ zinibu_basic.app_user }}
-    - is_global: True
-
-conf-setup-git-user-email:
-  git.config:
-    - name: user.email
-    - value: {{ django.user.email }}
-    - user: {{ zinibu_basic.app_user }}
-    - is_global: True

@@ -65,7 +65,9 @@ The second and third arguments are used to setup git --global user.name and user
 
 An installation of type full or master will also copy basic top.sls to /srv/salt/top.sls and /srv/pillar/* and files and point to them from /etc/salt/master.
 
-**Step 2**: Pay attention to the next steps displayed after the script finishes running and customize your settings before proceeding to run salt states.
+**Step 2**: Pay attention to the next steps displayed after the script finishes running and customize your settings before proceeding to run salt states. Run the script with the steps argument to remind you.
+
+  ``scripts/install-prerequisites-ubuntu.sh steps``
 
 You shouldn't worry about overwriting your settings if running the script more than once; files won't be touched if they already exist.
 

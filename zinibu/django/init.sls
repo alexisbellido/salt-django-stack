@@ -1,6 +1,9 @@
 {% from "zinibu/map.jinja" import django with context %}
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
+include:
+  - zinibu.django.git_setup
+
 {% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
 {% set run_project_script = '/home/' + zinibu_basic.app_user + '/run-' + zinibu_basic.project.name + '.sh' %}
 {% set project_static_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/static' %}
@@ -160,19 +163,5 @@ glusterfs-mount-media:
       - file: glusterfs-fstab-media
 
 {%- endif %}
-
-setup-git-user-name:
-  git.config:
-    - name: user.name
-    - value: {{ django.user.name }}
-    - user: {{ zinibu_basic.app_user }}
-    - is_global: True
-
-setup-git-user-email:
-  git.config:
-    - name: user.email
-    - value: {{ django.user.email }}
-    - user: {{ zinibu_basic.app_user }}
-    - is_global: True
 
 {% endif %}
