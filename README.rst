@@ -35,7 +35,7 @@ SSH to your server as root and make sure to create a user with sudo permissions 
 
 Now logout and ssh with this new user to continue.
 
-Add public key to the repositories you will need. This is how to easily create your private and public keys locally without a prompt or passphrase:
+Add public key to the repositories you will need, this includes both the main Django project and any applications you may need. This is how to easily create your private and public keys locally without a prompt or passphrase:
 
   ``echo -e 'y\n' | ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''``
 
@@ -418,6 +418,8 @@ Some test commands
   ``sudo salt '*' test.ping``
 
   ``sudo salt '*' pillar.items``
+
+  ``sudo salt 'staging1' pillar.item django``
 
   ``sudo salt '*' grains.item lsb_distrib_release``
 

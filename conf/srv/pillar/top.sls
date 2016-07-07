@@ -3,10 +3,8 @@ base:
   '*':
     - zinibu_nginx
     - zinibu_python
-    - zinibu_django
     - zinibu_gunicorn
     - zinibu_redis
-    - zinibu_postgresql
     - zinibu_upstart
     - zinibu_varnish
     - zinibu_haproxy
@@ -15,7 +13,11 @@ base:
 staging:
   'django[5-6]':
     - zinibu_basic
+    - zinibu_postgresql
+    - zinibu_django
 
 production:
   'django[8-9]':
     - zinibu_basic
+    - zinibu_postgresql
+    - zinibu_django
