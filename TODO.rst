@@ -1,5 +1,12 @@
 TODO
 
+- run
+sudo salt '*' state.highstate | tee /tmp/test
+
+I think we need to move zinibu_django and zinibu_python pillar to correct environments and probably create new settings files as collectatic is not finding python module
+
+
+
 - continue testing pillar per environmetn with:
 sudo salt '*' state.sls zinibu.python.test_env
 - document pillar with environments

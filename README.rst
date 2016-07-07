@@ -47,9 +47,9 @@ Optionally, if you want avoid the prompt when cloning this repository from Githu
 
   ``ssh-keyscan github.com >> ~/.ssh/known_hosts``
 
-You can use sed to quickly make changes in zinibu_basic.sls:
+You can use sed to quickly make changes pillar files, for example, in zinibu_basic.sls:
 
-  ``sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/zinibu_basic.sls``
+  ``sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls``
 
 Quick Install
 ===============
@@ -200,6 +200,7 @@ To create a self-signed SSL certificate
 
 When asked for a fully qualified domain name (FQDN) you can enter subdomain.example.com or *.example.com
 
+
   ``$ mkdir /etc/haproxy/ssl``
   ``$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/haproxy/ssl/haproxy.key -out /etc/haproxy/ssl/haproxy.crt``
   ``$ cd /etc/haproxy/ssl/``
@@ -251,6 +252,8 @@ Create the pillar directory and point /etc/salt/master to it:
 Copy the files from zinibu/pillar_data to /srv/pillar and now you can use the pillar data for your configuration. As you make changes to the pillar files in /srv/pillar, copy the changes to pillar_data the repository. Avoid keeping credentials and any other private data in the repository.
 
 The goal is to keep separate pillar SLS files for each state.
+ 
+Note that some pillar files are common to staging and production, with the pillar_roots configuration above they'll live in /srv/pillar, and others are specific to staging or production, living in the corresponding subdirectories (/srv/pillar/staging or /srv/pillar/production). These environment-specific pillar files are: zinibu_basic.sls, zinibu_django.sls and zinibu_postgresql.sls.
 
 Check example in conf/srv/pillar/top.sls to see how environments and minion targeting are used for pillar data.
 
