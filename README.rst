@@ -43,6 +43,10 @@ Your public key, which you should add to Github, should be in:
 
   ``cat ~/.ssh/id_rsa.pub`` 
 
+A quick way to add a publick key to a host with Ubuntu is:
+
+  ``ssh-copy-id user@host`` 
+
 Optionally, if you want avoid the prompt when cloning this repository from Github (which happens when running the quick install script), you can add the fingerprint like this:
 
   ``ssh-keyscan github.com >> ~/.ssh/known_hosts``
