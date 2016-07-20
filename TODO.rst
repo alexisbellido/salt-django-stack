@@ -1,16 +1,28 @@
 TODO
 
+- how to extend existing gluster peer nodes and volume as an option when starting a new webhead or as a separate task
+- keep an option to avoid extending glusterfs and use the existing volume when adding webhead
+- make sure haproxy, varnish, nginx and gunicorn are correctly updated when a new webhead is added
+- try running with just one webhead, which means no gluster should be set
+- keep staging and production separate; each of them should have its own salt master to avoid potential issues on production when running salt commands from staging. Adapt top.sls and pillar files accordingly.
+
+- new tests starting with these configurations:
+1. staging1
+- revisit pushing new code and deploying it at this point, include something in static and media to see how gluster will work
+2. staging1, staging2
+3. adding staging3 and staging4 to running staging1 and staging2
+4. try all of the above on digitalocean
+
+
+- create new settings files as collectatic is not finding python module?
+
 - run
 sudo salt '*' state.highstate | tee /tmp/test
 
-I think we need to move zinibu_django and zinibu_python pillar to correct environments and probably create new settings files as collectatic is not finding python module
-
-
+- for some big changes, I should be able to launch and terminate a staging setup mimicking production on DO
 
 - continue testing pillar per environmetn with:
 sudo salt '*' state.sls zinibu.python.test_env
-- document pillar with environments
-- create fresh minions from scratch to have new prod and stag environments createed, DOCUMENT!
 
 - complete zinibu.deploy to work with apps to update
 - follow https://repo.saltstack.com/#ubuntu to update saltstack (salt-master and salt-minion) to salt-master 2016.3.1 (Boron) 
