@@ -78,7 +78,7 @@ collectstatic:
   cmd.script:
     - name: {{ run_project_script }}
     - args: collectstatic
-    - user: {{ zinibu_basic.app_user }}
+    - runas: {{ zinibu_basic.app_user }}
     - shell: /bin/bash
     - cwd: {{ project_dir }}
     - require:
@@ -144,7 +144,7 @@ glusterfs-fstab-media:
 
 glusterfs-mount-static:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: mount {{ project_static_dir }}
     - shell: /bin/bash
     - unless: mount | grep static-{{ zinibu_basic.project.name }}
@@ -154,7 +154,7 @@ glusterfs-mount-static:
 
 glusterfs-mount-media:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: mount {{ project_media_dir }}
     - shell: /bin/bash
     - unless: mount | grep media-{{ zinibu_basic.project.name }}

@@ -29,7 +29,7 @@ clone-django-app-repo-{{ pip_package }}:
     - user: {{ zinibu_basic.app_user }}
     - target: {{ pip_package }}
     - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
-    - force: True # Deprecated since version 2015.8.0: Use force_clone instead.
+    - force_clone: True
     - require:
       - file: create_django_app_directory_{{ pip_package }}
       - git: setup-git-user-name

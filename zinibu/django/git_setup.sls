@@ -2,16 +2,16 @@
 {% from "zinibu/map.jinja" import zinibu_basic with context %}
 
 setup-git-user-name:
-  git.config:
+  git.config_set:
     - name: user.name
     - value: {{ django.user.name }}
     - user: {{ zinibu_basic.app_user }}
-    - is_global: True
+    - global: True
 
 setup-git-user-email:
-  git.config:
+  git.config_set:
     - name: user.email
     - value: {{ django.user.email }}
     - user: {{ zinibu_basic.app_user }}
-    - is_global: True
+    - global: True
 
