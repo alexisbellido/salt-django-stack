@@ -55,6 +55,10 @@ You can use sed to quickly make changes pillar files, for example, in zinibu_bas
 
   ``sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls``
 
+Make sure you refresh pillar data after you've made changes.
+
+  ``sudo salt '*' saltutil.refresh_pillar``
+
 Quick Install
 ===============
 
@@ -172,15 +176,15 @@ Set minions' ids and the roles as appropiate:
 
 The available roles are:
 
-* first_glusterfs_node (this is the one that will setup the volume and should be set just for one minion)
-* haproxy_master (used by Keepalived for HAProxy's high availability)
-* haproxy_backup (used by Keepalived for HAProxy's high availability)
-* glusterfs_node
-* varnish
-* webhead (which includes nginx and gunicorn)
-* redis
-* postgresql
-* haproxy
+* webhead (required for each webhead, includes nginx and gunicorn)
+* varnish (required for at least one)
+* glusterfs_node (optional)
+* first_glusterfs_node (required if using gluster, this will setup the volume and should be set just for one minion)
+* redis (optional)
+* postgresql (optional)
+* haproxy (optional)
+* haproxy_master (required by Keepalived for HAProxy's high availability)
+* haproxy_backup (required by Keepalived for HAProxy's high availability)
 
 A host may play more than one of these roles.
 
@@ -287,6 +291,10 @@ This will probably be the preferred method to deploy.
 
 Troubleshooting
 ================
+
+*No Top file or external nodes data matches found*
+
+You may have a repeated minion id in top.sls.
 
 *HAProxy shows the cache servers not running*
 
@@ -432,6 +440,8 @@ Some test commands
   ``sudo salt django5 pillar.items``
 
   ``sudo salt '*' pillar.items``
+  
+  ``sudo salt '*' saltutil.refresh_pillar``
 
   ``sudo salt django5 state.sls zinibu.python``
 

@@ -16,6 +16,16 @@ pip:
   pkg.installed:
     - name: {{ python.pip_pkg }}
 
+pip_up_to_date:
+  pip.installed:
+    - name: pip
+    - user: {{ zinibu_basic.app_user }}
+    - upgrade: True
+    - require:
+      - pkg: pip
+      - pkg: python3-dev
+      - user: user_{{ zinibu_basic.app_user }}_user
+
 pillow-prerequisites:
   pkg.installed:
     - pkgs:
@@ -33,8 +43,9 @@ python3-dev:
   pkg.installed:
     - name: {{ python.dev_pkg }}
 
-python3.4-venv:
+python-venv:
   pkg.installed:
+    - name: {{ python.venv_pkg }}
     - refresh: True
     - require:
       - pkg: python3-dev
@@ -45,7 +56,7 @@ install-postgres-libpq-dev:
     - name: {{ postgres.pkg_libpq_dev }}
 {% endif %}
 
-# no longer needed, with new python3.4-venv
+# no longer needed since python3.4-venv
 ## See:
 ## https://bugs.launchpad.net/ubuntu/+source/python3.4/+bug/1290847
 ## http://rem4me.me/2014/09/fixing-pyvenv-3-4-in-debian-ubuntu-mint-17-etc/
@@ -59,7 +70,7 @@ install-postgres-libpq-dev:
 
 mkdir_pyvenv:
   cmd.run:
-    - user: {{ zinibu_basic.app_user }}
+    - runas: {{ zinibu_basic.app_user }}
     - name: mkdir -p {{ pyvenvs_dir }}
     - shell: /bin/bash
     - require:
@@ -68,15 +79,14 @@ mkdir_pyvenv:
 create_pyvenv:
   cmd.run:
     - cwd: {{ pyvenvs_dir }}
-    - user: {{ zinibu_basic.app_user }}
-    - group: {{ zinibu_basic.app_group }}
+    - runas: {{ zinibu_basic.app_user }}
     - shell: /bin/bash
     - name: {{ python.pyvenv_cmd }} {{ pyvenv_name }} ; source {{ pyvenv_name }}/bin/activate ; pip --version
     - require:
-      - pkg: python3.4-venv
+      - pkg: python-venv
       - cmd: mkdir_pyvenv
       - user: user_{{ zinibu_basic.app_user }}_user
-# no longer needed, with new python3.4-venv
+# no longer needed since python3.4-venv
 #      - cmd: ensurepip
 
 # move installation of pip packages to its own sls
