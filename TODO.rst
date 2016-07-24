@@ -1,9 +1,11 @@
 TODO
 
-- how expensive is to test all of this running with digitalocean? try for a couple of days and let's see
 - upgrade to ubuntu 16.04 and try salt stuff, especially new varnish and haproxy:
+- most of packages updated, figure out varnish to make haproxy work without ssl and then work on ssl
 HA-Proxy version 1.6.3 2015/12/25
 varnishd (varnish-4.1.1 revision 66bb824)
+
+- how expensive is to test all of this running with digitalocean? try for a couple of days and let's see
 
 - how to extend existing gluster peer nodes and volume as an option when starting a new webhead or as a separate task
 - keep an option to avoid extending glusterfs and use the existing volume when adding webhead
