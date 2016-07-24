@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# Install git and Salt with basic configuration on Ubuntu (14.04, 14.10)
+# Install git and Salt with basic configuration on Ubuntu (14.04, 14.10, 16.04)
 
 if [ -z "$1" ]; then
 
@@ -17,6 +17,9 @@ if [ -z "$1" ]; then
   echo
 
 else
+  # sets $DISTRIB_ID and $DISTRIB_RELEASE
+  source /etc/lsb-release
+  ARCH=`uname -m`
 
   if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
 
@@ -24,98 +27,110 @@ else
     echo "Preparing Salt..."
     echo
 
-    apt-get update
-    apt-get install -y git
-
-    apt-get install -y python-software-properties
-    apt-get install -y software-properties-common
-    apt-get install -y vim-gnome
-
+#TEMP START
+#    apt-get update
+#    apt-get install -y git
+#
+#    apt-get install -y python-software-properties
+#    apt-get install -y software-properties-common
+#    apt-get install -y vim-gnome
+#
 #   Install a specific version of Salt for this version of Ubuntu
-#   TODO: detect Ubuntu version or pass it as parameter.
 #   See https://repo.saltstack.com/#ubuntu
-    wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
-    cat >> /etc/apt/sources.list.d/saltstack.list << EOL
-deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main
-EOL
-    apt-get update
+    if [ "$ARCH" == "x86_64" -a "$DISTRIB_ID" == "Ubuntu" -a "$DISTRIB_RELEASE" == "16.04" ]; then
+      echo "Xenial 64"
+# wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+# cat >> /etc/apt/sources.list.d/saltstack.list << EOL
+#deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/2016.3 xenial main
+#EOL
+    elif [ "$ARCH" == "x86_64" -a "$DISTRIB_ID" == "Ubuntu" -a "$DISTRIB_RELEASE" == "14.04" ]; then
+      echo "Trusty 64"
+#    wget -O - https://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+#    cat >> /etc/apt/sources.list.d/saltstack.list << EOL
+#deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/2016.3 trusty main
+#EOL
+    fi
+#    apt-get update
+#TEMP END
 
   fi
   
-  if [ "$1" == "master" -o "$1" == "full" ]; then
-
-    apt-get install -y salt-master
-
-    if [[ $SUDO_COMMAND == "/bin/bash -s"* ]]; then
-      ROOT_DIR="$PWD/salt-django-stack"
-    else
-      ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
-    fi
-    TOP_DIR="/srv/salt"
-    PILLAR_DIR="/srv/pillar"
-
-    if [ ! -d  "$ROOT_DIR" ]; then
-      sudo -u $SUDO_USER git clone git@github.com:alexisbellido/salt-django-stack.git
-    fi
-    
-    if [ ! -d  "$TOP_DIR" ]; then
-      echo "Creating $TOP_DIR..."
-      mkdir -p $TOP_DIR
-      cp $ROOT_DIR/conf/srv/salt/top.sls $TOP_DIR
-    fi
-    
-    if [ ! -d  "$PILLAR_DIR" ]; then
-      echo "Creating $PILLAR_DIR..."
-      mkdir -p $PILLAR_DIR
-      cp -r $ROOT_DIR/conf/srv/pillar/* $PILLAR_DIR
-    fi
-
-    sed -i '/^# Added by install script$/,$d' /etc/salt/master
-    cat >> /etc/salt/master << EOL
-
-# Added by install script
-file_roots:
-  base:
-    - /srv/salt
-    - ${ROOT_DIR}
-
-pillar_roots:
-  base:
-    - ${PILLAR_DIR}
-  staging:
-    - ${PILLAR_DIR}/staging
-  production:
-    - ${PILLAR_DIR}/production
-EOL
-
-    service salt-master restart
-
-  fi
-  
-  if [ "$1" == "minion" -o "$1" == "full" ]; then
-    apt-get install -y salt-minion
-  fi
-  
-  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
-    git config --global user.name "$2"
-    git config --global user.email $3
-  fi
-
-  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" -o "$1" == "steps" ]; then
-  echo
-  echo "Next steps:"
-  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR. Check production and staging subdirectories for environment-specific data."
-  echo "  You can use sed to quickly make changes in zinibu_basic.sls:"
-  echo "  sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls"
-  echo "2. Setup /srv/salt/top.sls and restart salt master"
-  echo "3. Setup /etc/hosts to point all hosts to the salt master using the \"salt\" hostname."
-  echo "4. Edit /etc/salt/minion in all minions to set id and roles and restart salt minion."
-  echo "5. Accept keys on master using salt-key."
-  echo "6. Make magic start:"
-  echo "   sudo scripts/install.sh"
-  echo
-  echo "Checkout the README for more details."
-  echo
-  fi
+#TEMP START
+#  if [ "$1" == "master" -o "$1" == "full" ]; then
+#
+#    apt-get install -y salt-master
+#
+#    if [[ $SUDO_COMMAND == "/bin/bash -s"* ]]; then
+#      ROOT_DIR="$PWD/salt-django-stack"
+#    else
+#      ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
+#    fi
+#    TOP_DIR="/srv/salt"
+#    PILLAR_DIR="/srv/pillar"
+#
+#    if [ ! -d  "$ROOT_DIR" ]; then
+#      sudo -u $SUDO_USER git clone git@github.com:alexisbellido/salt-django-stack.git
+#    fi
+#    
+#    if [ ! -d  "$TOP_DIR" ]; then
+#      echo "Creating $TOP_DIR..."
+#      mkdir -p $TOP_DIR
+#      cp $ROOT_DIR/conf/srv/salt/top.sls $TOP_DIR
+#    fi
+#    
+#    if [ ! -d  "$PILLAR_DIR" ]; then
+#      echo "Creating $PILLAR_DIR..."
+#      mkdir -p $PILLAR_DIR
+#      cp -r $ROOT_DIR/conf/srv/pillar/* $PILLAR_DIR
+#    fi
+#
+#    sed -i '/^# Added by install script$/,$d' /etc/salt/master
+#    cat >> /etc/salt/master << EOL
+#
+## Added by install script
+#file_roots:
+#  base:
+#    - /srv/salt
+#    - ${ROOT_DIR}
+#
+#pillar_roots:
+#  base:
+#    - ${PILLAR_DIR}
+#  staging:
+#    - ${PILLAR_DIR}/staging
+#  production:
+#    - ${PILLAR_DIR}/production
+#EOL
+#
+#    service salt-master restart
+#
+#  fi
+#  
+#  if [ "$1" == "minion" -o "$1" == "full" ]; then
+#    apt-get install -y salt-minion
+#  fi
+#  
+#  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
+#    git config --global user.name "$2"
+#    git config --global user.email $3
+#  fi
+#
+#  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" -o "$1" == "steps" ]; then
+#  echo
+#  echo "Next steps:"
+#  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR. Check production and staging subdirectories for environment-specific data."
+#  echo "  You can use sed to quickly make changes in zinibu_basic.sls:"
+#  echo "  sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls"
+#  echo "2. Setup /srv/salt/top.sls and restart salt master"
+#  echo "3. Setup /etc/hosts to point all hosts to the salt master using the \"salt\" hostname."
+#  echo "4. Edit /etc/salt/minion in all minions to set id and roles and restart salt minion."
+#  echo "5. Accept keys on master using salt-key."
+#  echo "6. Make magic start:"
+#  echo "   sudo scripts/install.sh"
+#  echo
+#  echo "Checkout the README for more details."
+#  echo
+#  fi
+#TEMP END
 
 fi
