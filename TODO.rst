@@ -1,9 +1,8 @@
 TODO
 
-- upgrade to ubuntu 16.04 and try salt stuff, especially new varnish and haproxy:
-- most of packages updated, figure out varnish to make haproxy work without ssl and then work on ssl
-HA-Proxy version 1.6.3 2015/12/25
-varnishd (varnish-4.1.1 revision 66bb824)
+- upgrading to ubuntu 16.04 and try salt stuff, especially new varnish and haproxy:
+- continue with varnish default4 vlc
+sudo salt-call state.sls zinibu.varnish.conf
 
 - how expensive is to test all of this running with digitalocean? try for a couple of days and let's see
 
