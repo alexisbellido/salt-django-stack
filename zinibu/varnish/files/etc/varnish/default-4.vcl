@@ -1,20 +1,28 @@
-# This is a basic VCL configuration file for varnish.  See the vcl(7)
-# man page for details on VCL syntax and semantics.
-# 
-# Default backend definition.  Set this to point to your content
-# server.
-# 
-
 # Managed by saltstack.
+# host id: {{ salt['grains.get']('id', '') }}
 {% set settings = salt['pillar.get']('varnish', {}) -%}
 {% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
+#
+# This is an example VCL file for Varnish.
+#
+# It does not do anything by default, delegating control to the
+# builtin VCL. The builtin VCL is called when there is no explicit
+# return statement.
+#
+# See the VCL chapters in the Users Guide at https://www.varnish-cache.org/docs/
+# and https://www.varnish-cache.org/trac/wiki/VCLExamples for more examples.
 
+# Marker to tell the VCL compiler that this VCL has been adapted to the
+# new 4.0 format.
 vcl 4.0;
+
+import std;
 import directors;
 
-backend bk_appsrv_static {
-  .host = "{{ zinibu_basic.project.haproxy_frontend_private_ip }}";
-  .port = "{{ zinibu_basic.project.haproxy_frontend_port }}";
+{%- for id, haproxy_server in zinibu_basic.project.haproxy_servers.iteritems() %}
+backend bk_appsrv_static_{{ id }} {
+  .host = "{{ haproxy_server.private_ip }}";
+  .port = "{{ haproxy_server.port }}";
   .probe = {
     .url = "{{ zinibu_basic.project.haproxy_check }}";
     .expected_response = 200;
@@ -25,440 +33,231 @@ backend bk_appsrv_static {
     .initial = 2;
   }
 }
+{%- endfor %}
+
+sub vcl_init {
+    new bar = directors.round_robin();
+{%- for id, haproxy_server in zinibu_basic.project.haproxy_servers.iteritems() %}
+    bar.add_backend(bk_appsrv_static_{{ id }});
+{%- endfor %}
+}
 
 acl purge {
     "localhost";
-}
-
-sub vcl_init {
-    new b = directors.round_robin();
-    b.add_backend(bk_appsrv_static);
+    "127.0.0.1";
 }
 
 sub vcl_recv {
-    # Health Checking
-    if (req.url == "{{ zinibu_basic.project.varnish_check }}") {
-        # todo
-        #error 751 "health check OK!";
-    }
+    # Happens before we check if we have this in cache already.
+    #
+    # Typically you clean up the request here, removing cookies you don't need,
+    # rewriting the request, etc.
 
     # debug bypass
     #return (pass);
-    #
 
-    # Set default backend
-    set req.backend_hint = b.backend();
+    # send all traffic to the bar director:
+    set req.backend_hint = bar.backend();
 
-    # conditions examples
-    # if (req.url ~ "^/yte-admin" || req.url ~ "^/accounts/" || req.url ~ "^/api/v1" || req.url ~ "^/sweeps" || req.url ~ "^/questions" || req.url ~ "^/static" || req.url ~ "^/media/"  || req.url ~ "^/dj-admin") {
-    #   set req.backend = django_balancer;
-    # } else {
-    #   set req.backend = drupal_balancer;
-    # }
+    # Normalize the header, remove the port (in case you're testing this on various TCP ports)
+    set req.http.Host = regsub(req.http.Host, ":[0-9]+", "");
 
-    # TODO normalize namespace, use correct domain
-    # https://www.varnish-cache.org/docs/3.0/tutorial/increasing_your_hitrate.html#normalizing-your-namespace
-    #if (req.http.host ~ "(?i)^(www.)?varnish-?software.com") {
-    #    set req.http.host = "varnish-software.com";
-    #}
-    
-    # https://www.varnish-cache.org/docs/3.0/reference/vcl.html#varnish-configuration-language
-    # You can use the set keyword to set arbitrary HTTP headers. You can remove headers with the remove or unset keywords, which are synonyms.
-    #
-    # If multiple subroutines with the the name of one of the builtin ones are defined, they are concatenated in the order in which they appear in the source. The default versions distributed with Varnish will be implicitly concatenated as a last resort at the end.
+    # Normalize the query arguments
+    set req.url = std.querysort(req.url);
 
-    # drop cookies (and respond from cache) if backends are down, do we still need it if we have probe?
-    #if (!req.backend.healthy) {
-    #  unset req.http.Cookie;
-    #}
-
-    # examples of avoiding caching
-    #if (req.url ~ "^/status\.php$" ||
-    #    req.url ~ "^/update\.php$" ||
-    #    req.url ~ "^/ooyala/ping$" ||
-    #    req.url ~ "^/admin/build/features" ||
-    #    req.url ~ "^/info/.*$" ||
-    #    req.url ~ "^/flag/.*$" ||
-    #    req.url ~ "^.*/ajax/.*$" ||
-    #    req.url ~ "^/dj-admin/" ||
-    #    req.url ~ "^/questions/from-external-login/" ||
-    #    req.url ~ "^/experts/search/" ||
-    #    req.url ~ "^.*/ahah/.*$") {
-    #     return (pass);
-    #}
-    
-    # Pipe these paths directly for streaming.
-    # Further investigation needed. Maybe for big downloads.
-    #if (req.url ~ "^/admin/content/backup_migrate/export") {
-    #  return (pipe);
-    #}
- 
-    # Purge request
+    # Allow purging
     if (req.method == "PURGE") {
-        if (!client.ip ~ purge) {
-	    # todo
-            #error 405 "Not allowed.";
+        if (!client.ip ~ purge) { # purge is the ACL defined at the begining
+	    # Not from an allowed IP? Then die with an error.
+                return (synth(405, "This IP is not allowed to send PURGE requests."));
         }
+        # If you got this stage (and didn't error out above), purge the cached result
         return (purge);
     }
 
+    # Only deal with "normal" types
+    if (req.method != "GET" &&
+        req.method != "HEAD" &&
+        req.method != "PUT" &&
+        req.method != "POST" &&
+        req.method != "TRACE" &&
+        req.method != "OPTIONS" &&
+        req.method != "PATCH" &&
+        req.method != "DELETE") {
+      /* Non-RFC2616 or CONNECT which is weird. */
+      return (pipe);
+    }
+
+    # Implementing websocket support (https://www.varnish-cache.org/docs/4.0/users-guide/vcl-example-websockets.html)
+    if (req.http.Upgrade ~ "(?i)websocket") {
+      return (pipe);
+    }
+
+    # Only cache GET or HEAD requests. This makes sure the POST requests are always passed.
+    if (req.method != "GET" && req.method != "HEAD") {
+      return (pass);
+    }
+
     # unless sessionid/csrftoken is in the request, don't pass ANY cookies (referral_source, utm, etc)
-    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.cookie !~ "sessionid" && req.http.cookie !~ "csrftoken"))) {
-        unset req.http.Cookie;
-    }
-
-    # Always cache the following file types for all users.
-    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|htm|html)(\?[a-z0-9]+)?$") {
-      unset req.http.Cookie;
-    }
-    
-    # static and media files always cached 
-    if (req.url ~ "^/static" || req.url ~ "^/media") {
+    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "csrftoken"))) {
       unset req.http.Cookie;
     }
 
-    # redundant?
-    # Static objects are first looked up in the cache
-    #if (req.url ~ ".(png|gif|jpg|swf|css|js)(?.*|)$") {
-    #    return (lookup);
-    #}
+# TODO probably not needed as conditions above cover this
+#    # static and media files always cached 
+#    if (req.url ~ "^/static" || req.url ~ "^/media") {
+#      unset req.http.Cookie;
+#    }
+#
+#    A condition for static files below should take care of this
+#    # Always cache the following file types for all users.
+#    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|htm|html)(\?[a-z0-9]+)?$") {
+#      unset req.http.Cookie;
+#    }
+# END TODO
 
-    #######################################
-    ## Strip hash, server doesn't need it.
-    #if (req.url ~ "\#") {
-    #  set req.url=regsub(req.url,"\#.*$","");
-    #}
-    #
-    ## Strip out Google related parameters
-    #if (req.url ~ "(\?|&)(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=") {
-    #  set req.url=regsuball(req.url,"&(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=([A-z0-9_\-\.%25]+)","");
-    #  set req.url=regsuball(req.url,"\?(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=([A-z0-9_\-\.%25]+)","?");
-    #  set req.url=regsub(req.url,"\?&","?");
-    #  set req.url=regsub(req.url,"\?$","");
-    #}
-    #
-    ## Django is setting this cookie so we only check here
-    #if (req.http.Cookie ~ "LOGGED_IN") {
-    #  return (pass);
-    #}
-    #
-    ## new lullabot cookies logic
-    ## Remove all cookies that Drupal doesn't need to know about. ANY remaining
-    ## cookie will cause the request to pass-through to Apache. For the most part
-    ## we always set the NO_CACHE cookie after any POST request, disabling the
-    ## Varnish cache temporarily. The session cookie allows all authenticated users
-    ## to pass through as long as they're logged in.
-    #
-    #if (req.http.Cookie) {
-    #  set req.http.Cookie = ";" + req.http.Cookie;
-    #  set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
-    #  # replace this original line to include Django's LOGGED_IN
-    #  #set req.http.Cookie = regsuball(req.http.Cookie, ";(SESS[a-z0-9]+|NO_CACHE)=", "; \1=");
-    #  set req.http.Cookie = regsuball(req.http.Cookie, ";(SESS[a-z0-9]+|NO_CACHE|LOGGED_IN)=", "; \1=");
-    #  set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
-    #  set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
-    #
-    #  if (req.http.Cookie == "") {
-    #    # If there are no remaining cookies, remove the cookie header. If there
-    #    # aren't any cookie headers, Varnish's default behavior will be to cache
-    #    # the page.
-    #    unset req.http.Cookie;
-    #  }
-    #  else {
-    #    # If there is any cookies left (a session or NO_CACHE cookie), do not
-    #    # cache the page. Pass it on to Apache directly.
-    #    return (pass);
-    #  }
-    #}
-    #######################################
-
-    # normalize accept-encoding to account for different browsers
-    # see: https://www.varnish-cache.org/trac/wiki/VCLExampleNormalizeAcceptEncoding
-    # Accept-Encoding header clean-up
-    if (req.http.Accept-Encoding) {
-        # use gzip when possible, otherwise use deflate
-        if (req.http.Accept-Encoding ~ "gzip") {
-            set req.http.Accept-Encoding = "gzip";
-        } elsif (req.http.Accept-Encoding ~ "deflate") {
-            set req.http.Accept-Encoding = "deflate";
-        } else {
-            # unknown algorithm, remove accept-encoding header
-            unset req.http.Accept-Encoding;
-        }
-        
-        # Microsoft Internet Explorer 6 is well know to be buggy with compression and css / js
-        if (req.url ~ ".(css|js)" && req.http.User-Agent ~ "MSIE 6") {
-            unset req.http.Accept-Encoding;
-        }
+    # Large static files are delivered directly to the end-user without
+    # waiting for Varnish to fully read the file first.
+    # Varnish 4 fully supports Streaming, so set do_stream in vcl_backend_response()
+    if (req.url ~ "^[^?]*\.(7z|avi|bz2|flac|flv|gz|mka|mkv|mov|mp3|mp4|mpeg|mpg|ogg|ogm|opus|rar|tar|tgz|tbz|txz|wav|webm|xz|zip)(\?.*)?$") {
+      unset req.http.Cookie;
+      return (hash);
     }
 
-    # Per host/application configuration
-    # bk_appsrv_static
-    # Stale content delivery
-
-    # todo
-    #if (req.backend.healthy) {
-    #    set req.grace = 30s;
-    #} else {
-    #    set req.grace = 1d;
-    #}
+    # Remove all cookies for static files
+    # A valid discussion could be held on this line: do you really need to cache static files that don't cause load? Only if you have memory left.
+    # Sure, there's disk I/O, but chances are your OS will already have these files in their buffers (thus memory).
+    # Before you blindly enable this, have a read here: https://ma.ttias.be/stop-caching-static-files/
+    if (req.url ~ "^[^?]*\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*)?$") {
+      unset req.http.Cookie;
+      return (hash);
+    }
     
-    # unneeded?
-    # Cookie ignored in these static pages
-    #unset req.http.cookie;
+    # Are there cookies left with only spaces or that are empty?
+    if (req.http.cookie ~ "^\s*$") {
+      unset req.http.Cookie;
+    }
+
+    # Strip hash, server doesn't need it.
+    if (req.url ~ "\#") {
+      set req.url = regsub(req.url, "\#.*$", "");
+    }
+
+    # Strip a trailing ? if it exists
+    if (req.url ~ "\?$") {
+      set req.url = regsub(req.url, "\?$", "");
+    }
+
 }
 
-# Routine used to determine the cache key if storing/retrieving a cached page.
-# todo
 sub vcl_hash {
+    # Called after vcl_recv to create a hash value for the request. This is used as a key
+    # to look up the object in Varnish.
+  
     hash_data(req.url);
+  
     if (req.http.host) {
-        hash_data(req.http.host);
+      hash_data(req.http.host);
     } else {
-        hash_data(server.ip);
+      hash_data(server.ip);
     }
+  
+    # hash cookies for requests that have them
+    if (req.http.Cookie) {
+      hash_data(req.http.Cookie);
+    }
+
     return (lookup);
 }
 
-sub vcl_hit {
-    # Purge
-    if (req.method == "PURGE") {
-        # todo now read only
-        # set obj.ttl = 0s;
+sub vcl_backend_response {
+    # Happens after we have read the response headers from the backend.
+    #
+    # Here you clean the response headers, removing silly Set-Cookie headers
+    # and other mistakes your backend does.
 
-        # todo
-        #error 200 "Purged.";
+    # Called after the response headers has been successfully retrieved from the backend.
+
+    # Pause ESI request and remove Surrogate-Control header
+    if (beresp.http.Surrogate-Control ~ "ESI/1.0") {
+      unset beresp.http.Surrogate-Control;
+      set beresp.do_esi = true;
     }
+
+    # Enable cache for all static files
+    # The same argument as the static caches from above: monitor your cache size, if you get data nuked out of it, consider giving up the static file cache.
+    # Before you blindly enable this, have a read here: https://ma.ttias.be/stop-caching-static-files/
+    if (bereq.url ~ "^[^?]*\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*)?$") {
+      unset beresp.http.set-cookie;
+    }
+
+    # Large static files are delivered directly to the end-user without
+    # waiting for Varnish to fully read the file first.
+    # Varnish 4 fully supports Streaming, so use streaming here to avoid locking.
+    if (bereq.url ~ "^[^?]*\.(7z|avi|bz2|flac|flv|gz|mka|mkv|mov|mp3|mp4|mpeg|mpg|ogg|ogm|opus|rar|tar|tgz|tbz|txz|wav|webm|xz|zip)(\?.*)?$") {
+      unset beresp.http.set-cookie;
+      set beresp.do_stream = true;  # Check memory usage it'll grow in fetch_chunksize blocks (128k by default) if the backend doesn't send a Content-Length header, so only enable it for big objects
+      set beresp.do_gzip   = false;   # Don't try to compress it for storage
+    }
+
+    # Sometimes, a 301 or 302 redirect formed via Apache's mod_rewrite can mess with the HTTP port that is being passed along.
+    # This often happens with simple rewrite rules in a scenario where Varnish runs on :80 and Apache on :8080 on the same box.
+    # A redirect can then often redirect the end-user to a URL on :8080, where it should be :80.
+    # This may need finetuning on your setup.
+    #
+    # To prevent accidental replace, we only filter the 301/302 redirects for now.
+    if (beresp.status == 301 || beresp.status == 302) {
+      set beresp.http.Location = regsub(beresp.http.Location, ":[0-9]+", "");
+    }
+
+    # Set 2min cache if unset for static files
+    if (beresp.ttl <= 0s || beresp.http.Set-Cookie || beresp.http.Vary == "*") {
+      set beresp.ttl = 120s; # Important, you shouldn't rely on this, SET YOUR HEADERS in the backend
+      set beresp.uncacheable = true;
+      return (deliver);
+    }
+
+    # Don't cache 50x responses
+    if (beresp.status == 500 || beresp.status == 502 || beresp.status == 503 || beresp.status == 504) {
+      return (abandon);
+    }
+
+    # Allow stale content, in case the backend goes down.
+    # make Varnish keep all objects for 6 hours beyond their TTL
+    set beresp.grace = 6h;
+
     return (deliver);
 }
 
-sub vcl_miss {
-    # Purge
-    if (req.method == "PURGE") {
-        # todo
-        #error 404 "Not in cache.";
-    }
-    return (fetch);
-}
-
-sub vcl_backend_response {
-    # Stale content delivery
-    set beresp.grace = 1d;
-    
-    # static files always cached 
-    if (bereq.url ~ "^/media" || bereq.url ~ "^/static") {
-       unset beresp.http.set-cookie;
-       return (deliver);  
-    }
-
-    # TODO should I pass some of this caching of app servers to haproxy?
-    # pass through for anything with a session/csrftoken set
-    if (beresp.http.set-cookie ~ "sessionid" || beresp.http.set-cookie ~ "csrftoken") {
-        # hit_for_pass: Pass in fetch. This will create a hit_for_pass object. Note that the TTL for the hit_for_pass object will be set to what the current value of beresp.ttl. Control will be handled to vcl_deliver on the current request, but subsequent requests will go directly to vcl_pass based on the hit_for_pass object.
-
-        # this is to control time to cache this url
-        #set beresp.ttl = 10s;
-        set beresp.uncacheable = true;
-        return (deliver);
-    } else {
-        return (deliver);
-    }
-
-    # Some optional logic from Drupal
-    # if (bereq.url ~ "^/api/v1") {
-    #   set beresp.ttl = 10s;
-    #   return (deliver);
-    # }
-    # 
-    # if (bereq.url == "/questions/esi-test/") {
-    #    set beresp.ttl = 1s;
-    #    #set beresp.ttl = 5m;
-    # } else {
-    #    set beresp.do_esi = true; /* Do ESI processing               */
-    #    set beresp.ttl = 24h;
-    # }
-    # 
-    # # Don't allow static files to set cookies.
-    # if (bereq.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|html|htm)(\?[a-z0-9]+)?$") {
-    #   # beresp == Back-end response from the web server.
-    #   unset beresp.http.set-cookie;
-    # }
-    # 
-    # # static and media files always cached 
-    # if (bereq.url ~ "^/static" || bereq.url ~ "^/media") {
-    #    unset beresp.http.set-cookie;
-    # }
-    # 
-    # if (bereq.url ~ "^/accounts/login" || bereq.url ~ "^/accounts/register" || bereq.url ~ "^/accounts/password" || bereq.url ~ "^/questions/$" || bereq.url ~ "^/questions/login/" || bereq.url ~ "^/questions/from-external-login/") {
-    #    return (hit_for_pass);
-    # }
-    # 
-    # # notice Drupal URLs don't have the trailing slash
-    # # /experts/user-register and /experts/payment-options are needed to fix YTE join problem in Firefox and other Windows browsers
-    # #if (req.url !~ "^/dj-admin/$" && req.url !~ "^/questions/$" && req.url !~ "^/questions/login/" && req.url !~ "^/questions/from-external-login/" && req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "csrftoken" && req.url !~ "^/user/login" && req.url !~ "^/experts/user-register" && req.http.Cookie !~ "LOGGED_IN" && req.http.Cookie !~ "SESS[a-z0-9]+") {
-    # if (req.url !~ "^/api/user" && req.url !~ "^/accounts/login" && req.url !~ "^/accounts/register" && req.url !~ "^/accounts/password" && req.url !~ "^/dj-admin/$" && req.url !~ "^/questions/$" && req.url !~ "^/questions/login/" && req.url !~ "^/questions/from-external-login/" && req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "csrftoken" && req.url !~ "^/user/login" && req.url !~ "^/experts/user-register" && req.http.Cookie !~ "LOGGED_IN") {
-    #    unset beresp.http.set-cookie;
-    #    return (deliver);
-    # } else {
-    #    return (hit_for_pass);
-    # }
-
-#    TODO review
-#    # Hide Server information
-#    unset beresp.http.Server;
-#    
-#    # Store compressed objects in memory
-#    # They would be uncompressed on the fly by Varnish if the client doesn't support compression
-#    if (beresp.http.content-type ~ "(text|application)") {
-#        set beresp.do_gzip = true;
-#    }
-#
-#    # remove any cookie on static or pseudo-static objects
-#    unset beresp.http.set-cookie;
-}
-
 sub vcl_deliver {
-    # debugging
-    #set resp.http.X-DEBUG-Varnish = "Hey, this is Varnish 3 on staging";
-    #set resp.http.X-DEBUG-URL = "URL " + req.url;
-    
-    # optionally hide a couple of headers
-    #unset resp.http.via;
-    #unset resp.http.x-varnish;
-    
-    # could be useful to know if the object was in cache or not
-    if (obj.hits > 0) {
-        set resp.http.X-Cache = "HIT";
+    # Happens when we have all the pieces we need, and are about to send the
+    # response to the client.
+    #
+    # You can do accounting or modifying the final object here.
+
+    # Called before a cached object is delivered to the client.
+
+    if (obj.hits > 0) { # Add debug header to see if it's a HIT/MISS and the number of hits, disable when not needed
+      set resp.http.X-Cache = "HIT";
     } else {
-        set resp.http.X-Cache = "MISS";
+      set resp.http.X-Cache = "MISS";
     }
+
+    # Please note that obj.hits behaviour changed in 4.0, now it counts per objecthead, not per object
+    # and obj.hits may not be reset in some cases where bans are in use. See bug 1492 for details.
+    # So take hits with a grain of salt
+    set resp.http.X-Cache-Hits = obj.hits;
+
+    # Remove some headers: PHP version
+    unset resp.http.X-Powered-By;
+
+    # Remove some headers: Apache version & OS
+    unset resp.http.Server;
+    unset resp.http.X-Drupal-Cache;
+    unset resp.http.X-Varnish;
+    unset resp.http.Via;
+    unset resp.http.Link;
+    unset resp.http.X-Generator;
+
+    return (deliver);
 }
-
-sub vcl_backend_error {
-    # Health check
-    if (beresp.status == 751) {
-        set beresp.status = 200;
-        return (deliver);
-    }
-}
-
-# end of managed by saltstack.
-
-#backend default {
-#    .host = "127.0.0.1";
-#    .port = "8080";
-#}
-# 
-# Below is a commented-out copy of the default VCL logic.  If you
-# redefine any of these subroutines, the built-in logic will be
-# appended to your code.
-# sub vcl_recv {
-#     if (req.restarts == 0) {
-# 	if (req.http.x-forwarded-for) {
-# 	    set req.http.X-Forwarded-For =
-# 		req.http.X-Forwarded-For + ", " + client.ip;
-# 	} else {
-# 	    set req.http.X-Forwarded-For = client.ip;
-# 	}
-#     }
-#     if (req.method != "GET" &&
-#       req.method != "HEAD" &&
-#       req.method != "PUT" &&
-#       req.method != "POST" &&
-#       req.method != "TRACE" &&
-#       req.method != "OPTIONS" &&
-#       req.method != "DELETE") {
-#         /* Non-RFC2616 or CONNECT which is weird. */
-#         return (pipe);
-#     }
-#     if (req.method != "GET" && req.method != "HEAD") {
-#         /* We only deal with GET and HEAD by default */
-#         return (pass);
-#     }
-#     if (req.http.Authorization || req.http.Cookie) {
-#         /* Not cacheable by default */
-#         return (pass);
-#     }
-#     return (lookup);
-# }
-# 
-# sub vcl_pipe {
-#     # Note that only the first request to the backend will have
-#     # X-Forwarded-For set.  If you use X-Forwarded-For and want to
-#     # have it set for all requests, make sure to have:
-#     # set bereq.http.connection = "close";
-#     # here.  It is not set by default as it might break some broken web
-#     # applications, like IIS with NTLM authentication.
-#     return (pipe);
-# }
-# 
-# sub vcl_pass {
-#     return (pass);
-# }
-# 
-# sub vcl_hash {
-#     hash_data(req.url);
-#     if (req.http.host) {
-#         hash_data(req.http.host);
-#     } else {
-#         hash_data(server.ip);
-#     }
-#     return (hash);
-# }
-# 
-# sub vcl_hit {
-#     return (deliver);
-# }
-# 
-# sub vcl_miss {
-#     return (fetch);
-# }
-# 
-# sub vcl_fetch {
-#     if (beresp.ttl <= 0s ||
-#         beresp.http.Set-Cookie ||
-#         beresp.http.Vary == "*") {
-# 		/*
-# 		 * Mark as "Hit-For-Pass" for the next 2 minutes
-# 		 */
-# 		set beresp.ttl = 120 s;
-# 		return (hit_for_pass);
-#     }
-#     return (deliver);
-# }
-# 
-# sub vcl_deliver {
-#     return (deliver);
-# }
-# 
-# sub vcl_error {
-#     set obj.http.Content-Type = "text/html; charset=utf-8";
-#     set obj.http.Retry-After = "5";
-#     synthetic {"
-# <?xml version="1.0" encoding="utf-8"?>
-# <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-#  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-# <html>
-#   <head>
-#     <title>"} + obj.status + " " + obj.response + {"</title>
-#   </head>
-#   <body>
-#     <h1>Error "} + obj.status + " " + obj.response + {"</h1>
-#     <p>"} + obj.response + {"</p>
-#     <h3>Guru Meditation:</h3>
-#     <p>XID: "} + req.xid + {"</p>
-#     <hr>
-#     <p>Varnish cache server</p>
-#   </body>
-# </html>
-# "};
-#     return (deliver);
-# }
-# 
-# sub vcl_init {
-# 	return (ok);
-# }
-# 
-# sub vcl_fini {
-# 	return (ok);
-# }
