@@ -56,6 +56,8 @@ sub vcl_recv {
     # debug bypass
     #return (pass);
 
+    #std.log("vcl recv: "+req.request);
+
     # send all traffic to the bar director:
     set req.backend_hint = bar.backend();
 
@@ -69,7 +71,7 @@ sub vcl_recv {
     if (req.method == "PURGE") {
         if (!client.ip ~ purge) { # purge is the ACL defined at the begining
 	    # Not from an allowed IP? Then die with an error.
-                return (synth(405, "This IP is not allowed to send PURGE requests."));
+            return (synth(405, "This IP is not allowed to send PURGE requests."));
         }
         # If you got this stage (and didn't error out above), purge the cached result
         return (purge);
@@ -98,23 +100,21 @@ sub vcl_recv {
       return (pass);
     }
 
+    # Django is setting this cookie so we only check here
+    if (req.http.Cookie ~ "LOGGED_IN") {
+      return (pass);
+    }
+
+    if (req.http.Authorization) {
+      # Not cacheable by default
+      return (pass);
+    }
+
     # unless sessionid/csrftoken is in the request, don't pass ANY cookies (referral_source, utm, etc)
     if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "csrftoken"))) {
       unset req.http.Cookie;
+      return (hash);
     }
-
-# TODO probably not needed as conditions above cover this
-#    # static and media files always cached 
-#    if (req.url ~ "^/static" || req.url ~ "^/media") {
-#      unset req.http.Cookie;
-#    }
-#
-#    A condition for static files below should take care of this
-#    # Always cache the following file types for all users.
-#    if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js|htm|html)(\?[a-z0-9]+)?$") {
-#      unset req.http.Cookie;
-#    }
-# END TODO
 
     # Large static files are delivered directly to the end-user without
     # waiting for Varnish to fully read the file first.
@@ -138,6 +138,41 @@ sub vcl_recv {
       unset req.http.Cookie;
     }
 
+    # Some generic cookie manipulation, useful for all templates that follow
+    # Remove the "has_js" cookie
+    set req.http.Cookie = regsuball(req.http.Cookie, "has_js=[^;]+(; )?", "");
+
+    # Remove any Google Analytics based cookies
+    set req.http.Cookie = regsuball(req.http.Cookie, "__utm.=[^;]+(; )?", "");
+    set req.http.Cookie = regsuball(req.http.Cookie, "_ga=[^;]+(; )?", "");
+    set req.http.Cookie = regsuball(req.http.Cookie, "_gat=[^;]+(; )?", "");
+    set req.http.Cookie = regsuball(req.http.Cookie, "utmctr=[^;]+(; )?", "");
+    set req.http.Cookie = regsuball(req.http.Cookie, "utmcmd.=[^;]+(; )?", "");
+    set req.http.Cookie = regsuball(req.http.Cookie, "utmccn.=[^;]+(; )?", "");
+
+    # Remove DoubleClick offensive cookies
+    set req.http.Cookie = regsuball(req.http.Cookie, "__gads=[^;]+(; )?", "");
+
+    # Remove the Quant Capital cookies (added by some plugin, all __qca)
+    #set req.http.Cookie = regsuball(req.http.Cookie, "__qc.=[^;]+(; )?", "");
+
+    # Remove the AddThis cookies
+    #set req.http.Cookie = regsuball(req.http.Cookie, "__atuv.=[^;]+(; )?", "");
+
+    # Remove a ";" prefix in the cookie if present
+    set req.http.Cookie = regsuball(req.http.Cookie, "^;\s*", "");
+
+    if (req.http.Cache-Control ~ "(?i)no-cache") {
+    #if (req.http.Cache-Control ~ "(?i)no-cache" && client.ip ~ editors) { # create the acl editors if you want to restrict the Ctrl-F5
+      # http://varnish.projects.linpro.no/wiki/VCLExampleEnableForceRefresh
+      # Ignore requests via proxy caches and badly behaved crawlers
+      # like msnbot that send no-cache with every request.
+      if (! (req.http.Via || req.http.User-Agent ~ "(?i)bot" || req.http.X-Purge)) {
+        #set req.hash_always_miss = true; # Doesn't seems to refresh the object in the cache
+        return(purge); # Couple this with restart in vcl_purge and X-Purge header to avoid loops
+      }
+    }
+
     # Strip hash, server doesn't need it.
     if (req.url ~ "\#") {
       set req.url = regsub(req.url, "\#.*$", "");
@@ -148,6 +183,39 @@ sub vcl_recv {
       set req.url = regsub(req.url, "\?$", "");
     }
 
+    return (hash);
+}
+
+sub vcl_pipe {
+  # Called upon entering pipe mode.
+  # In this mode, the request is passed on to the backend, and any further data from both the client
+  # and backend is passed on unaltered until either end closes the connection. Basically, Varnish will
+  # degrade into a simple TCP proxy, shuffling bytes back and forth. For a connection in pipe mode,
+  # no other VCL subroutine will ever get called after vcl_pipe.
+
+  # Note that only the first request to the backend will have
+  # X-Forwarded-For set.  If you use X-Forwarded-For and want to
+  # have it set for all requests, make sure to have:
+  # set bereq.http.connection = "close";
+  # here.  It is not set by default as it might break some broken web
+  # applications, like IIS with NTLM authentication.
+
+  # set bereq.http.Connection = "Close";
+
+  # Implementing websocket support (https://www.varnish-cache.org/docs/4.0/users-guide/vcl-example-websockets.html)
+  if (req.http.upgrade) {
+    set bereq.http.upgrade = req.http.upgrade;
+  }
+
+  return (pipe);
+}
+
+sub vcl_pass {
+  # Called upon entering pass mode. In this mode, the request is passed on to the backend, and the
+  # backend's response is passed on to the client, but is not entered into the cache. Subsequent
+  # requests submitted over the same client connection are handled normally.
+
+  # return (pass);
 }
 
 sub vcl_hash {
@@ -214,6 +282,21 @@ sub vcl_backend_response {
     if (beresp.ttl <= 0s || beresp.http.Set-Cookie || beresp.http.Vary == "*") {
       set beresp.ttl = 120s; # Important, you shouldn't rely on this, SET YOUR HEADERS in the backend
       set beresp.uncacheable = true;
+
+      # Study and test this
+      # Mark as "Hit-For-Pass" for the next 60 minutes - 24 hours
+      #if (bereq.url ~ "\.(jpe?g|png|gif|pdf|gz|tgz|bz2|tbz|tar|zip|tiff|tif)$" || bereq.url ~ "/(image|(image_(?:[^/]|(?!view.*).+)))$") {
+      #    set beresp.ttl = std.duration(beresp.http.age+"s",0s) + 6h;
+      #} elseif (bereq.url ~ "\.(svg|swf|ico|mp3|mp4|m4a|ogg|mov|avi|wmv|flv)$") {
+      #    set beresp.ttl = std.duration(beresp.http.age+"s",0s) + 6h;
+      #} elseif (bereq.url ~ "\.(xls|vsd|doc|ppt|pps|vsd|doc|ppt|pps|xls|pdf|sxw|rar|odc|odb|odf|odg|odi|odp|ods|odt|sxc|sxd|sxi|sxw|dmg|torrent|deb|msi|iso|rpm)$") {
+      #    set beresp.ttl = std.duration(beresp.http.age+"s",0s) + 6h;
+      #} elseif (bereq.url ~ "\.(css|js)$") {
+      #    set beresp.ttl = std.duration(beresp.http.age+"s",0s) + 24h;
+      #} else {
+      #    set beresp.ttl = std.duration(beresp.http.age+"s",0s) + 1h;
+      #}
+
       return (deliver);
     }
 
@@ -259,5 +342,21 @@ sub vcl_deliver {
     unset resp.http.Link;
     unset resp.http.X-Generator;
 
+    return (deliver);
+}
+
+sub vcl_purge {
+  # Only handle actual PURGE HTTP methods, everything else is discarded
+  if (req.method != "PURGE") {
+    # restart request
+    set req.http.X-Purge = "Yes";
+    return(restart);
+  }
+}
+
+sub vcl_synth {
+    set resp.http.Content-Type = "text/html; charset=utf-8";
+    set resp.http.Retry-After = "5";
+    synthetic ("Error");
     return (deliver);
 }

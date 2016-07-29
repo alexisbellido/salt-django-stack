@@ -1,5 +1,7 @@
 TODO
 
+- document that upstart support was dropped in 15.04 and that we only support 14.10 and up
+- write systemd script to start zinibu service
 - upgrading to ubuntu 16.04 and try salt stuff, especially new varnish and haproxy:
 - continue with varnish default4 vlc
 sudo salt-call state.sls zinibu.varnish.conf
