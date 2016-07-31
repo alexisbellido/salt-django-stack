@@ -1,10 +1,6 @@
 TODO
 
-- write systemd script to start zinibu service, read about systemd to run bash script
-- upgrading to ubuntu 16.04 and try salt stuff, especially new varnish and haproxy:
-- continue with varnish default4 vlc
-sudo salt-call state.sls zinibu.varnish.conf
-
+- try the whole thing from the beginning new virtual box
 - how expensive is to test all of this running with digitalocean? try for a couple of days and let's see
 
 - how to extend existing gluster peer nodes and volume as an option when starting a new webhead or as a separate task
