@@ -1,0 +1,9 @@
+[Unit]
+Description=Django {{ project_name }}
+
+[Service]
+Type=simple
+ExecStart={{ run_project_script }} production
+
+[Install]
+WantedBy=multi-user.target
