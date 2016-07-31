@@ -1,5 +1,6 @@
 TODO
 
+- check env in /srv/pillar/staging/zinibu_django.sls to try with correct local domain
 - try the whole thing from the beginning new virtual box
 - how expensive is to test all of this running with digitalocean? try for a couple of days and let's see
 
