@@ -7,7 +7,7 @@
 
 {{ systemd_unit_file }}:
   file.managed:
-    - source: salt://zinibu/upstart/files/django-gunicorn.service
+    - source: salt://zinibu/service/files/django-gunicorn.service
     - mode: 644
     - user: root
     - group: root
@@ -22,12 +22,20 @@ service.systemctl_reload service-{{ zinibu_basic.project.name }}:
     - watch:
       - file: {{ systemd_unit_file }}
 
-service.enable {{ zinibu_basic.project.name }}:
+service.enable service-{{ zinibu_basic.project.name }}:
   module.run:
     - name: service.enable
     - m_name: {{ zinibu_basic.project.name }}
     - require:
       - module: service.systemctl_reload
+
+service.restart service-{{ zinibu_basic.project.name }}:
+  module.run:
+    - name: service.restart
+    - m_name: {{ zinibu_basic.project.name }}
+    - require:
+      - module: service.systemctl_reload service-{{ zinibu_basic.project.name }}
+      - module: service.enable service-{{ zinibu_basic.project.name }}
 
 {% else %}
 {% set upstart_job_file = '/etc/init/' + zinibu_basic.project.name + '.conf' %}
@@ -40,7 +48,7 @@ upstart_job_running:
 
 {{ upstart_job_file }}:
   file.managed:
-    - source: salt://zinibu/upstart/files/django-gunicorn.conf
+    - source: salt://zinibu/service/files/django-gunicorn.conf
     - mode: 644
     - user: root
     - group: root
