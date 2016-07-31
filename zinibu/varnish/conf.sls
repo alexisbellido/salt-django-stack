@@ -1,4 +1,5 @@
 {% from "zinibu/map.jinja" import varnish with context %}
+{% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 {% set settings = salt['pillar.get']('varnish', {}) -%}
 
 include:
@@ -38,6 +39,35 @@ include:
     - watch_in:
       - service: varnish
 
+{% if varnish.version == '4' %}
+test-params-1:
+  cmd.run:
+    - name: echo 'TEST VARNISH 4'
+
+/etc/systemd/system/varnish.service.d/customexec.conf:
+  file:
+    - managed
+    - makedirs: true
+    - source: salt://zinibu/varnish/files/etc/systemd/system/varnish.service.d/customexec.conf
+    - require:
+      - pkg: varnish
+      #- module: service.systemctl_reload
+      - cmd: service.systemctl_reload
+
+service.systemctl_reload:
+#  module.run:
+  cmd.run:   
+    - name: systemctl daemon-reload
+    - runas: {{ zinibu_basic.root_user }}
+    - shell: /bin/bash
+    - require:
+      - pkg: varnish
+    #- watch:
+    #  - file: /etc/systemd/system/varnish.service.d/customexec.conf
+    - watch_in:
+      - service: varnish
+{% endif %}
+
 # Below we delete the "absent" vcl files and we trigger a reload of varnish
 #{% for file in settings.get('vcl', {}).get('files_absent', []) %}
 #/etc/varnish/{{ file }}:
@@ -48,3 +78,4 @@ include:
 #    - watch_in:
 #      - service: varnish
 #{% endfor %}
+

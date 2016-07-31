@@ -1,5 +1,16 @@
 TODO
 
+- detect ubuntu >= 15.04 or varnish 4 and cp /etc/systemd/system/varnish.service.d/customexec.conf
+then
+sudo systemctl daemon-reload
+sudo systemctl restart varnish (this probably normal service restart from salt state)
+
+see: https://github.com/saltstack/salt/issues/34927
+service.systemctl_reload
+  module.run:
+    - onchanges:
+      - file: /etc/systemd/system/varnish.service.d/customexec.conf
+
 - document that upstart support was dropped in 15.04 and that we only support 14.10 and up
 - write systemd script to start zinibu service
 - upgrading to ubuntu 16.04 and try salt stuff, especially new varnish and haproxy:

@@ -11,7 +11,7 @@
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-user:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume set static-{{ zinibu_basic.project.name }} storage.owner-uid `id -u {{ zinibu_basic.app_user }}`
     - shell: /bin/bash
     - require:
@@ -19,7 +19,7 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-user:
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-group:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume set static-{{ zinibu_basic.project.name }} storage.owner-gid `id -g {{ zinibu_basic.app_user }}`
     - shell: /bin/bash
     - require:
@@ -29,7 +29,7 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-group:
   {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
 glusterfs-volume-static-{{ zinibu_basic.project.name }}-allow-{{ id }}:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume set static-{{ zinibu_basic.project.name }} auth.allow {{ webhead.private_ip }}
     - shell: /bin/bash
     - require:
@@ -39,7 +39,7 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-allow-{{ id }}:
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume create static-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica {{ zinibu_basic.project.glusterfs_nodes|length }}{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
     - shell: /bin/bash
     - unless: "gluster volume info static-{{ zinibu_basic.project.name }}"
@@ -54,7 +54,7 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-start:
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: echo -e 'y\n' | gluster volume stop static-{{ zinibu_basic.project.name }}
     - shell: /bin/bash
     - onlyif: "gluster volume start static-{{ zinibu_basic.project.name }}"
@@ -64,7 +64,7 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-stop:
 
 glusterfs-volume-media-{{ zinibu_basic.project.name }}-set-user:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume set media-{{ zinibu_basic.project.name }} storage.owner-uid `id -u {{ zinibu_basic.app_user }}`
     - shell: /bin/bash
     - require:
@@ -72,7 +72,7 @@ glusterfs-volume-media-{{ zinibu_basic.project.name }}-set-user:
 
 glusterfs-volume-media-{{ zinibu_basic.project.name }}-set-group:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume set media-{{ zinibu_basic.project.name }} storage.owner-gid `id -g {{ zinibu_basic.app_user }}`
     - shell: /bin/bash
     - require:
@@ -82,7 +82,7 @@ glusterfs-volume-media-{{ zinibu_basic.project.name }}-set-group:
   {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
 glusterfs-volume-media-{{ zinibu_basic.project.name }}-allow-{{ id }}:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume set media-{{ zinibu_basic.project.name }} auth.allow {{ webhead.private_ip }}
     - shell: /bin/bash
     - require:
@@ -92,7 +92,7 @@ glusterfs-volume-media-{{ zinibu_basic.project.name }}-allow-{{ id }}:
 
 glusterfs-volume-media-{{ zinibu_basic.project.name }}:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: gluster volume create media-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica {{ zinibu_basic.project.glusterfs_nodes|length }}{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/media-{{ zinibu_basic.project.name }}{% endfor %} force
     - shell: /bin/bash
     - unless: "gluster volume info media-{{ zinibu_basic.project.name }}"
@@ -107,7 +107,7 @@ glusterfs-volume-media-{{ zinibu_basic.project.name }}-start:
 
 glusterfs-volume-media-{{ zinibu_basic.project.name }}-stop:
   cmd.run:
-    - user: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - name: echo -e 'y\n' | gluster volume stop media-{{ zinibu_basic.project.name }}
     - shell: /bin/bash
     - onlyif: "gluster volume start media-{{ zinibu_basic.project.name }}"
