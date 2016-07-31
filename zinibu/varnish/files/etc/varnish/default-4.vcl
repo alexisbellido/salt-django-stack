@@ -58,6 +58,11 @@ sub vcl_recv {
 
     #std.log("vcl recv: "+req.request);
 
+    # Health Checking
+    if (req.url == "{{ zinibu_basic.project.varnish_check }}") {
+        return (synth(751, "health check OK!"));
+    }
+
     # send all traffic to the bar director:
     set req.backend_hint = bar.backend();
 
@@ -355,6 +360,11 @@ sub vcl_purge {
 }
 
 sub vcl_synth {
+    # Health check
+    if (resp.status == 751) {
+        set resp.status = 200;
+        return (deliver);
+    }
     set resp.http.Content-Type = "text/html; charset=utf-8";
     set resp.http.Retry-After = "5";
     synthetic ("Error");

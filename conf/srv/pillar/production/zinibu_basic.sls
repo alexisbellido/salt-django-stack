@@ -35,7 +35,7 @@ zinibu_basic:
     haproxy_frontend_port: 80
     haproxy_frontend_secure_port: 443
     haproxy_check: '/haproxycheck'
-    haproxy_app_check_url: '/app-check'
+    haproxy_app_check_url: '/app-check/'
     haproxy_app_check_expect: '[oO][kK]'
     haproxy_static_check_url: '/static/znbmain/static-check.txt'
 
