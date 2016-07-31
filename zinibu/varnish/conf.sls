@@ -40,10 +40,6 @@ include:
       - service: varnish
 
 {% if varnish.version == '4' %}
-test-params-1:
-  cmd.run:
-    - name: echo 'TEST VARNISH 4'
-
 /etc/systemd/system/varnish.service.d/customexec.conf:
   file:
     - managed
@@ -51,23 +47,29 @@ test-params-1:
     - source: salt://zinibu/varnish/files/etc/systemd/system/varnish.service.d/customexec.conf
     - require:
       - pkg: varnish
-      #- module: service.systemctl_reload
-      - cmd: service.systemctl_reload
 
+# The following two have to run as execution modules for systemctl
+# changes to work.
+# See:
+# http://stackoverflow.com/questions/20773400/salt-stack-using-execution-modules-in-sls 
+# https://docs.saltstack.com/en/latest/ref/states/all/salt.states.module.html#module-salt.states.module
 service.systemctl_reload:
-#  module.run:
-  cmd.run:   
-    - name: systemctl daemon-reload
-    - runas: {{ zinibu_basic.root_user }}
-    - shell: /bin/bash
+  module.run:
     - require:
       - pkg: varnish
-    #- watch:
-    #  - file: /etc/systemd/system/varnish.service.d/customexec.conf
-    - watch_in:
-      - service: varnish
+    - watch:
+      - file: /etc/systemd/system/varnish.service.d/customexec.conf
+
+service.restart varnish:
+  module.run:
+    - name: service.restart
+    - m_name: varnish
+    - require:
+      - module: service.systemctl_reload
+
 {% endif %}
 
+# Not sure what this is for. Coming from https://github.com/saltstack-formulas/varnish-formula
 # Below we delete the "absent" vcl files and we trigger a reload of varnish
 #{% for file in settings.get('vcl', {}).get('files_absent', []) %}
 #/etc/varnish/{{ file }}:
@@ -78,4 +80,3 @@ service.systemctl_reload:
 #    - watch_in:
 #      - service: varnish
 #{% endfor %}
-

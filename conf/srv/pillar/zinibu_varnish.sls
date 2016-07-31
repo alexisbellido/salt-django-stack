@@ -16,7 +16,7 @@ varnish:
     thread_pool_max: 1000
     thread_pool_timeout: 120
 
-  # Extra options for varnishd invocation
+  # Extra options for varnishd invocation, user and group retired in Varnish 4.1
   extra_options: '-u varnish -g varnish'
 
   # VCL templates and pillar values used in them

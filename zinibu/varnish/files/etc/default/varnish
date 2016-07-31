@@ -1,3 +1,7 @@
+# Managed by saltstack. Note we're gettings values from the root varnish element in pillar
+{% from "zinibu/map.jinja" import varnish with context %}
+{% set settings = salt['pillar.get']('varnish', {}) -%}
+{% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
 # Configuration file for varnish
 #
 # /etc/init.d/varnish expects the variables $DAEMON_OPTS, $NFILES and $MEMLOCK
@@ -112,10 +116,6 @@ MEMLOCK=82000
 #
 # DAEMON_OPTS=""
 
-# Managed by saltstack. Note we're gettings values from the root varnish element in pillar
-{% set settings = salt['pillar.get']('varnish', {}) -%}
-{% set zinibu_basic = salt['pillar.get']('zinibu_basic', {}) -%}
-
 {%- if 'varnish_servers' in zinibu_basic.project %}
   {%- for id, varnish_server in zinibu_basic.project.varnish_servers.iteritems() %}
     {%- if grains['id'] == id %}
@@ -127,9 +127,12 @@ DAEMON_OPTS="-a {{ varnish_server.private_ip }}:{{ varnish_server.port }} \
              -s {{ storage }} \
 {%- endfor %}
 {%- for param, value in settings.get('params', {}).iteritems() %}
-             -p {{ param }}={{ value }}\
+             -p {{ param }}={{ value }}{% if loop.last and varnish.version == '4' %}"{% else %}\{% endif %}
 {%- endfor %}
+	{% if varnish.version == '3' %}
+             # user and group retired in Varnish 4.1, see conf/srv/pillar/zinibu_varnish.sls
              {{ settings.get('extra_options', '') }}"
+        {%- endif %}
     {%- endif %}
   {%- endfor %}
 {%- endif %}
