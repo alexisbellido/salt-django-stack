@@ -33,10 +33,6 @@
 #      - echo "pillar as dictionary using names - {{ pip_package }}"
 #{% endfor %}
 #
-#show-grains:
-#  cmd.run:
-#    - name: echo echo "grains id {{ grains['id'] }} public ip {{ grains['ip_interfaces']['eth0'][0] }}"
-#
 #python-test-webheads:
 #  cmd.run:
 #    - name: echo 'webheads ips [ {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}{{ id }} {{ webhead.public_ip }} {% endfor %}]'
@@ -59,4 +55,8 @@ pillar-test-2:
 # There has to be at least one other state for this to run
 pillar-test-3:
   cmd.run:
-    - name: echo "333"
+    - name: echo "PRIVATE IP {{ zinibu_basic.app_user }} - {{ zinibu_basic.project.webheads.staging1.private_ip }} "
+
+pillar-test-4:
+  cmd.run:
+    - name: echo "PUBLIC IP {{ zinibu_basic.app_user }} - {{ zinibu_basic.project.webheads.staging1.public_ip }} "

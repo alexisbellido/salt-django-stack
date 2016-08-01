@@ -1,5 +1,7 @@
 django:
   lookup:
+    # This is the Django project
+    # The env variable determines DJANGO_SETTINGS_MODULE used
     env: local
     # using a public Github repository
     repo: git@github.com:alexisbellido/basic-django-project.git

@@ -418,7 +418,7 @@ Future Plans
 * Control Gunicorn with systemd, the new services manager by Ubuntu 15.04.
 * Varnish 4 support. It's the default starting with Ubuntu 14.10.
 * High availability Redis.
-* High availability PostgreSQL.
+* High availability PostgreSQL. pgpool-II?
 
 Some test commands
 ====================
