@@ -16,7 +16,7 @@ This Salt formula will setup a stack of one or more servers to run a Django proj
 
 The states are designed to be run together but you could take what you need and reuse in your own formulas.
 
-So far, I have tested with Ubuntu 14.04 and 14.10 on both Linode and Digital Ocean hosts.
+So far, I have tested with Ubuntu 14.04, 14.10 and 16.04 on Linode and Digital Ocean hosts.
 
 .. note::
 
