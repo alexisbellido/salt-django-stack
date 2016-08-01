@@ -30,13 +30,6 @@ server {
 
     location /media/ {
         root /home/{{ user }}/{{ project_name }};
-        # if asset versioning is used
-        #if ($query_string) {
-        #    expires max;
-        #}
-        if ( $request ~* "{{ haproxy_static_check_url }}" ) {
-            access_log off;
-        }
     }
 
     location / {
