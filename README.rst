@@ -106,6 +106,8 @@ file_roots:
 
 The first directory, /srv/salt, is the default used by Salt on Ubuntu.
 
+Set "hash_type" to sha256 in Salt Master config.
+
 Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a standard webhead (this is zinibu/init.sls including state files to setup the web stack). To setup other servers include individual state files, like this:
 
   base:

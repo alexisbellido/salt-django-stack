@@ -19,8 +19,7 @@ redis-prerequisites:
 redis-make:
   cmd.run:
     - cwd: /usr/local/src/redis-server/{{ redis.version }}
-    - user: {{ zinibu_basic.root_user }}
-    - group: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - shell: /bin/bash
     - name: make
     - require:
@@ -30,8 +29,7 @@ redis-make:
 redis-make-install:
   cmd.run:
     - cwd: /usr/local/src/redis-server/{{ redis.version }}
-    - user: {{ zinibu_basic.root_user }}
-    - group: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - shell: /bin/bash
     - name: make install
     - require:
@@ -40,8 +38,7 @@ redis-make-install:
 redis-install-script:
   cmd.run:
     - cwd: /usr/local/src/redis-server/{{ redis.version }}/utils
-    - user: {{ zinibu_basic.root_user }}
-    - group: {{ zinibu_basic.root_user }}
+    - runas: {{ zinibu_basic.root_user }}
     - shell: /bin/bash
     - name: echo -n | bash install_server.sh
     - require:
