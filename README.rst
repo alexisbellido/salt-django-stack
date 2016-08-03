@@ -79,7 +79,7 @@ An installation of type full or master will also copy basic top.sls to /srv/salt
 
 You shouldn't worry about overwriting your settings if running the script more than once; files won't be touched if they already exist.
 
-**Step 3**: Run all the states with:
+**Step 3**: Go to the directory where this project was cloned (e.g.: /home/user/salt-django-stack) and run all the states with:
 
   ``sudo scripts/install.sh``
 
