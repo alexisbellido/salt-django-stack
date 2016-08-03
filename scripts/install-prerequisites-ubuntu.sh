@@ -20,6 +20,8 @@ if [ -z "$1" ]; then
   echo
 
 else
+  TOP_DIR="/srv/salt"
+  PILLAR_DIR="/srv/pillar"
   # sets $DISTRIB_ID and $DISTRIB_RELEASE
   source /etc/lsb-release
   ARCH=`uname -m`
@@ -63,8 +65,6 @@ EOL
     else
       ROOT_DIR="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
     fi
-    TOP_DIR="/srv/salt"
-    PILLAR_DIR="/srv/pillar"
 
     if [ ! -d  "$ROOT_DIR" ]; then
       sudo -u $SUDO_USER git clone git@github.com:alexisbellido/salt-django-stack.git
