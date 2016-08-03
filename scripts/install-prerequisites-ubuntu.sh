@@ -7,6 +7,9 @@ if [ -z "$1" ]; then
   echo
   echo "Usage (run from the root of this repository):"
   echo "sudo scripts/install-prerequisites-ubuntu.sh master|minion|full git_user_name git_user_email"
+  echo 
+  echo "Alternatively, just to get next steps:"
+  echo "sudo scripts/install-prerequisites-ubuntu.sh steps"
   echo
   echo "Example:"
   echo "sudo scripts/install-prerequisites-ubuntu.sh master \"Joe Doe\" name@example.com"
@@ -112,19 +115,30 @@ EOL
 
   if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" -o "$1" == "steps" ]; then
   echo
+  echo "====================================================================================================="
+  echo
   echo "Next steps:"
-  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR. Check production and staging subdirectories for environment-specific data."
-  echo "  You can use sed to quickly make changes in zinibu_basic.sls:"
-  echo "  sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls"
-  echo "2. Setup /srv/salt/top.sls and restart salt master"
-  echo "3. Setup /etc/hosts to point all hosts to the salt master using the \"salt\" hostname."
-  echo "4. Edit /etc/salt/minion in all minions to set id and roles and restart salt minion."
+  echo
+  echo "1. Setup pillar data starting with zinibu_basic.sls and zinibu_django.sls in $PILLAR_DIR."
+  echo "   Check production and staging subdirectories for environment-specific data."
+  echo "   You can use sed to quickly make changes in zinibu_basic.sls:"
+  echo "   sed -i -e s/django5/django8/g -e s/95/98/g -e s/15/18/g /srv/pillar/staging/zinibu_basic.sls"
+  echo
+  echo "2. Edit /etc/salt/minion in all minions to set id for targeting and roles and restart salt minion."
+  echo
+  echo "3. Setup /srv/salt/top.sls and /srv/pillar/top.sls with the corresponding targets and restart salt master"
+  echo
+  echo "4. Setup /etc/hosts to point all minions to the salt master using the \"salt\" hostname and"
+  echo "   assign correct private IPs to each minion."
+  echo
   echo "5. Accept keys on master using salt-key."
+  echo
   echo "6. Make magic start:"
   echo "   sudo scripts/install.sh"
   echo
-  echo "Checkout the README for more details."
+  echo "   Check out the README for more details."
   echo
+  echo "====================================================================================================="
   fi
 
 fi

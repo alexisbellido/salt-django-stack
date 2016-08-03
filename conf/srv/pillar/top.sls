@@ -5,19 +5,19 @@ base:
     - zinibu_python
     - zinibu_gunicorn
     - zinibu_redis
-    - zinibu_upstart
+    - zinibu_service
     - zinibu_varnish
     - zinibu_haproxy
     - zinibu_keepalived
 
 staging:
-  'django[5-6]':
+  'staging*':
     - zinibu_basic
     - zinibu_postgresql
     - zinibu_django
 
 production:
-  'django[8-9]':
+  'production*':
     - zinibu_basic
     - zinibu_postgresql
     - zinibu_django
