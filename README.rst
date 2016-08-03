@@ -178,7 +178,7 @@ The available roles are:
 
 * webhead (required for each webhead, includes nginx and gunicorn)
 * varnish (required for at least one)
-* glusterfs_node (optional)
+* glusterfs_node (optional, if not used then glusterfs won't be setup)
 * first_glusterfs_node (required if using gluster, this will setup the volume and should be set just for one minion)
 * redis (optional)
 * postgresql (optional)

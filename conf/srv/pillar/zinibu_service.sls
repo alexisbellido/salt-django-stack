@@ -1,2 +1,2 @@
-upstart:
+service:
   lookup:
