@@ -10,7 +10,7 @@ django:
     #repo: user@example.com:/home/user/git/basic-django-project.git
     user:
       name: Joe Doe
-      email: joe@example.com
+      email: user@example.com
 
     # Django-specific packages go here. Always indicate version.
     # A package should have just one of pypi, editable or test_pypi set to True.

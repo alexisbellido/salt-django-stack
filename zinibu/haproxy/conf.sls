@@ -3,29 +3,33 @@ net.ipv4.ip_nonlocal_bind:
   sysctl.present:
     - value: 1
 
-haproxy.service:
-{% if salt['pillar.get']('haproxy:enable', True) %}
-  service.running:
-    - name: haproxy
-    - enable: True
-    - reload: True
-    - require:
-      - file: haproxy.start_file
-      - sysctl: net.ipv4.ip_nonlocal_bind
-# to avoid apt-get update from haproxy_ppa_repo
-#      - pkg: haproxy
-    - watch:
-      - file: haproxy.config
-{% else %}
-  service.dead:
-    - name: haproxy
-    - enable: False
-{% endif %}
+#haproxy.service:
+#{% if salt['pillar.get']('haproxy:enable', True) %}
+#  service.running:
+#    - name: haproxy
+#    - enable: True
+#    - reload: True
+#    - require:
+#      - file: haproxy.start_file
+#      - sysctl: net.ipv4.ip_nonlocal_bind
+## to avoid apt-get update from haproxy_ppa_repo
+##      - pkg: haproxy
+#    - watch:
+#      - file: haproxy.config
+#{% else %}
+#  service.dead:
+#    - name: haproxy
+#    - enable: False
+#{% endif %}
+haproxy_setup:
   file.replace:
     - name: /etc/default/haproxy
 {% if salt['pillar.get']('haproxy:enabled', True) %}
     - pattern: ENABLED=0$
     - repl: ENABLED=1
+    - require:
+      - file: haproxy.start_file
+      - sysctl: net.ipv4.ip_nonlocal_bind
 {% else %}
     - pattern: ENABLED=1$
     - repl: ENABLED=0

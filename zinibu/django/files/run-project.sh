@@ -60,10 +60,6 @@ else
     {% set django_env = django.env -%}
     {% endif -%}
     export DJANGO_SETTINGS_MODULE=$PROJECTNAME.settings.{{ django_env }}
-    LOGFILE=/var/log/upstart/$PROJECTNAME.log
-    # logging inside /var/log/upstart, the directory should already be present
-    LOGDIR=$(dirname $LOGFILE)
-    test -d $LOGDIR || mkdir -p $LOGDIR
     
     NUM_WORKERS=3
     BIND_ADDRESS={{ private_ip }}:{{ gunicorn_port }}
@@ -99,6 +95,12 @@ else
       # production server (gunicorn)
       # see http://docs.gunicorn.org/en/latest/settings.html#loglevel
       # possible values: debug, info, warning, error, critical
+
+      LOGFILE=/var/log/upstart/$PROJECTNAME.log
+      # logging inside /var/log/upstart, the directory should already be present
+      LOGDIR=$(dirname $LOGFILE)
+      test -d $LOGDIR || mkdir -p $LOGDIR
+
       if [ "$2" == "--log-level=debug" ]; then
         LOGLEVEL=debug
       elif [ "$2" == "--log-level=critical" ]; then

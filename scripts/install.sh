@@ -10,3 +10,6 @@ salt '*' state.highstate
 
 # Restart Varnish servers (requires 'varnish' role grains setup in /etc/salt/minion).
 salt -G 'roles:varnish' service.restart varnish
+
+# Restart HAProxy servers (requires 'haproxy' role grains setup in /etc/salt/minion).
+salt -G 'roles:haproxy' service.restart haproxy
