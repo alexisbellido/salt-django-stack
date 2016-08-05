@@ -133,7 +133,7 @@ EOL
   echo
   echo "5. Accept keys on master using salt-key."
   echo
-  echo "6. Make magic start:"
+  echo "6. Change to the salt-django-stack directory and make magic start:"
   echo "   sudo scripts/install.sh"
   echo
   echo "   Check out the README for more details."
