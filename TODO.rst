@@ -2,10 +2,12 @@ TODO
 
 - scenarios to test with pillar data from staging/zinibu_basic.sls:
 1. only staging1, no glusterfs_nodes
-2. only staging1, one glusterfs_nodes
-3. staging1 and staging2 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
-4. staging1, staging2, staging3, staging4 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
-5. staging1, staging2, staging3, staging4 (all of them webheads, just staging1 runs haproxy), four glusterfs_nodes
+
+2. staging1 and staging2 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
+
+
+3. staging1, staging2, staging3, staging4 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
+4. staging1, staging2, staging3, staging4 (all of them webheads, just staging1 runs haproxy), four glusterfs_nodes
 
 - check env in /srv/pillar/staging/zinibu_django.sls to try with correct local domain
 - try the whole thing from the beginning new virtual box
