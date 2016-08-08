@@ -173,6 +173,7 @@ Set minions' ids and the roles as appropiate:
     roles:
       - first_glusterfs_node
       - glusterfs_node
+      - haproxy
       - varnish
       - webhead
 
@@ -180,13 +181,13 @@ The available roles are:
 
 * webhead (required for each webhead, includes nginx and gunicorn)
 * varnish (required for at least one)
+* haproxy (required for server load balancing)
 * glusterfs_node (optional, if not used then glusterfs won't be setup)
 * first_glusterfs_node (required if using gluster, this will setup the volume and should be set just for one minion)
 * redis (optional)
 * postgresql (optional)
-* haproxy (optional)
-* haproxy_master (required by Keepalived for HAProxy's high availability)
-* haproxy_backup (required by Keepalived for HAProxy's high availability)
+* haproxy_master (required in addition to haproxy role if using Keepalived for HAProxy's high availability)
+* haproxy_backup (required in addition to haproxy role if using Keepalived for HAProxy's high availability)
 
 A host may play more than one of these roles.
 
