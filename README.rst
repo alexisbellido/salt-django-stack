@@ -227,6 +227,14 @@ to expand a volume called static-zinibu.
 We need to explore a little more about the rebalancing when using more than one volume, maybe stop the volume during the process to
 avoid storing files in the incorrect volumes.
 
+To shrink the volume you can use something like this:
+
+  ``sudo gluster volume remove-brick media-zinibu 192.168.33.19:/var/exports/media-zinibu 192.168.33.20:/var/exports/media-zinibu force``
+  ``sudo gluster volume info media-zinibu``
+
+Remember, when shrinking distributed replicated and distributed striped volumes, you need to remove a number of bricks
+that is a multiple of the replica or stripe count.
+
 See https://gluster.readthedocs.io/en/latest/Administrator%20Guide/Managing%20Volumes/#expanding-volumes
 
 
