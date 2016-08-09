@@ -26,15 +26,13 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-set-group:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
 
 {%- if 'webheads' in zinibu_basic.project %}
-  {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
-glusterfs-volume-static-{{ zinibu_basic.project.name }}-allow-{{ id }}:
+glusterfs-volume-static-{{ zinibu_basic.project.name }}-allow:
   cmd.run:
     - runas: {{ zinibu_basic.root_user }}
-    - name: gluster volume set static-{{ zinibu_basic.project.name }} auth.allow {{ webhead.private_ip }}
+    - name: gluster volume set static-{{ zinibu_basic.project.name }} auth.allow {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}{{ webhead.private_ip }}{% if not loop.last %},{% endif %}{%- endfor %}
     - shell: /bin/bash
     - require:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
-  {%- endfor %}
 {%- endif %}
 
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
@@ -79,15 +77,13 @@ glusterfs-volume-media-{{ zinibu_basic.project.name }}-set-group:
       - cmd: glusterfs-volume-media-{{ zinibu_basic.project.name }}
 
 {%- if 'webheads' in zinibu_basic.project %}
-  {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}
-glusterfs-volume-media-{{ zinibu_basic.project.name }}-allow-{{ id }}:
+glusterfs-volume-media-{{ zinibu_basic.project.name }}-allow:
   cmd.run:
     - runas: {{ zinibu_basic.root_user }}
-    - name: gluster volume set media-{{ zinibu_basic.project.name }} auth.allow {{ webhead.private_ip }}
+    - name: gluster volume set media-{{ zinibu_basic.project.name }} auth.allow {% for id, webhead in zinibu_basic.project.webheads.iteritems() %}{{ webhead.private_ip }}{% if not loop.last %},{% endif %}{%- endfor %}
     - shell: /bin/bash
     - require:
       - cmd: glusterfs-volume-media-{{ zinibu_basic.project.name }}
-  {%- endfor %}
 {%- endif %}
 
 glusterfs-volume-media-{{ zinibu_basic.project.name }}:
