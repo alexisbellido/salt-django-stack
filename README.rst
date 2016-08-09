@@ -195,6 +195,51 @@ Restart salt-minion to activate changes:
 
   ``sudo service salt-minion restart``
 
+
+Adding more nodes to GlusterFS
+=================================
+
+If more servers are added to work as glusterfs nodes (role: glusterfs_node in /etc/salt/minion) then you should expand
+the volume manually and rebalance it. It's important to note that you need to add new peers from a node already in the pool
+and use force when adding the bricks because of the new bricks being created in the root partition.
+
+To start, you first need a minion install of salt-django-stack as described in the Quick Start section of this document,
+add the minions, configure pillar items accordingly to include the new minions and then run zinibu.boostrap to update
+settings for the existing volumes and setup the basics of GlusterFS:
+
+  ``sudo salt-run state.orchestrate zinibu.bootstrap``
+
+From here on, you need to go manual.  Here's an example set of commands that assume you're adding 192.168.33.18 and 192.168.33.19
+to expand a volume called static-zinibu.
+
+  ``sudo gluster peer probe 192.168.33.19``
+
+  ``sudo gluster peer status``
+
+  ``sudo gluster volume info``
+
+  ``sudo gluster volume add-brick static-zinibu 192.168.33.19:/var/exports/static-zinibu 192.168.33.20:/var/exports/static-zinibu force``
+
+  ``sudo gluster volume rebalance static-zinibu start``
+
+  ``sudo gluster volume rebalance static-zinibu status``
+
+We need to explore a little more about the rebalancing when using more than one volume, maybe stop the volume during the process to
+avoid storing files in the incorrect volumes.
+
+See https://gluster.readthedocs.io/en/latest/Administrator%20Guide/Managing%20Volumes/#expanding-volumes
+
+
+Adding more webheads
+=================================
+
+Run the minion install for the new hosts as described in Quick Install, setup /srv/salt/top.sls to target the new minions and
+update pillar data (probably just /srv/pillar/staging/zinibu_basic.sls (being staging the environment you are modifying) and rerun:
+
+
+  ``sudo scripts/install.sh``
+
+
 HAProxy and high availability
 =================================
 
@@ -297,7 +342,7 @@ Troubleshooting
 
 *No Top file or external nodes data matches found*
 
-You may have a repeated minion id in top.sls.
+You may have a repeated minion id in top.sls. Make sure a target name is used just once.
 
 *HAProxy shows the cache servers not running*
 

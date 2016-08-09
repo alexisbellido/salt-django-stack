@@ -3,7 +3,10 @@
 # Run full install with state.hightstate and state.orchestrate.
 
 # Setup Glusterfs in correct order (requires 'glusterfs_node' role grains setup in /etc/salt/minion).
+# Disable exit immediately option then re-enable it.
+set +e
 salt-run state.orchestrate zinibu.bootstrap
+set -e
 
 # Main setup.
 salt '*' state.highstate
