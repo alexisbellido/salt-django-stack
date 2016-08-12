@@ -254,9 +254,9 @@ HAProxy and high availability
 frontend ft_web and www-https (if using SSL) use public IP or, if using Keepalived with Digital Ocean's floating IPs, an anchor IP.
 frontend ft_web_static uses a private IP and it's used by Varnish servers to update their cache.
 
-To enable SSL termination obtain an SSL certificate or create a self-signed one (see instructions below), we're using .pem for this example, and put it in a directory for each of your HAProxy servers, like /etc/haproxy/ssl, then add the following pillar data to zinibu_basic.sls:
+To enable SSL termination obtain an SSL certificate or create a self-signed one (see instructions below), we're using .pem for this example, and put it in a directory for each of your HAProxy servers, like /srv/haproxy/ssl, then add the following pillar data to zinibu_basic.sls:
 
-  ``haproxy_ssl_cert: /etc/haproxy/ssl/haproxy.pem``
+  ``haproxy_ssl_cert: /srv/haproxy/ssl/example_com.pem``
 
   
 To create a self-signed SSL certificate
@@ -265,22 +265,22 @@ To create a self-signed SSL certificate
 When asked for a fully qualified domain name (FQDN) you can enter subdomain.example.com or *.example.com
 
 
-  ``$ mkdir /etc/haproxy/ssl``
-  ``$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/haproxy/ssl/haproxy.key -out /etc/haproxy/ssl/haproxy.crt``
-  ``$ cd /etc/haproxy/ssl/``
-  ``$ cat haproxy.crt haproxy.key > haproxy.pem``
+  ``$ mkdir -p /srv/haproxy/ssl``
+  ``$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/haproxy/ssl/example_com.key -out /srv/haproxy/ssl/example_com.crt``
+  ``$ cd /srv/haproxy/ssl/``
+  ``$ cat example_com.crt example_com.key > example_com.pem``
 
 
 Create .pem to use with HAProxy from Comodo PositiveSSL
 =========================================================
 
-For this example we're creating a new file at /etc/haproxy/ssl/haproxy.pem using the key file generated when requesting the certificate and the bundle and crt files provided by Comodo.
+For this example we're creating a new file at /srv/haproxy/ssl/example_com.pem using the key file generated when requesting the certificate and the bundle and crt files provided by Comodo.
 
-  ``$ cd /etc/haproxy/ssl``
-  ``$ rm haproxy.pem``
-  ``$ cat zinibu.com.key >> haproxy.pem``
-  ``$ cat zinibu_com.crt >> haproxy.pem``
-  ``$ cat zinibu_com.ca-bundle >> haproxy.pem``
+  ``$ cd /srv/haproxy/ssl``
+  ``$ rm example_com.pem``
+  ``$ cat example_com.key >> example_com.pem``
+  ``$ cat example_com.crt >> example_com.pem``
+  ``$ cat example_com.ca-bundle >> example_com.pem``
 
   
 Keepalived and high availability

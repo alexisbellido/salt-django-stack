@@ -48,8 +48,8 @@ zinibu_basic:
 
     # if using keepalived, put the floating IP here
     haproxy_frontend_public_ip: pub1
-    # optional ssl certificate, must be created and copied here beforehand
-    #haproxy_ssl_cert: /etc/haproxy/ssl/haproxy.pem
+    # optional ssl certificate, must be created and copied here beforehand, see README
+    #haproxy_ssl_cert: /srv/haproxy/ssl/example_com.pem
     haproxy_frontend_port: 80
     haproxy_frontend_secure_port: 443
     haproxy_check: '/haproxycheck'
