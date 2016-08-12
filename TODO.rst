@@ -1,5 +1,6 @@
 TODO
 
+- test ssl just staging1
 - tested all these scenarios with vagrant, test them with DO next:
 1. only staging1, no glusterfs_nodes
 2. staging1 and staging2 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
