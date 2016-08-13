@@ -1,13 +1,17 @@
 TODO
 
-- test ssl just staging1
-- tested all these scenarios with vagrant, test them with DO next:
-1. only staging1, no glusterfs_nodes
-2. staging1 and staging2 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
-3. staging1, staging2, staging3, staging4 (all of them webheads, just staging1 runs haproxy), two glusterfs_nodes
-4. staging1, staging2, staging3, staging4 (all of them webheads, just staging1 runs haproxy), four glusterfs_nodes
-
 - revisit pushing new code and deploying it at this point
+
+- testing nginx protected files, change salt formula to do
+
+    location /media/ {
+        root /home/alexis/zinibu;
+    }
+
+- test ~/djapps/django-zinibu-main/znbmain/views.py and urls.py to create view like ~/djapps/django-zinibu-main/znbmain/views.py 
+- move baiscs of  download to a new app for ebooks or digital goods in general
+
+
 - complete zinibu.deploy to work with apps to update
 - zinibu.deploy should be able to tell which branch to git pull for the project and which apps and branch for each app should be used. We can assume master is the default in most cases but see how git.latest work with branches
 
