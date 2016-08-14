@@ -9,7 +9,8 @@ include:
 {% set project_static_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/static' %}
 {% set project_media_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name + '/media' %}
 
-# This is used with salt-run state.orchestrate zinibu.deploy, see README.rst
+# This is used with salt-run state.orchestrate zinibu.deploy, see README.rst,
+# which is used only after the initial install has been done.
 {% set deploy = salt['pillar.get']('deploy', False) %}
 
 {% set project_branch = salt['pillar.get']('project_branch', '') %}
@@ -22,6 +23,7 @@ include:
 deploying:
   cmd.run:
     - name: echo "Deploy project {{ django.repo }}\nBranch {{ django.branch }} ..."
+
 {% else %}
 
 {{ run_project_script }}:

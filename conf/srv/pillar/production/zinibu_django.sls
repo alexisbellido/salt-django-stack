@@ -22,5 +22,6 @@ django:
       /home/user/djapps/django-zinibu-skeleton:
         editable: True # local source code, useful for development
         repo: user@example.com:/home/user/git/django-zinibu-skeleton.git
+        branch: master
       #django-zinibu-skeleton==0.0.2a0:
       #  test_pypi: True # from test PyPi server

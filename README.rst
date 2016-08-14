@@ -4,14 +4,14 @@ zinibu
 
 This Salt formula will setup a stack of one or more servers to run a Django project with some high availability and scalability features. The stack includes:
 
-* Gunicorn and Nginx webheads running * Django 1.9.x with Python 3.x and venv.
+* Gunicorn and Nginx webheads running * Django 1.10.x with Python 3.x and venv.
 * Gunicorn process managed via Upstart.
-* Varnish 3.x to cache static files and dynamic pages for non-logged in users.
-* HAProxy 1.5x load balancing inspired by `Baptiste Assmann`_.
+* Varnish (3.x and 4.x) to cache static files and dynamic pages for non-logged in users.
+* HAProxy (1.5x and 1.6x) load balancing inspired by `Baptiste Assmann`_.
 * HAProxy high availability support via Keepalived and floating IPs on Digital Ocean.
 * Redis.
 * PostgreSQL.
-* GlusterFS cluster for managing and sharing a volume for Django's static directory. Replica support is automatic if the number of hosts used as GlusterFS nodes is a multiple of two.
+* GlusterFS cluster for managing and sharing a volume for Django's static and media directory. Replica support is automatic if the number of hosts used as GlusterFS nodes is a multiple of two.
 * vim-gnome on the host used as a Salt master. Just because I love vim.
 
 The states are designed to be run together but you could take what you need and reuse in your own formulas.
@@ -334,17 +334,6 @@ To run all states in the correct order, run from the salt master, this is what s
 
 state.orchestrate is important to make sure the GlusterFS volumes are setup in the correct order.
 
-Run remotely with Fabric
-==========================
-
-Install Fabric locally (via pip, just for Python 2.5-2.7) and change to the scripts directory to run commands against the master host like this:
-
-  ``fab -H host salt_ping``
-
-This will probably be the preferred method to deploy.
-
-
-
 Troubleshooting
 ================
 
@@ -454,11 +443,9 @@ This will point DJANGO_SETTINGS_MODULE to the correct settings module so that yo
 Deploying
 ===========
 
-The project and the application it uses should be deployed via orchestration like this:
+The project and the application it uses should be deployed with the help of orchestration running:
 
-  ``sudo salt-run state.orchestrate zinibu.deploy``
-
-This is currently work in progress and and applies only to the Django project at this point. We should try to reuse the states used for the initial setup. See more details in TODO.rst and note the checks for the deploy value in zinibu.django.init.
+  ``sudo scripts/install.sh``
 
 
 Additional Resources

@@ -1,12 +1,21 @@
-#TODO go over project and django apps and see if I can target all by default or just some
-
-deploy-state:
+deploy-django-project:
   salt.state:
     - tgt: 'roles:webhead'
     - tgt_type: grain
     - sls:
       - zinibu.django
     - pillar: {'deploy': True }
+
+deploy-django-packages:
+  salt.state:
+    - tgt: 'roles:webhead'
+    - tgt_type: grain
+    - sls:
+      - zinibu.django.conf
+    - pillar: {'deploy': True }
+
+# TODO pass a variable from bash to determine what should be deployed,
+# possible choices: everything (default), just project, just packages, one or more packages (passed as list)
 
 # This can receive pillar data from command line like this:
 # sudo salt-run state.orchestrate zinibu.deploy pillar='{"project_branch": "master"}'

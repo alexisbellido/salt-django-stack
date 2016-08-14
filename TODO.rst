@@ -1,9 +1,6 @@
 TODO
 
-- revisit pushing new code and deploying it at this point
-- complete zinibu.deploy to work with apps to update
-- zinibu.deploy should be able to tell which branch to git pull for the project and which apps and branch for each app should be used. We can assume master is the default in most cases but see how git.latest work with branches
-- investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
+- test installing from beginning and then deploying an update for project and znbmain and seeing if service zinibu, varnish and haproxy restart correctly, use scripts/deploy.sh
 
 ==
 
