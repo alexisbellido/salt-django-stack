@@ -21,7 +21,7 @@ include:
 
 deploying:
   cmd.run:
-    - name: echo "Deploying project_branch {{ project_branch }}..."
+    - name: echo "Deploy project {{ django.repo }}\nBranch {{ django.branch }} ..."
 {% else %}
 
 {{ run_project_script }}:
@@ -164,4 +164,4 @@ glusterfs-mount-media:
 
 {%- endif %}
 
-{% endif %}
+{% endif %} # not deploy

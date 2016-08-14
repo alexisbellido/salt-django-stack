@@ -1,22 +1,18 @@
 TODO
 
 - revisit pushing new code and deploying it at this point
-
-- testing nginx protected files, change salt formula to do
-
-    location /media/ {
-        root /home/alexis/zinibu;
-    }
-
-- test ~/djapps/django-zinibu-main/znbmain/views.py and urls.py to create view like ~/djapps/django-zinibu-main/znbmain/views.py 
-- move baiscs of  download to a new app for ebooks or digital goods in general
-
-
 - complete zinibu.deploy to work with apps to update
 - zinibu.deploy should be able to tell which branch to git pull for the project and which apps and branch for each app should be used. We can assume master is the default in most cases but see how git.latest work with branches
+- investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
+
+==
+
+- test ~/djapps/django-zinibu-main/znbmain/views.py and urls.py to create view like ~/djapps/django-zinibu-main/znbmain/views.py 
+- move basics of  download to a new app for ebooks or digital goods in general
+
+==
 
 - django skeleton app doing common Django stuff to use as inspiration for specific apps
-- investigate git hooks (standard and managed by github) for some deploy operations, see Jenkins too for testing but only for the dev box (jenkins and continuous integration)
 
 - salt state to setup postgresql for running django tests locally, something like this needs to be added to pg_hba.conf:
 host   test_db1      user1   192.168.1.203/32     md5

@@ -1,3 +1,5 @@
+#TODO go over project and django apps and see if I can target all by default or just some
+
 deploy-state:
   salt.state:
     - tgt: 'roles:webhead'
@@ -17,4 +19,4 @@ deploy-state:
 #    - tgt: 'roles:webhead'
 #    - tgt_type: grain
 #    - arg:
-#      - echo "TEST RUN WEBHEAD COMMAND"
+#      - echo "TEST RUN WEBHEAD COMMAND deploy"
