@@ -2,22 +2,12 @@ TODO
 
 - test installing from beginning and then deploying an update for project and znbmain and seeing if service zinibu, varnish and haproxy restart correctly, use scripts/deploy.sh
 
-==
-
-- test ~/djapps/django-zinibu-main/znbmain/views.py and urls.py to create view like ~/djapps/django-zinibu-main/znbmain/views.py 
-- move basics of  download to a new app for ebooks or digital goods in general
-
-==
-
-- django skeleton app doing common Django stuff to use as inspiration for specific apps
-
 - salt state to setup postgresql for running django tests locally, something like this needs to be added to pg_hba.conf:
 host   test_db1      user1   192.168.1.203/32     md5
 host   postgres      user1   192.168.1.203/32     md5
 
 where the user1 and db1 parts are the ones setup from pillar
 
-- (?) edit scripts/fabric.py to run salt commands, use for inspiration: https://github.com/alexisbellido/The-Django-gunicorn-fabfile-project/blob/master/fabfile.py, this should accept parameters
 - move postgres-related lines from zinibu.python.init to postgres specific states, add include to zinibu.python.init.
 - don't worry about high availability for redis and postgresql yet
 - most destructive operations (umount, removing directories, uninstalls, etc) should be handled manually to avoid errors
@@ -26,7 +16,7 @@ where the user1 and db1 parts are the ones setup from pillar
 
 
 ===
-- I may continue without the keepalived parts. If I shut down the keepalived service, it works. The problem is that backup is not becoming master as it should. The check script is working and priority is changing but still master remains master.
+- I may continue without the keepalived part. If I shut down the keepalived service, it works. The problem is that backup is not becoming master as it should. The check script is working and priority is changing but still master remains master.
 
 - Check about multicast, unicast, firewall and communicating between hosts with keepalived
 http://serverfault.com/questions/512153/both-servers-running-keepalived-become-master-and-have-a-same-virtual-ip
