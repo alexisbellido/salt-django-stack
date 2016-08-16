@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+import argparse
+
+import salt.client
+import salt.runner
+
+parser = argparse.ArgumentParser(description="Process deploy options. Run with sudo or Salt's features to work.")
+parser.add_argument("--project", help="Deploy the project.", action="store_true")
+parser.add_argument("--apps", help="Deploy applications only. Provide a list of application names separated by spaces if you want to specify which ones to deploy. It will deploy all applications by default.", default=None, nargs="*")
+args = parser.parse_args()
+
+if args.project:
+    print('Deploy the project')
+    local = salt.client.LocalClient()
+    #print(local.cmd('*', 'test.ping'))
+    print(local.cmd('roles:webhead', 'test.ping', expr_form='grain'))
+    print(local.cmd('roles:varnish', 'test.ping', expr_form='grain'))
+    print(local.cmd('roles:haproxy', 'test.ping', expr_form='grain'))
+
+if args.apps is not None:
+    if len(args.apps):
+        print('Deploy the following apps:')
+        for app in args.apps:
+            print('App: %s' % app)
+    else:
+        print('Deploy all the apps')
