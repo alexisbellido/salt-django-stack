@@ -3,7 +3,7 @@
 
 {% set deploy_target = salt['pillar.get']('deploy_target', '') %}
 
-{% if deploy_target == 'all' or deploy_target == 'project' %}
+{% if deploy_target == 'project' %}
 deploy-django-project:
   salt.state:
     - tgt: 'roles:webhead'
@@ -13,7 +13,7 @@ deploy-django-project:
     - pillar: {'deploy': True, 'deploy_target': {{ deploy_target }} }
 {% endif %}
 
-{% if deploy_target == 'all' or deploy_target == 'apps' %}
+{% if deploy_target == 'apps' %}
 deploy-django-packages:
   salt.state:
     - tgt: 'roles:webhead'

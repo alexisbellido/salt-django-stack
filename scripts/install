@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+
+import argparse
+
+import salt.config
+import salt.client
+import salt.runner
+
+# TODO run whatever is in install.sh and get rid of that

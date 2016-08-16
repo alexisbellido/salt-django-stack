@@ -2,26 +2,40 @@
 
 import argparse
 
+import salt.config
 import salt.client
 import salt.runner
+
+local = salt.client.LocalClient()
+opts = salt.config.master_config('/etc/salt/master')
+runner = salt.runner.RunnerClient(opts)
 
 parser = argparse.ArgumentParser(description="Process deploy options. Run with sudo or Salt's features to work.")
 parser.add_argument("--project", help="Deploy the project.", action="store_true")
 parser.add_argument("--apps", help="Deploy applications only. Provide a list of application names separated by spaces if you want to specify which ones to deploy. It will deploy all applications by default.", default=None, nargs="*")
+parser.add_argument("--debug", help="Print debug information.", action="store_true")
 args = parser.parse_args()
 
 if args.project:
-    print('Deploy the project')
-    local = salt.client.LocalClient()
-    #print(local.cmd('*', 'test.ping'))
-    print(local.cmd('roles:webhead', 'test.ping', expr_form='grain'))
-    print(local.cmd('roles:varnish', 'test.ping', expr_form='grain'))
-    print(local.cmd('roles:haproxy', 'test.ping', expr_form='grain'))
+    print('Deploying project...')
+    runner.cmd('state.orchestrate', ['zinibu.deploy'], kwarg={'pillar': {'deploy_target': 'project'}})
 
 if args.apps is not None:
+    # TODO pass list of apps to deploy via pillar list and update zinibu.deploy accordingly
+    # TODO replace scripts/install.sh and README with instructions
     if len(args.apps):
-        print('Deploy the following apps:')
         for app in args.apps:
-            print('App: %s' % app)
+            print('Deploying application %s...' % app)
     else:
-        print('Deploy all the apps')
+        print('Deploying all applications...')
+        runner.cmd('state.orchestrate', ['zinibu.deploy'], kwarg={'pillar': {'deploy_target': 'apps'}})
+
+print('Restarting zinibu service...')
+result = local.cmd('roles:webhead', 'service.restart', ['zinibu'],  expr_form='grain')
+if args.debug:
+    print result
+
+print('Restarting Varnish...')
+result = local.cmd('roles:varnish', 'service.restart', ['varnish'], expr_form='grain')
+if args.debug:
+    print result
