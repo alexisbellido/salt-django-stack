@@ -24,7 +24,7 @@ deploying-package-{{ pip_package }} :
       {%- else %}
         {% set package_branch = 'master' %}
       {%- endif %}
-    - name: echo "Deploy package {{ pip_package }}\nBranch {{ package_branch }} ..."
+    - name: echo "Deploy application {{ pip_package }}\nBranch {{ package_branch }} ..."
     {%- endif %} # deploy
 
 {%- if 'editable' in properties %}

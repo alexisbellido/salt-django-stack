@@ -12,6 +12,7 @@ include:
 # This is used with salt-run state.orchestrate zinibu.deploy, see README.rst,
 # which is used only after the initial install has been done.
 {% set deploy = salt['pillar.get']('deploy', False) %}
+{% set deploy_target = salt['pillar.get']('deploy_target', '') %}
 
 {% set project_branch = salt['pillar.get']('project_branch', '') %}
 
