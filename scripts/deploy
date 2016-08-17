@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import pprint
 
 import salt.config
 import salt.client
@@ -10,10 +11,33 @@ local = salt.client.LocalClient()
 opts = salt.config.master_config('/etc/salt/master')
 runner = salt.runner.RunnerClient(opts)
 
-parser = argparse.ArgumentParser(description="Process deploy options. Run with sudo or Salt's features to work.")
-parser.add_argument("--project", help="Deploy the project.", action="store_true")
-parser.add_argument("--apps", help="Deploy applications only. Provide a list of application names separated by spaces if you want to specify which ones to deploy. It will deploy all applications by default.", default=None, nargs="*")
-parser.add_argument("--debug", help="Print debug information.", action="store_true")
+pp = pprint.PrettyPrinter(indent=4)
+
+parser = argparse.ArgumentParser(
+    description='''Deploy Django project and/or applications. Run with sudo for Salt's features to work.
+
+Examples:
+
+    sudo deploy -p
+    sudo deploy -a django-braces==1.8.1
+    sudo deploy -a /home/user/djapps/django-zinibu-main --no-restart
+    sudo deploy -a
+''',
+    formatter_class=argparse.RawDescriptionHelpFormatter
+)
+parser.add_argument("-p", "--project", help="Deploy the project", action="store_true")
+parser.add_argument(
+    "-a", 
+    "--apps", 
+    help='''Deploy applications.
+Specify a list of application names separated by spaces and matching the ids defined in the zinibu.django pillar.
+It will deploy all applications by default.
+''',
+    default=None,
+    nargs="*"
+)
+parser.add_argument("--no-restart", dest="no_restart", help="Do not restart services after deployment", action="store_true", default=False)
+parser.add_argument("--debug", help="Print debug information", action="store_true")
 args = parser.parse_args()
 
 if args.project:
@@ -21,21 +45,21 @@ if args.project:
     runner.cmd('state.orchestrate', ['zinibu.deploy'], kwarg={'pillar': {'deploy_target': 'project'}})
 
 if args.apps is not None:
-    # TODO pass list of apps to deploy via pillar list and update zinibu.deploy accordingly
-    # TODO replace scripts/install.sh and README with instructions
     if len(args.apps):
-        for app in args.apps:
-            print('Deploying application %s...' % app)
+        print('Deploying selected applications...')
+        runner.cmd('state.orchestrate', ['zinibu.deploy'], kwarg={'pillar': {'deploy_target': 'apps', 'apps': args.apps }})
     else:
         print('Deploying all applications...')
         runner.cmd('state.orchestrate', ['zinibu.deploy'], kwarg={'pillar': {'deploy_target': 'apps'}})
 
-print('Restarting zinibu service...')
-result = local.cmd('roles:webhead', 'service.restart', ['zinibu'],  expr_form='grain')
-if args.debug:
-    print result
+if not args.no_restart:
+    print('Restarting zinibu service...')
+    result = local.cmd('roles:webhead', 'service.restart', ['zinibu'],  expr_form='grain')
+    if args.debug:
+        pp.pprint(result)
 
-print('Restarting Varnish...')
-result = local.cmd('roles:varnish', 'service.restart', ['varnish'], expr_form='grain')
-if args.debug:
-    print result
+if not args.no_restart:
+    print('Restarting Varnish...')
+    result = local.cmd('roles:varnish', 'service.restart', ['varnish'], expr_form='grain')
+    if args.debug:
+        pp.pprint(result)

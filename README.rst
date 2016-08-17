@@ -81,7 +81,7 @@ You shouldn't worry about overwriting your settings if running the script more t
 
 **Step 3**: Go to the directory where this project was cloned (e.g.: /home/user/salt-django-stack) and run all the states with:
 
-  ``sudo scripts/install.sh``
+  ``sudo scripts/install``
 
 Alternative Prerequisites Install
 ===================================
@@ -445,7 +445,7 @@ Deploying
 
 The project and the application it uses should be deployed with the help of orchestration running:
 
-  ``sudo scripts/install.sh``
+  ``sudo scripts/deploy``
 
 
 Additional Resources

@@ -1,6 +1,6 @@
 TODO
 
-- test installing from beginning and then deploying an update for project and znbmain and seeing if service zinibu, varnish and haproxy restart correctly, use scripts/deploy.sh
+- test installing from beginning and then deploying an update for project and znbmain and seeing if service zinibu, varnish and haproxy restart correctly, use sudo scripts/deploy, which is python
 
 - salt state to setup postgresql for running django tests locally, something like this needs to be added to pg_hba.conf:
 host   test_db1      user1   192.168.1.203/32     md5

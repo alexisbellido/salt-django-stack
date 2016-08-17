@@ -1,9 +1,45 @@
 #!/usr/bin/env python
 
 import argparse
+import pprint
 
 import salt.config
 import salt.client
 import salt.runner
 
-# TODO run whatever is in install.sh and get rid of that
+local = salt.client.LocalClient()
+opts = salt.config.master_config('/etc/salt/master')
+runner = salt.runner.RunnerClient(opts)
+
+pp = pprint.PrettyPrinter(indent=4)
+
+parser = argparse.ArgumentParser(
+    description='''Install Django project and applications. Run with sudo for Salt's features to work.
+''',
+    formatter_class=argparse.RawDescriptionHelpFormatter
+)
+parser.add_argument("--no-restart", dest="no_restart", help="Do not restart services after deployment", action="store_true", default=False)
+parser.add_argument("--no-bootstrap", dest="no_bootstrap", help="Do not run bootstrap.sls", action="store_true", default=False)
+parser.add_argument("--debug", help="Print debug information", action="store_true")
+args = parser.parse_args()
+
+print('Installing project and applications...')
+
+if not args.no_bootstrap:
+    runner.cmd('state.orchestrate', ['zinibu.bootstrap'])
+
+result = local.cmd('*', 'state.highstate')
+if args.debug:
+    pp.pprint(result)
+
+if not args.no_restart:
+    print('Restarting Varnish...')
+    result = local.cmd('roles:varnish', 'service.restart', ['varnish'], expr_form='grain')
+    if args.debug:
+        pp.pprint(result)
+
+if not args.no_restart:
+    print('Restarting HAProxy...')
+    result = local.cmd('roles:haproxy', 'service.restart', ['haproxy'], expr_form='grain')
+    if args.debug:
+        pp.pprint(result)

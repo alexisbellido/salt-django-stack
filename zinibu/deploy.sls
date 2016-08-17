@@ -2,6 +2,7 @@
 # possible choices: everything (default), just project, just packages, one or more packages (passed as list)
 
 {% set deploy_target = salt['pillar.get']('deploy_target', '') %}
+{% set apps = salt['pillar.get']('apps', []) %}
 
 {% if deploy_target == 'project' %}
 deploy-django-project:
@@ -20,7 +21,7 @@ deploy-django-packages:
     - tgt_type: grain
     - sls:
       - zinibu.django.conf
-    - pillar: {'deploy': True, 'deploy_target': {{ deploy_target }} }
+    - pillar: {'deploy': True, 'deploy_target': {{ deploy_target }}, 'apps': {{ apps }} }
 {% endif %}
 
 #deploy-function:
