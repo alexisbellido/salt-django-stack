@@ -83,6 +83,8 @@ You shouldn't worry about overwriting your settings if running the script more t
 
   ``sudo scripts/install``
 
+This is a Python script using argparse so you can pass the -h argument to get extra help.
+
 Alternative Prerequisites Install
 ===================================
 
@@ -245,7 +247,7 @@ Run the minion install for the new hosts as described in Quick Install, setup /s
 update pillar data (probably just /srv/pillar/staging/zinibu_basic.sls (being staging the environment you are modifying) and rerun:
 
 
-  ``sudo scripts/install.sh``
+  ``sudo scripts/install``
 
 
 HAProxy and high availability
@@ -446,6 +448,8 @@ Deploying
 The project and the application it uses should be deployed with the help of orchestration running:
 
   ``sudo scripts/deploy``
+
+This is a Python script using argparse so you can pass the -h argument to get extra help. You can choose to deploy just the project, all the applications or a list of applications.
 
 
 Additional Resources
