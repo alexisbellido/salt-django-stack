@@ -32,7 +32,6 @@ deploying-package-{{ pip_package }} :
 
 {%- if 'editable' in properties %}
 
-{% if not deploy %}
 create_django_app_directory_{{ pip_package }}:
   file.directory:
     - name: {{ pip_package }}
@@ -40,7 +39,6 @@ create_django_app_directory_{{ pip_package }}:
     - group: {{ zinibu_basic.app_group }}
     - mode: 755
     - makedirs: True
-{%- endif %} # not deploy
 
 {%- if (apps|length and pip_package in apps) or not apps %}
 clone-django-app-repo-{{ pip_package }}:
