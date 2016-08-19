@@ -78,6 +78,7 @@ else
       echo "==================================="
       # Using DJANGO_SETTINGS_MODULE environment variables as we are not specifying --settings
       #django-admin.py runserver --pythonpath=`pwd` --settings=$PROJECTNAME.settings $BIND_ADDRESS
+      export PROJECT_RUNNING_DEV=true
       django-admin.py runserver --pythonpath=`pwd` $BIND_ADDRESS_DEV
       # thin wrapper for django-admin.py, no need for --pythonpath or --settings but it requires to use python first
       #python manage.py runserver $BIND_ADDRESS
