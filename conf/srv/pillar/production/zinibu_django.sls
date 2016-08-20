@@ -17,7 +17,7 @@ django:
     pip_packages:
       django-braces==1.8.1:
         pypi: True
-      django-registration==2.0.3:
+      django-registration==2.1.1:
         pypi: True # the default for production packages from PyPi
       /home/user/djapps/django-zinibu-skeleton:
         editable: True # local source code, useful for development
