@@ -9,6 +9,7 @@ base:
     - zinibu_varnish
     - zinibu_haproxy
     - zinibu_keepalived
+    - zinibu_elasticsearch
 
 staging:
   'staging*':

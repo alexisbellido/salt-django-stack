@@ -1,6 +1,6 @@
 {% set user = 'exampleuser' %}
 {% set group = 'examplegroup' %}
-{% set private_ips = { 1: '192.168.33.17', 2: '192.168.33.18' } %} 
+{% set private_ips = { 1: '192.168.33.17', 2: '192.168.33.18', 3: '192.168.33.19' } %} 
 {% set public_ips = { 1: '192.168.1.97', 2: '192.168.1.98' } %} 
 
 zinibu_basic:
@@ -102,6 +102,12 @@ zinibu_basic:
     redis_nodes:
       production1:
           private_ip: {{ private_ips[1] }}
+
+    # keys must match minion ids
+    elasticsearch_servers:
+      production3:
+          private_ip: {{ private_ips[3] }}
+          port: 9200
 
     postgresql_servers:
       production1:

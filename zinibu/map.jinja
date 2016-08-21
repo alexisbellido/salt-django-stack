@@ -154,6 +154,23 @@
 
 {% set postgres = salt['pillar.get']('postgres', default=postgres_lookup, merge=True) %}
 
+{% set elasticsearch = salt['grains.filter_by']({
+    'Debian': {
+        'service': 'elasticsearch',
+        'source': 'https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.5/elasticsearch-2.3.5.deb',
+        'config': '/etc/elasticsearch/elasticsearch.yml',
+    },
+    'RedHat': {
+    },
+}, merge=salt['grains.filter_by']({
+    '14.04': {
+    },
+    '14.10': {
+    },
+    '16.04': {
+    }
+}, grain='lsb_distrib_release', merge=salt['pillar.get']('elasticsearch:lookup'))) %}
+
 {% set zinibu_basic = salt['grains.filter_by']({
     'default': {
         'app_user': 'default_user',

@@ -11,6 +11,7 @@ This Salt formula will setup a stack of one or more servers to run a Django proj
 * HAProxy high availability support via Keepalived and floating IPs on Digital Ocean.
 * Redis.
 * PostgreSQL.
+* ElasticSearch. A basic one node installation.
 * GlusterFS cluster for managing and sharing a volume for Django's static and media directory. Replica support is automatic if the number of hosts used as GlusterFS nodes is a multiple of two.
 * vim-gnome on the host used as a Salt master. Just because I love vim.
 
@@ -123,6 +124,8 @@ Include zinibu in your top.sls (which may be in /srv/salt/top.sls) to setup a st
       - zinibu.keepalived.conf
       - zinibu.haproxy
       - zinibu.haproxy.conf
+    'elasticsearch-server':
+      - zinibu.elasticsearch
     'redis-server':
       - zinibu.redis
     'database':
