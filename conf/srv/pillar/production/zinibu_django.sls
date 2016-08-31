@@ -17,6 +17,8 @@ django:
     pip_packages:
       django-braces==1.8.1:
         pypi: True
+      django-debug-toolbar==1.5:
+        pypi: True
       django-allauth==0.27.0:
         pypi: True # the default for production packages from PyPi
       /home/user/djapps/django-zinibu-skeleton:
