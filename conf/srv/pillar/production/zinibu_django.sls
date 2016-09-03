@@ -15,7 +15,9 @@ django:
     # Django-specific packages go here. Always indicate version.
     # A package should have just one of pypi, editable or test_pypi set to True.
     pip_packages:
-      django-braces==1.8.1:
+      django-haystack==2.5.0:
+        pypi: True
+      django-braces==1.9.0:
         pypi: True
       django-debug-toolbar==1.5:
         pypi: True
