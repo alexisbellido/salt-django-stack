@@ -1,5 +1,6 @@
 # This is a basic VCL configuration file for varnish.  See the vcl(7)
 # man page for details on VCL syntax and semantics.
+# TODO ESI logic for Django. See default-4.vcl
 # 
 # Default backend definition.  Set this to point to your content
 # server.

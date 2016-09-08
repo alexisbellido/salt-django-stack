@@ -105,18 +105,21 @@ sub vcl_recv {
       return (pass);
     }
 
+    # Don't think is needed anymore, just check for sessionid cookie
     # Django is setting this cookie so we only check here
-    if (req.http.Cookie ~ "LOGGED_IN") {
-      return (pass);
-    }
+    #if (req.http.Cookie ~ "LOGGED_IN") {
+    #  return (pass);
+    #}
 
     if (req.http.Authorization) {
       # Not cacheable by default
       return (pass);
     }
 
-    # unless sessionid/csrftoken is in the request, don't pass ANY cookies (referral_source, utm, etc)
-    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "csrftoken"))) {
+    set req.http.X-Varnish-Use-Cache = "TRUE";
+    # unless Django's sessionid or message cookies are in the request, don't pass ANY cookies (referral_source, utm, etc)
+    # also, anything inside /media or /static should be cached
+    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "messages"))) {
       unset req.http.Cookie;
       return (hash);
     }
@@ -250,6 +253,13 @@ sub vcl_backend_response {
     # and other mistakes your backend does.
 
     # Called after the response headers has been successfully retrieved from the backend.
+    # Enable ESI
+    set beresp.do_esi = true;
+    # and make sure everything under /no-cache is, well, not cached
+    if (bereq.url ~ "^/no-cache/") {
+      set beresp.uncacheable = true;
+      return(deliver); 
+    }
 
     # Pause ESI request and remove Surrogate-Control header
     if (beresp.http.Surrogate-Control ~ "ESI/1.0") {
