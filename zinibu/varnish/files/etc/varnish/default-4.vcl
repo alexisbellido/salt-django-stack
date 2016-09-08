@@ -119,7 +119,7 @@ sub vcl_recv {
     set req.http.X-Varnish-Use-Cache = "TRUE";
     # unless Django's sessionid or message cookies are in the request, don't pass ANY cookies (referral_source, utm, etc)
     # also, anything inside /media or /static should be cached
-    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "messages"))) {
+    if (req.method == "GET" && (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "csrftoken" && req.http.Cookie !~ "messages"))) {
       unset req.http.Cookie;
       return (hash);
     }
