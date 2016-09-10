@@ -119,7 +119,7 @@ sub vcl_recv {
     set req.http.X-Varnish-Use-Cache = "TRUE";
     # unless Django's sessionid or message cookies are in the request, don't pass ANY cookies (referral_source, utm, etc)
     # also, anything inside /media or /static should be cached
-    if (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "messages" && req.http.Cookie !~ "csrftoken")) {
+    if (req.url ~ "^/media" || req.url ~ "^/static" || (req.http.Cookie !~ "logged_in" && req.http.Cookie !~ "sessionid" && req.http.Cookie !~ "messages" && req.http.Cookie !~ "csrftoken")) {
       unset req.http.Cookie;
       return (hash);
     }
@@ -254,6 +254,7 @@ sub vcl_backend_response {
 
     # Called after the response headers has been successfully retrieved from the backend.
     # Enable ESI
+    # TODO see if I need to add conditions to enable ESI
     set beresp.do_esi = true;
     # and make sure everything under /no-cache is, well, not cached
     if (bereq.url ~ "^/no-cache/") {
