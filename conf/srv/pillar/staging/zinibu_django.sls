@@ -15,6 +15,12 @@ django:
     # Django-specific packages go here. Always indicate version.
     # A package should have just one of pypi, editable or test_pypi set to True.
     pip_packages:
+      django-redis-cache==1.7.0:
+        pypi: True
+      hiredis==0.2.0:
+        pypi: True
+      elasticsearch==2.4.0
+        pypi: True
       django-haystack==2.5.0:
         pypi: True
       django-braces==1.9.0:
