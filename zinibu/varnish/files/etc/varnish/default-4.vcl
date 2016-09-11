@@ -105,6 +105,10 @@ sub vcl_recv {
       return (pass);
     }
 
+    if (req.url ~ "^/search/") {
+      return (pass);
+    }
+
     # Don't think is needed anymore, just check for sessionid cookie
     # Django is setting this cookie so we only check here
     #if (req.http.Cookie ~ "LOGGED_IN") {
