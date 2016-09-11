@@ -19,6 +19,8 @@ django:
         pypi: True
       hiredis==0.2.0:
         pypi: True
+      python-dateutil:
+        pypi: True
       elasticsearch==2.4.0
         pypi: True
       django-haystack==2.5.0:
