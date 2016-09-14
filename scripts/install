@@ -26,7 +26,9 @@ args = parser.parse_args()
 print('Installing project and applications...')
 
 if not args.no_bootstrap:
-    runner.cmd('state.orchestrate', ['zinibu.bootstrap'])
+    result = runner.cmd('state.orchestrate', ['zinibu.bootstrap'])
+    if args.debug:
+        pp.pprint(result)
 
 result = local.cmd('*', 'state.highstate')
 if args.debug:
