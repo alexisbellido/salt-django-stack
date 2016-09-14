@@ -47,7 +47,7 @@ zinibu_basic:
           maxconn_cache: 1000
 
     # if using keepalived, put the floating IP here
-    haproxy_frontend_public_ip: pub1
+    haproxy_frontend_public_ip: {{ public_ips[1] }}
     # optional ssl certificate, must be created and copied here beforehand, see README
     #haproxy_ssl_cert: /srv/haproxy/ssl/example_com.pem
     haproxy_frontend_port: 80
