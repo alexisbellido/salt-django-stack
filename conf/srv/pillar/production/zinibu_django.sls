@@ -21,7 +21,7 @@ django:
         pypi: True
       python-dateutil:
         pypi: True
-      elasticsearch==2.4.0
+      elasticsearch==2.4.0:
         pypi: True
       django-haystack==2.5.0:
         pypi: True
