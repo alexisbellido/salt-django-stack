@@ -83,6 +83,8 @@ else
       django-admin.py runserver --pythonpath=`pwd` $BIND_ADDRESS_DEV
       # thin wrapper for django-admin.py, no need for --pythonpath or --settings but it requires to use python first
       #python manage.py runserver $BIND_ADDRESS
+    elif [ "$1" == "update_index" ]; then
+      django-admin.py update_index --age=$2 --pythonpath=`pwd`
     elif [ "$1" == "shell" ]; then
       django-admin.py shell --pythonpath=`pwd`
     elif [ "$1" == "setenv" ]; then
