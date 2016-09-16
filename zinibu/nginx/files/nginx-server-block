@@ -10,6 +10,7 @@ server {
 
     listen {{ private_ip }}:{{ nginx_port }};
     server_name {{ private_ip }};
+    client_max_body_size 2M;
 
     # ignore problems with favicon?
     #location = /favicon.ico { 
