@@ -34,6 +34,8 @@ SSH to your server as root and make sure to create a user with sudo permissions 
 
   ``$ usermod -a -G sudo exampleuser``
 
+Always disable ssh password authentication in /etc/ssh/sshd_config setting PasswordAuthentication no.
+
 Now logout and ssh with this new user to continue.
 
 Add public key to the repositories you will need, this includes both the main Django project and any applications you may need. This is how to easily create your private and public keys locally without a prompt or passphrase:
