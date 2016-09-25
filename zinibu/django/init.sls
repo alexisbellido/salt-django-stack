@@ -120,13 +120,17 @@ glusterfs-client:
 {%- if 'glusterfs_nodes' in zinibu_basic.project %}
   {%- for id, node in zinibu_basic.project.glusterfs_nodes.iteritems() %}
     {%- if loop.index == 1 %}
+      {% set backupvolfile_server = node.private_ip %}
+    {%- endif %}
+
+    {%- if loop.index == 2 %}
 
 glusterfs-fstab-static:
   file.append:
     - name: /etc/fstab
     - text: |
         # GlusterFS mount
-        {{ node.private_ip }}:static-{{ zinibu_basic.project.name }} {{ project_static_dir }} glusterfs defaults,_netdev 0 0
+        {{ node.private_ip }}:static-{{ zinibu_basic.project.name }} {{ project_static_dir }} glusterfs defaults,_netdev,backupvolfile-server={{ backupvolfile_server }} 0 0
     - require:
       - file: {{ project_static_dir }}
 
@@ -135,7 +139,7 @@ glusterfs-fstab-media:
     - name: /etc/fstab
     - text: |
         # GlusterFS mount
-        {{ node.private_ip }}:media-{{ zinibu_basic.project.name }} {{ project_media_dir }} glusterfs defaults,_netdev 0 0
+        {{ node.private_ip }}:media-{{ zinibu_basic.project.name }} {{ project_media_dir }} glusterfs defaults,_netdev,backupvolfile-server={{ backupvolfile_server }} 0 0
     - require:
       - file: {{ project_media_dir }}
     {%- endif %}
