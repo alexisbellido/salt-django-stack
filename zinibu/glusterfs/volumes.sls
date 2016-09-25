@@ -35,10 +35,11 @@ glusterfs-volume-static-{{ zinibu_basic.project.name }}-allow:
       - cmd: glusterfs-volume-static-{{ zinibu_basic.project.name }}
 {%- endif %}
 
+# Keeping replica set at 2 if more than one glusterfs node
 glusterfs-volume-static-{{ zinibu_basic.project.name }}:
   cmd.run:
     - runas: {{ zinibu_basic.root_user }}
-    - name: gluster volume create static-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica {{ zinibu_basic.project.glusterfs_nodes|length }}{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
+    - name: gluster volume create static-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica 2{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/static-{{ zinibu_basic.project.name }}{% endfor %} force
     - shell: /bin/bash
     - unless: "gluster volume info static-{{ zinibu_basic.project.name }}"
 
@@ -86,10 +87,11 @@ glusterfs-volume-media-{{ zinibu_basic.project.name }}-allow:
       - cmd: glusterfs-volume-media-{{ zinibu_basic.project.name }}
 {%- endif %}
 
+# Keeping replica set at 2 if more than one glusterfs node
 glusterfs-volume-media-{{ zinibu_basic.project.name }}:
   cmd.run:
     - runas: {{ zinibu_basic.root_user }}
-    - name: gluster volume create media-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica {{ zinibu_basic.project.glusterfs_nodes|length }}{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/media-{{ zinibu_basic.project.name }}{% endfor %} force
+    - name: gluster volume create media-{{ zinibu_basic.project.name }} {% if zinibu_basic.project.glusterfs_nodes|length > 1 %}replica 2{% endif %} transport tcp {% for id, node in salt['pillar.get']('zinibu_basic:project:glusterfs_nodes', {}).iteritems() %} {{ node.private_ip }}:/var/exports/media-{{ zinibu_basic.project.name }}{% endfor %} force
     - shell: /bin/bash
     - unless: "gluster volume info media-{{ zinibu_basic.project.name }}"
 
