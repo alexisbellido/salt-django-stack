@@ -255,6 +255,11 @@ update pillar data (probably just /srv/pillar/staging/zinibu_basic.sls (being st
   ``sudo scripts/install``
 
 
+Running on Amazon Web Services EC2
+====================================
+
+If using AWS EC2, you will need to add a second private IP associated to an elastic IP and use the private IP as anchor_ip for your HAProxy server. Use the first private IP for all internal communications between webheads and other servers.
+
 HAProxy and high availability
 =================================
 
