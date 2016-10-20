@@ -43,6 +43,7 @@ else
     
     {% for id, redis_node in salt['pillar.get']('zinibu_basic:project:redis_nodes', {}).iteritems() %}
     export PROJECT_REDIS_HOST="{{ redis_node.private_ip }}"
+    export PROJECT_REDIS_PORT="{{ redis_node.port }}"
     {% endfor -%}
     
     # user/group to run as
