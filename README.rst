@@ -480,6 +480,8 @@ Future Plans
 Some test commands
 ====================
 
+  ``sudo salt-run state.orchestrate zinibu.deploy pillar='{"deploy_target": "project"}'``
+
   ``sudo salt-key -L``
 
   ``sudo salt-key -a django*``
