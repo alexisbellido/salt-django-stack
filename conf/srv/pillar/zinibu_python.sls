@@ -12,3 +12,5 @@ pip_packages:
   - Unipath==1.1
   - docutils==0.12
   - restview==2.5.2
+  - django-storages==1.5.
+  - boto3==1.4.1
