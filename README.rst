@@ -482,6 +482,10 @@ Some test commands
 
   ``sudo salt-run state.orchestrate zinibu.deploy pillar='{"deploy_target": "project"}'``
 
+  ``sudo salt -G 'roles:webhead' state.sls zinibu.django pillar='{"deploy": True, "deploy_target": "project"}' --log-level=debug | tee ~/log``
+
+  ``sudo salt 'znbweb1' state.sls zinibu.django pillar='{"deploy": True, "deploy_target": "project"}' --log-level=debug | tee ~/log``
+
   ``sudo salt-key -L``
 
   ``sudo salt-key -a django*``
