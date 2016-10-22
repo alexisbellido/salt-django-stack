@@ -13,4 +13,4 @@ pip_packages:
   - docutils==0.12
   - restview==2.5.2
   - django-storages==1.5.
-  - boto3==1.4.1
+  - boto==2.43.0
