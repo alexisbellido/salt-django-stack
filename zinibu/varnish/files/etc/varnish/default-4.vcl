@@ -63,6 +63,11 @@ sub vcl_recv {
         return (synth(751, "health check OK!"));
     }
 
+    # If using https and no haproxy, redirect non-https and non-www URLs to https://www.example.com
+    #if ( (req.http.host ~ "^(?i)www.example.com" && req.http.X-Forwarded-Proto !~ "(?i)https") || (req.http.host ~ "^(?i)example.com") ) {
+    #    return (synth(750, ""));
+    #}
+
     # send all traffic to the bar director:
     set req.backend_hint = bar.backend();
 
